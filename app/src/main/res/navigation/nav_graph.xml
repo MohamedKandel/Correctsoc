@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.correct.correctsoc.ui.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" />
+    <fragment
+        android:id="@+id/onBoardingFragment"
+        android:name="com.correct.correctsoc.ui.onBoarding.onBoardingFragment"
+        android:label="fragment_on_boarding"
+        tools:layout="@layout/fragment_on_boarding" />
+    <fragment
+        android:id="@+id/firstFragment"
+        android:name="com.correct.correctsoc.ui.onBoarding.FirstFragment"
+        android:label="fragment_first"
+        tools:layout="@layout/fragment_first" />
+    <fragment
+        android:id="@+id/fourthFragment"
+        android:name="com.correct.correctsoc.ui.onBoarding.FourthFragment"
+        android:label="fragment_fourth"
+        tools:layout="@layout/fragment_fourth" />
+    <fragment
+        android:id="@+id/secondFragment"
+        android:name="com.correct.correctsoc.ui.onBoarding.SecondFragment"
+        android:label="fragment_second"
+        tools:layout="@layout/fragment_second" />
+    <fragment
+        android:id="@+id/thirdFragment"
+        android:name="com.correct.correctsoc.ui.onBoarding.ThirdFragment"
+        android:label="fragment_third"
+        tools:layout="@layout/fragment_third" />
+    <fragment
+        android:id="@+id/langFragment"
+        android:name="com.correct.correctsoc.ui.onBoarding.LangFragment"
+        android:label="fragment_lang"
+        tools:layout="@layout/fragment_lang" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.correct.correctsoc.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.correct.correctsoc.ui.home.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/selfPenFragment"
+        android:name="com.correct.correctsoc.ui.selfScan.SelfPenFragment"
+        android:label="fragment_self_pen"
+        tools:layout="@layout/fragment_self_pen" />
+    <fragment
+        android:id="@+id/detectingFragment"
+        android:name="com.correct.correctsoc.ui.selfScan.DetectingFragment"
+        android:label="fragment_detecting"
+        tools:layout="@layout/fragment_detecting" />
+    <fragment
+        android:id="@+id/penResultFragment"
+        android:name="com.correct.correctsoc.ui.selfScan.PenResultFragment"
+        android:label="fragment_pen_result"
+        tools:layout="@layout/fragment_pen_result" />
+    <fragment
+        android:id="@+id/applicationScanFragment"
+        android:name="com.correct.correctsoc.ui.applicationScan.ApplicationScanFragment"
+        android:label="fragment_application_scan"
+        tools:layout="@layout/fragment_application_scan" />
+    <fragment
+        android:id="@+id/scanningFragment"
+        android:name="com.correct.correctsoc.ui.applicationScan.ScanningFragment"
+        android:label="fragment_scanning"
+        tools:layout="@layout/fragment_scanning" />
+    <fragment
+        android:id="@+id/appScanResultFragment"
+        android:name="com.correct.correctsoc.ui.applicationScan.AppScanResultFragment"
+        android:label="fragment_app_scan_result"
+        tools:layout="@layout/fragment_app_scan_result" />
+    <fragment
+        android:id="@+id/APKsFragment"
+        android:name="com.correct.correctsoc.ui.applicationScan.APKsFragment"
+        android:label="fragment_a_p_ks"
+        tools:layout="@layout/fragment_a_p_ks" />
+    <fragment
+        android:id="@+id/deviceScanningFragment"
+        android:name="com.correct.correctsoc.ui.deviceScan.DeviceScanningFragment"
+        android:label="fragment_device_scanning"
+        tools:layout="@layout/fragment_device_scanning" />
+    <fragment
+        android:id="@+id/devicesFragment"
+        android:name="com.correct.correctsoc.ui.deviceScan.DevicesFragment"
+        android:label="fragment_devices"
+        tools:layout="@layout/fragment_devices" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.correct.correctsoc.ui.home.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/insertLinkFragment"
+        android:name="com.correct.correctsoc.ui.webIPScan.InsertLinkFragment"
+        android:label="fragment_insert_link"
+        tools:layout="@layout/fragment_insert_link" />
+    <fragment
+        android:id="@+id/webScanFragment"
+        android:name="com.correct.correctsoc.ui.webIPScan.WebScanFragment"
+        android:label="fragment_web_scan"
+        tools:layout="@layout/fragment_web_scan" />
+    <fragment
+        android:id="@+id/CVEsFragment"
+        android:name="com.correct.correctsoc.ui.webIPScan.CVEsFragment"
+        android:label="fragment_c_v_es"
+        tools:layout="@layout/fragment_c_v_es" />
+    <fragment
+        android:id="@+id/deviceDataFragment"
+        android:name="com.correct.correctsoc.ui.deviceScan.DeviceDataFragment"
+        android:label="fragment_device_data"
+        tools:layout="@layout/fragment_device_data" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.correct.correctsoc.ui.auth.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/OTPFragment"
+        android:name="com.correct.correctsoc.ui.auth.OTPFragment"
+        android:label="fragment_o_t_p"
+        tools:layout="@layout/fragment_o_t_p" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.correct.correctsoc.ui.auth.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" />
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.correct.correctsoc.ui.auth.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.correct.correctsoc.ui.auth.ResetPasswordFragment"
+        android:label="fragment_reset_password"
+        tools:layout="@layout/fragment_reset_password" />
+</navigation>

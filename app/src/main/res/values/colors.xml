@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="alphaWhite">#99FFFFFF</color>
+    <color name="alphaBlack">#66000000</color>
+    <color name="gold">#CCC2A7</color>
+    <color name="selectedDots">#FCFDFF</color>
+    <color name="borderDots">#726D6D</color>
+    <color name="alpha">#00FFFFFF</color>
+    <color name="gray">#999999</color>
+    <color name="purple">#663CA6</color>
+    <color name="dark_purple">#401744</color>
+    <color name="safe_color">#48A62C</color>
+    <color name="warning_color">#C79516</color>
+    <color name="danger_color">#BA0909</color>
+    <color name="border_color">#D9E1E7</color>
+    <color name="light_gray">#DFDFDF</color>
+    <color name="green">#4db6ac</color>
+    <color name="dark_blue">#251B5B</color>
+    <color name="blue_link">#2196F3</color>
+</resources>

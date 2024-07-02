@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_7sdp"
+    android:layout_marginEnd="@dimen/_7sdp"
+    android:layout_marginBottom="@dimen/_6sdp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/alphaBlack"
+        app:cardCornerRadius="@dimen/_7sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeWidth="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="@dimen/_4sdp"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_marginBottom="@dimen/_7sdp"
+                android:background="@drawable/vertical_line_drawable"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_18sdp"
+                android:layout_marginEnd="@dimen/_18sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/view"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/port"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/port"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_alignParentStart="true"/>
+
+                <TextView
+                    android:id="@+id/txt_port"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/port"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_toEndOf="@id/port"/>
+
+                <TextView
+                    android:id="@+id/service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/Service"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/txt_port"/>
+
+                <TextView
+                    android:id="@+id/txt_service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/Service"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_toEndOf="@id/service"
+                    android:layout_below="@id/txt_port"/>
+
+                <TextView
+                    android:id="@+id/protocol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/Protocol"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/txt_service"/>
+
+                <TextView
+                    android:id="@+id/txt_protocol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/Protocol"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_toEndOf="@id/protocol"
+                    android:layout_below="@id/service"/>
+
+                <TextView
+                    android:id="@+id/version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/Version"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/txt_protocol"/>
+
+                <TextView
+                    android:id="@+id/txt_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/Version"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_toEndOf="@id/version"
+                    android:layout_below="@id/txt_protocol"/>
+
+                <TextView
+                    android:id="@+id/cpe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/CVE_Count"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/txt_version"/>
+
+                <TextView
+                    android:id="@+id/txt_cpe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/CVE_Count"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_toEndOf="@id/cpe"
+                    android:layout_below="@id/txt_version"/>
+
+                <TextView
+                    android:id="@+id/cve"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/CVEs"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/txt_cpe"/>
+
+                <TextView
+                    android:id="@+id/txt_cve"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/CVEs"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14ssp"
+                    android:layout_toEndOf="@id/cve"
+                    android:layout_below="@id/txt_cpe"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/hand_icon"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/txt_cpe"
+                    android:padding="@dimen/_7sdp"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/btn_see_more"/>
+
+            </RelativeLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

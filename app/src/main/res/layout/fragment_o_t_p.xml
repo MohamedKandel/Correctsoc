@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/auth_bg"
+    tools:context=".ui.auth.OTPFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_32sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/welcome_back"
+            android:padding="@dimen/_12sdp"
+            android:src="@drawable/arrow_icon" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:textDirection="locale"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:id="@+id/verification_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txt_verification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/barlow_semi_condensed_semibold"
+                android:text="@string/verification"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_25ssp" />
+
+            <TextView
+                android:id="@+id/txt_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_verification"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center"
+                android:text="@string/verification_msg"
+                android:textColor="@color/alphaWhite"
+                android:textSize="@dimen/_12ssp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/verification_code_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_33sdp"
+            android:layout_marginTop="@dimen/_21sdp"
+            android:layout_marginEnd="@dimen/_33sdp"
+            android:layoutDirection="locale"
+            android:orientation="horizontal"
+            android:textDirection="locale"
+            android:layout_below="@id/verification_layout">
+
+            <EditText
+                android:id="@+id/txt_first_digit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="#80868181"
+                android:digits="0123456789"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="@dimen/_9sdp"
+                android:paddingBottom="@dimen/_9sdp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+
+            <EditText
+                android:id="@+id/txt_second_digit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="#80868181"
+                android:digits="0123456789"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="@dimen/_9sdp"
+                android:paddingBottom="@dimen/_9sdp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+
+            <EditText
+                android:id="@+id/txt_third_digit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="#80868181"
+                android:digits="0123456789"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="@dimen/_9sdp"
+                android:paddingBottom="@dimen/_9sdp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+
+            <EditText
+                android:id="@+id/txt_fourth_digit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="#80868181"
+                android:digits="0123456789"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="@dimen/_9sdp"
+                android:paddingBottom="@dimen/_9sdp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+
+            <EditText
+                android:id="@+id/txt_fifth_digit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="#80868181"
+                android:digits="0123456789"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="@dimen/_9sdp"
+                android:paddingBottom="@dimen/_9sdp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+
+            <EditText
+                android:id="@+id/txt_sixth_digit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="#80868181"
+                android:digits="0123456789"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingTop="@dimen/_9sdp"
+                android:paddingBottom="@dimen/_9sdp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/timer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:gravity="center"
+            android:layoutDirection="locale"
+            android:textDirection="locale"
+            android:layout_below="@+id/verification_code_layout">
+
+            <TextView
+                android:id="@+id/txt_expires"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/verification_expires"
+                android:textColor="@color/alphaWhite"
+                android:textSize="@dimen/_12ssp" />
+
+            <TextView
+                android:id="@+id/txt_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/txt_expires"
+                android:fontFamily="@font/roboto_bold"
+                android:text=" 02:00"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+
+        </RelativeLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_verify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_35sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_35sdp"
+            android:background="@drawable/auth_btn_drawable"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_10sdp"
+            android:text="@string/verify"
+            android:textAllCaps="false"
+            android:textColor="#450F49"
+            android:textSize="@dimen/_12ssp"
+            android:layout_below="@+id/timer_layout" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_resend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_35sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_35sdp"
+            android:backgroundTint="@android:color/transparent"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_10sdp"
+            android:text="@string/resend"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12ssp"
+            app:cornerRadius="@dimen/_15sdp"
+            android:layout_below="@+id/btn_verify"
+            app:strokeColor="@color/white"
+            app:strokeWidth="@dimen/_1sdp" />
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.auth.RegisterFragment"
+    android:background="@drawable/ask_bg">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/shield_ask"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginEnd="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:layout_marginBottom="@dimen/_33sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_title"
+            android:fontFamily="@font/barlow_bold"
+            android:layout_centerHorizontal="true"
+            android:text="@string/sign_up_title"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_21ssp"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_msg"
+            android:fontFamily="@font/roboto_medium"
+            android:layout_centerHorizontal="true"
+            android:text="@string/anti_spy_msg"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_below="@id/txt_title"
+            android:textColor="@color/alphaWhite"
+            android:textSize="@dimen/_11ssp"
+            android:gravity="center"/>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/auth_btn_drawable"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_10sdp"
+            android:text="@string/signup"
+            android:layout_above="@id/btn_login"
+            android:layout_marginStart="@dimen/_33sdp"
+            android:layout_marginEnd="@dimen/_33sdp"
+            android:textColor="#450F49"
+            android:textAllCaps="false"
+            android:textSize="@dimen/_15ssp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/auth_btn_drawable"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_10sdp"
+            android:text="@string/login"
+            android:layout_marginStart="@dimen/_33sdp"
+            android:layout_marginEnd="@dimen/_33sdp"
+            android:textAllCaps="false"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/_18sdp"
+            android:textColor="#450F49"
+            android:textSize="@dimen/_15ssp" />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

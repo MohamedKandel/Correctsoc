@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/_200sdp"
+    android:layout_height="match_parent"
+    android:background="@drawable/menu_drawable">
+
+    <ImageView
+        android:id="@+id/img_logo"
+        android:layout_width="@dimen/_160sdp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/_9sdp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/correct" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/img_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_logo"
+        android:layout_marginTop="@dimen/_48sdp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/menu_list_item" />
+<!--
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_version"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        android:textColor="@color/alphaWhite"
+        android:text="Hello"
+        android:fontFamily="@font/roboto_regular"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+-->
+</androidx.constraintlayout.widget.ConstraintLayout>

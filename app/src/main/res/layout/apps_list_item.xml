@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/apps_item_drawable"
+    android:layout_margin="@dimen/_12sdp">
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/applications"
+        android:src="@drawable/android_icon" />
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_toEndOf="@id/app_icon"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/applications"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_13ssp" />
+
+    <TextView
+        android:id="@+id/pkg_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_toEndOf="@id/app_icon"
+        android:layout_below="@id/app_name"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/applications"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_10ssp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/delete_icon"
+        android:background="@android:color/transparent"
+        android:padding="@dimen/_6sdp"
+        android:id="@+id/delete_icon"/>
+
+
+
+</RelativeLayout>

@@ -1,0 +1,108 @@
+<resources>
+    <string name="app_name" translatable="false">Correctsoc</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="version">Version</string>
+    <string name="select_language">Select your language</string>
+    <string name="english" translatable="false">English</string>
+    <string name="arabic" translatable="false">عربي</string>
+    <string name="network_scanner">Services</string>
+    <string name="self_test">Check router status</string>
+    <string name="device_scan">Connected wifi device Scan</string>
+    <string name="apps_scan">Scan spy apps</string>
+    <string name="premium">Buy premium</string>
+    <string name="support">Get support</string>
+    <string name="setting">Setting</string>
+    <string name="reward">Free reward</string>
+    <string name="community">Join the community</string>
+    <string name="rate">Rate us</string>
+    <string name="about">About us</string>
+    <string name="logout">Logout</string>
+    <string name="general">General</string>
+    <string name="notification">Notification setting</string>
+    <string name="language">Language</string>
+    <string name="share">Share with friends</string>
+    <string name="feedback">Send feedback</string>
+    <string name="security">Security</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="self_pen">Check router status</string>
+    <string name="self_body_1">Test your network for\nexternal open ports</string>
+    <string name="self_body_2">Please, Enable the Wi-Fi\nconnection on the network\nyou would like to scan</string>
+    <string name="self_body_3">IP- Address Detected\n</string>
+    <string name="start">Start</string>
+    <string name="next">Next</string>
+    <string name="detect_msg">Detecting IP</string>
+    <string name="patience">Please wait…</string>
+    <string name="stop">Stop</string>
+    <string name="app_status">App Status</string>
+    <string name="safe">Safe</string>
+    <string name="warning">Warning</string>
+    <string name="danger">Danger</string>
+    <string name="scan">Scan</string>
+
+    <string name="applications">Threats application</string>
+    <string name="scan_device">Scanning connected devices…</string>
+    <string name="conntected_devices">Connected devices</string>
+    <string name="web_scan">Scan secure link</string>
+    <string name="about_txt">At CorrectSOC, our mission is to protect your privacy and ensure the security of your personal information.\nWe understand the increasing threats in the digital world, and our app is designed to provide you with top-notch protection against spyware and malicious activities.\nOur app is designed to detect and neutralize spyware, ensuring that your personal information remains confidential.</string>
+    <string name="enter_link">Enter Link</string>
+    <string name="enter_ip">Enter IP</string>
+    <string name="device_name">• Device name</string>
+    <string name="port">Port :</string>
+    <string name="Service">Service :</string>
+    <string name="Protocol">Protocol :</string>
+    <string name="Version">Version :</string>
+    <string name="CVE_Count">CPE :</string>
+    <string name="CVEs">CVEs :</string>
+    <string name="invalid_link">Invalid URL</string>
+    <string name="invalid_ip">Invalid IP Address</string>
+    <string name="scan_type">Choose Scan Type</string>
+    <string name="ip_scan">IP Scan</string>
+    <string name="router_scan">Connected Wifi devices</string>
+    <string name="id">ID :</string>
+    <string name="url">URL : </string>
+    <string name="cvss">CVSs : </string>
+    <string name="deviceName">Device Name :</string>
+    <string name="Mac">Mac Address :</string>
+    <string name="Vendor">Vendor Name :</string>
+
+    <string name="waiting_msg">Thanks for your patience, we are scanning your Wi-Fi devices now</string>
+    <string name="search">Search …</string>
+    <string name="not_found_search">Sorry, we can\'t find any device with this IP address</string>
+
+    <string name="update_title">Warning</string>
+    <string name="update_msg">There is a new version of the app on store that make you more secure\n
+    do you want to update now ?</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="anti_spy_title">Anti-Spy Application</string>
+    <string name="anti_spy_msg">Protect your privacy effortlessly with our Anti-Spy\nMobile App - Sign up now to stay secure!</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign Up</string>
+
+    <string name="sign_up_title">Welcome to CorrectSOC</string>
+    <string name="already_have_account">Already have account ?\nSign in</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="phone">Mobile number</string>
+    <string name="password">Password</string>
+    <string name="remember">Remember me</string>
+    <string name="forget_password">Forget Password ?</string>
+    <string name="new_user">Don\'t have account ? Sign up</string>
+    <string name="create_account">Create account</string>
+    <string name="full_name">Full name</string>
+    <string name="code">Code</string>
+    <string name="verification">Check your phone</string>
+    <string name="verification_msg">Please enter the verification code sent\nto</string>
+
+    <string name="verification_expires">Code expire in</string>
+    <string name="verify">Verify</string>
+    <string name="resend">Send again</string>
+    <string name="reset_password">Reset your password</string>
+    <string name="request_new_password">Please enter your new password</string>
+    <string name="password_requirement">Your password should contain\nat least 6 characters</string>
+    <string name="done">Done</string>
+
+    <string name="code_expired">Code expired, please request sending it again</string>
+</resources>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/auth_bg"
+    tools:context=".ui.auth.SignUpFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_32sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/welcome_back"
+            android:padding="@dimen/_12sdp"
+            android:src="@drawable/arrow_icon" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_fields"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:textDirection="locale"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginEnd="@dimen/_18sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:text="@string/create_account"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_25ssp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_phone"
+            style="@style/AuthInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_title"
+            android:layout_marginTop="@dimen/_25sdp"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_phone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autofillHints="phone"
+                android:drawableStart="@drawable/phone_icon"
+                android:drawablePadding="@dimen/_7sdp"
+                android:hint="@string/phone"
+                android:digits="0123456789+"
+                android:inputType="phone"
+                android:textColor="@color/white"
+                android:textColorHint="@color/alphaWhite" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_name"
+            style="@style/AuthInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_phone"
+            android:layout_marginTop="@dimen/_12sdp"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autofillHints="name"
+                android:drawableStart="@drawable/person_icon"
+                android:drawablePadding="@dimen/_7sdp"
+                android:hint="@string/full_name"
+                android:inputType="textPersonName"
+                android:textColor="@color/white"
+                android:textColorHint="@color/alphaWhite" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_password"
+            style="@style/AuthInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_name"
+            android:layout_marginTop="@dimen/_12sdp"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autofillHints="password"
+                android:drawableStart="@drawable/lock_icon"
+                android:drawablePadding="@dimen/_7sdp"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:textColor="@color/white"
+                android:textColorHint="@color/alphaWhite" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_code"
+            style="@style/AuthInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_password"
+            android:layout_marginTop="@dimen/_12sdp"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_code"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autofillHints="name"
+                android:drawableStart="@drawable/key_icon"
+                android:drawablePadding="@dimen/_7sdp"
+                android:hint="@string/code"
+                android:inputType="text"
+                android:textColor="@color/white"
+                android:textColorHint="@color/alphaWhite" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="@dimen/_31sdp"
+        android:layout_marginStart="@dimen/_34sdp"
+        android:layout_marginEnd="@dimen/_34sdp"
+        android:textDirection="locale"
+        android:layoutDirection="locale">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/register_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/auth_btn_drawable"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/signup"
+            android:textAllCaps="false"
+            android:textColor="#1C051E"
+            android:layout_alignParentTop="true"
+            android:textSize="@dimen/_15ssp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/register_btn"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:text="@string/already_have_account"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/alphaWhite"
+            android:gravity="center"
+            android:id="@+id/txt_login"
+            android:textSize="@dimen/_12ssp"/>
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

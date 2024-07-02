@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+    <gradient android:startColor="@color/purple"
+        android:endColor="@color/black"
+        android:angle="270"/>-->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:topRightRadius="@dimen/_15sdp"
+                android:bottomRightRadius="@dimen/_15sdp"
+                android:topLeftRadius="@dimen/_15sdp"
+                android:bottomLeftRadius="@dimen/_15sdp"/>
+        </shape>
+    </item>
+    <item android:drawable="@drawable/menu_bg"/>
+
+</layer-list>

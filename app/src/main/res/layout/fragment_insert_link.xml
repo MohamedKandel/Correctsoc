@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/scan_bg"
+    tools:context=".ui.webIPScan.InsertLinkFragment">
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_27sdp"
+        android:layoutDirection="locale"
+        android:paddingStart="@dimen/_9sdp"
+        android:paddingEnd="@dimen/_9sdp"
+        android:textDirection="locale"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/_7sdp"
+            android:src="@drawable/arrow_icon" />
+
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/web_scan"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16ssp" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/txt_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:digits="0123456789."
+        android:layout_marginStart="@dimen/_13sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_13sdp"
+        android:background="@drawable/link_drawable"
+        android:drawableStart="@drawable/link_icon"
+        android:drawablePadding="@dimen/_20sdp"
+        android:fontFamily="@font/roboto_regular"
+        android:hint="@string/enter_link"
+        android:textColor="@color/white"
+        android:textColorHint="@color/alphaWhite"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintTop_toBottomOf="@id/header_layout" />
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/white"
+        android:layout_marginBottom="@dimen/_30sdp"
+        app:cornerRadius="@dimen/_15sdp"
+        android:layout_marginStart="@dimen/_36sdp"
+        android:layout_marginEnd="@dimen/_36sdp"
+        android:text="@string/scan"
+        android:textColor="@color/dark_purple"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="@dimen/_15ssp"
+        android:paddingTop="@dimen/_12sdp"
+        android:id="@+id/btn_scan"
+        android:paddingBottom="@dimen/_12sdp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

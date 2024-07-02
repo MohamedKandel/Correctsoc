@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="version">الإصدار</string>
+    <string name="select_language">أختار اللغة</string>
+    <string name="network_scanner">الخدمات</string>
+    <string name="self_test">فحص سلامة الراوتر</string>
+    <string name="device_scan">فحص الاجهزة المتصلة بالواي فاي</string>
+    <string name="apps_scan">كشف تطبيقات التجسس</string>
+    <string name="premium">شراء النسخة المتطورة</string>
+    <string name="support">الدعم الفني</string>
+    <string name="setting">الإعدادات</string>
+    <string name="reward">الهدية المجانية</string>
+    <string name="community">الإنضمام للمجموعة</string>
+    <string name="rate">تقييمنا</string>
+    <string name="about">حولنا</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="general">العام</string>
+    <string name="notification">إعدادات الاشعارات</string>
+    <string name="language">اللغة</string>
+    <string name="share">مشاركة مع الأصدقاء</string>
+    <string name="feedback">شاركنا رأيك</string>
+    <string name="security">الأمان</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="self_pen">فحص سلامة الراوتر</string>
+    <string name="self_body_1">اختبر شبكتك\nلفحص المنافذ المفتوحة</string>
+    <string name="self_body_2">برجاء الاتصال على شبكة الواي فاي\nالتي ترغب في فحصها</string>
+    <string name="self_body_3">عنوان IP المُكتشف\n</string>
+    <string name="start">ابدأ</string>
+    <string name="next">التالي</string>
+    <string name="detect_msg">اكتشاف IP</string>
+    <string name="patience">برجاء الانتظار …</string>
+    <string name="stop">إيقاف</string>
+    <string name="app_status">حالة التطبيقات</string>
+    <string name="safe">آمن</string>
+    <string name="warning">تحذير</string>
+    <string name="danger">خطر</string>
+    <string name="scan">فحص</string>
+
+    <string name="applications">تطبيقات تهدد الهاتف</string>
+    <string name="scan_device">فحص الأجهزة المتصلة …</string>
+    <string name="conntected_devices">الأجهزة المتصلة بالواي فاي</string>
+    <string name="web_scan">فحص أمان الروابط</string>
+    <string name="about_txt">في CorrectSOC، مهمتنا هي حماية خصوصيتك وضمان أمان معلوماتك الشخصية.\nنحن نتفهم التهديدات المتزايدة في العالم الرقمي، وقد تم تصميم تطبيقنا ليوفر لك حماية من الدرجة الأولى ضد برامج التجسس والأنشطة الضارة.\nم تصميم تطبيقنا لاكتشاف برامج التجسس وإبطال مفعولها، مما يضمن بقاء معلوماتك الشخصية سرية.</string>
+    <string name="enter_link">أكتب الرابط</string>
+    <string name="enter_ip">أدخل عنوان IP</string>
+    <string name="device_name">• اسم الجهاز</string>
+    <string name="port">المنفذ : </string>
+    <string name="Service">الخدمة : </string>
+    <string name="Protocol">بروتوكول : </string>
+    <string name="Version">الإصدار : </string>
+    <string name="CVE_Count">التعداد الشائع للمنصات :</string>
+    <string name="CVEs">وصف الثغرة :</string>
+    <string name="invalid_link">الرابط غير صالح</string>
+    <string name="invalid_ip">عنوان IP غير صالح</string>
+    <string name="scan_type">اختار نوع الفحص</string>
+    <string name="ip_scan">فحص عنوان IP</string>
+    <string name="router_scan">الأجهزة المتصلة على الواي فاي</string>
+    <string name="id">بطاقة التعريف :</string>
+    <string name="url">الرابط : </string>
+    <string name="cvss">مدى الخطورة : </string>
+    <string name="deviceName">اسم الجهاز :</string>
+    <string name="Mac">عنوان MAC :</string>
+    <string name="Vendor">اسم البائع :</string>
+
+    <string name="waiting_msg">شكرا على صبرك نحن نفحص الآن الاجهزة المتصلة بشبكة الواي فاي الخاصة بك</string>
+    <string name="search">بحث …</string>
+    <string name="not_found_search">للأسف لم يتم العثور على عنوان الـ IP هذا</string>
+
+    <string name="update_title">تحذير</string>
+    <string name="update_msg">هناك نسخة جديدة من تطبيقنا على المتجر والتي تجعلك أمن بشكل اكبر\n
+    هل تريد تحميلها الآن ؟</string>
+
+    <string name="ok">حسنًا</string>
+    <string name="cancel">إلغاء</string>
+
+    <string name="anti_spy_title">تطبيق مكافحة التجسس</string>
+    <string name="anti_spy_msg">قم بحماية خصوصيتك بسهولة من خلال تطبيق مكافحة التجسس الخاص بنا - سجل الآن لتظل آمنًا!</string>
+
+    <string name="login">تسجيل دخول</string>
+    <string name="signup">تسجيل مستخدم</string>
+
+    <string name="sign_up_title">مرحبًا بك في CorrectSOC</string>
+    <string name="already_have_account">بالفعل تمتلك حساب ؟\nتسجيل الدخول</string>
+    <string name="welcome_back">مرحبًا بك</string>
+    <string name="phone">رقم الهاتف</string>
+    <string name="password">كلمة المرور</string>
+    <string name="remember">تذكرني</string>
+    <string name="forget_password">نسيت كلمة المرور</string>
+    <string name="new_user">لا تمتلك حساب ؟ تسجيل مستخدم</string>
+    <string name="create_account">إنشاء حساب</string>
+    <string name="full_name">الاسم بالكامل</string>
+    <string name="code">الكود</string>
+    <string name="verification">تحقق من هاتفك المحمول</string>
+    <string name="verification_msg">من فضلك ادخل كود التفعيل الذي وصل\nعلى</string>
+
+    <string name="verification_expires">تنتهي صلاحية الكود بعد</string>
+    <string name="verify">تأكيد</string>
+    <string name="resend">إرسال مجددًا</string>
+    <string name="reset_password">إعادة تعيين كلمة المرور</string>
+    <string name="request_new_password">من فضلك ادخل كلمة المرور الجديدة</string>
+    <string name="password_requirement">كلمة المرور يجب ان تكون\nعلى الاقل 6 أحرف</string>
+    <string name="done">تم</string>
+
+    <string name="code_expired">انتهت صلاحية الكود من فضلك اطلب اعادة ارساله مرة اخرى</string>
+</resources>

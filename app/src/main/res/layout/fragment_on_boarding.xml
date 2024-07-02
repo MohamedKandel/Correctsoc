@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context=".ui.onBoarding.onBoardingFragment">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/_11sdp"
+        android:layout_marginEnd="@dimen/_11sdp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_18sdp"
+        android:layoutDirection="locale"
+        android:textDirection="locale"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
+            android:id="@+id/dots_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            app:dampingRatio="0.5"
+            app:dotsColor="@color/white"
+            app:dotsCornerRadius="@dimen/_20sdp"
+            app:dotsSize="@dimen/_12sdp"
+            app:dotsSpacing="@dimen/_3sdp"
+            app:dotsStrokeColor="@color/borderDots"
+            app:dotsStrokeWidth="@dimen/_2sdp"
+            app:stiffness="300" />
+
+        <ImageButton
+            android:id="@+id/nextBtn"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_below="@id/dots_indicator"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_36sdp"
+            android:background="@drawable/next_btn_drawable"
+            android:src="@drawable/icon_arrow"
+            android:contentDescription="@string/app_name"/>
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
