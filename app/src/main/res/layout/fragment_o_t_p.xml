@@ -216,20 +216,21 @@
 
         </RelativeLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_verify"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_35sdp"
             android:layout_marginTop="@dimen/_12sdp"
             android:layout_marginEnd="@dimen/_35sdp"
-            android:background="@drawable/auth_btn_drawable"
+            android:backgroundTint="@color/white"
+            app:cornerRadius="@dimen/_15sdp"
             android:fontFamily="@font/roboto_bold"
             android:paddingTop="@dimen/_10sdp"
             android:paddingBottom="@dimen/_10sdp"
             android:text="@string/verify"
             android:textAllCaps="false"
-            android:textColor="#450F49"
+            android:textColor="@color/dark_purple"
             android:textSize="@dimen/_12ssp"
             android:layout_below="@+id/timer_layout" />
 

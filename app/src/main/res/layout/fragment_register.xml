@@ -54,11 +54,11 @@
             android:gravity="center"/>
 
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/auth_btn_drawable"
+            android:backgroundTint="@color/white"
             android:fontFamily="@font/roboto_bold"
             android:paddingTop="@dimen/_10sdp"
             android:paddingBottom="@dimen/_10sdp"
@@ -66,15 +66,16 @@
             android:layout_above="@id/btn_login"
             android:layout_marginStart="@dimen/_33sdp"
             android:layout_marginEnd="@dimen/_33sdp"
-            android:textColor="#450F49"
+            android:textColor="@color/dark_purple"
+            app:cornerRadius="@dimen/_15sdp"
             android:textAllCaps="false"
             android:textSize="@dimen/_15ssp" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/auth_btn_drawable"
+            android:backgroundTint="@color/white"
             android:fontFamily="@font/roboto_bold"
             android:paddingTop="@dimen/_10sdp"
             android:paddingBottom="@dimen/_10sdp"
@@ -84,7 +85,8 @@
             android:textAllCaps="false"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/_18sdp"
-            android:textColor="#450F49"
+            android:textColor="@color/dark_purple"
+            app:cornerRadius="@dimen/_15sdp"
             android:textSize="@dimen/_15ssp" />
 
     </RelativeLayout>

@@ -138,7 +138,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/_12ssp" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/login_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -146,12 +146,15 @@
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_36sdp"
             android:layout_marginEnd="@dimen/_12sdp"
-            android:background="@drawable/auth_btn_drawable"
+            android:backgroundTint="@color/white"
             android:fontFamily="@font/roboto_bold"
             android:text="@string/login"
             android:textAllCaps="false"
-            android:textColor="#1C051E"
-            android:textSize="@dimen/_15ssp" />
+            android:textColor="@color/dark_purple"
+            android:textSize="@dimen/_15ssp"
+            app:cornerRadius="@dimen/_15sdp"
+            android:paddingTop="@dimen/_9sdp"
+            android:paddingBottom="@dimen/_9sdp"/>
 
         <TextView
             android:id="@+id/txt_signup"

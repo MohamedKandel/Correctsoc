@@ -154,15 +154,18 @@
         android:textDirection="locale"
         android:layoutDirection="locale">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/register_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/auth_btn_drawable"
+            android:backgroundTint="@color/white"
             android:fontFamily="@font/roboto_bold"
             android:text="@string/signup"
             android:textAllCaps="false"
-            android:textColor="#1C051E"
+            android:textColor="@color/dark_purple"
+            android:paddingBottom="@dimen/_9sdp"
+            android:paddingTop="@dimen/_9sdp"
+            app:cornerRadius="@dimen/_15sdp"
             android:layout_alignParentTop="true"
             android:textSize="@dimen/_15ssp" />
 
