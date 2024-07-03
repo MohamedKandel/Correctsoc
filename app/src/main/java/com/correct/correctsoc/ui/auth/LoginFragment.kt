@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
@@ -97,7 +98,16 @@ class LoginFragment : Fragment() {
         })
 
         binding.loginBtn.setOnClickListener {
-            // send credentials to server here
+            if (helper.isEmpty(binding.txtPassword, binding.txtPhone)) {
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.required_data),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                // send credentials to server here
+
+            }
         }
 
         helper.onBackPressed(this) {
@@ -128,19 +138,4 @@ class LoginFragment : Fragment() {
 
         return binding.root
     }
-
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (source != -1) {
-                        findNavController().navigate(source)
-                    } else {
-                        findNavController().navigate(R.id.askForRegisterFragment)
-                    }
-                }
-            })
-    }*/
 }

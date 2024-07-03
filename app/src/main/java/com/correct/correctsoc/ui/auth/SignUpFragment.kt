@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
@@ -39,6 +40,9 @@ class SignUpFragment : Fragment() {
         binding = FragmentSignUpBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
         usersDB = UsersDB.getDBInstance(requireContext())
+        val text = resources
+            .getString(R.string.already_have_account)
+            .replace("\n", " ")
 
         if (arguments != null) {
             source = requireArguments().getInt(SOURCE)
@@ -46,16 +50,17 @@ class SignUpFragment : Fragment() {
 
         if (helper.getLang(requireContext()).equals("en")) {
             startIndx = 23
-            endIndx = 30
+            //endIndx = 30
         } else {
             startIndx = 20
-            endIndx = 32
+            //endIndx = 32
         }
+        endIndx = text.length
 
         val span = helper.setSpannable(
             startIndx,
             endIndx,
-            resources.getString(R.string.already_have_account).replace("\n", " "),
+            text,
             resources.getColor(R.color.white, context?.theme)
         ) {
             val bundle = Bundle()
@@ -90,7 +95,22 @@ class SignUpFragment : Fragment() {
         })
 
         binding.registerBtn.setOnClickListener {
-            // send data to server here
+            if (helper.isEmpty(
+                    binding.txtPhone,
+                    binding.txtPassword,
+                    binding.txtCode,
+                    binding.txtName
+                )
+            ) {
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.required_data),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                // send data to server here
+
+            }
         }
 
         helper.onBackPressed(this) {
@@ -115,19 +135,4 @@ class SignUpFragment : Fragment() {
 
         return binding.root
     }
-
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (source != -1) {
-                        findNavController().navigate(source)
-                    } else {
-                        findNavController().navigate(R.id.registerFragment)
-                    }
-                }
-            })
-    }*/
 }

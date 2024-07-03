@@ -101,8 +101,21 @@
     <string name="resend">Send again</string>
     <string name="reset_password">Reset your password</string>
     <string name="request_new_password">Please enter your new password</string>
-    <string name="password_requirement">Your password should contain\nat least 6 characters</string>
+
+
+    <string name="instruction_title_normal">Your password, Should contain :</string>
+    <string name="instruction_title_weak">Weak password, Should contain :</string>
+    <string name="instruction_title_medium">Medium password, Should contain :</string>
+    <string name="instruction_title_strong">Strong password, Should contain :</string>
+    <string name="instruction_1">At least 6 characters</string>
+    <string name="instruction_2">At least 1 number</string>
+    <string name="instruction_3">At least 1 special character</string>
+
+
     <string name="done">Done</string>
 
     <string name="code_expired">Code expired, please request sending it again</string>
+    <string name="required_data">Please fill all required data</string>
+
+    <string name="restart_required">Installing successfully… application will restart in 5 seconds</string>
 </resources>

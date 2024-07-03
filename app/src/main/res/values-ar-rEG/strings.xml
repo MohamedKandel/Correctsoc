@@ -98,8 +98,19 @@
     <string name="resend">إرسال مجددًا</string>
     <string name="reset_password">إعادة تعيين كلمة المرور</string>
     <string name="request_new_password">من فضلك ادخل كلمة المرور الجديدة</string>
-    <string name="password_requirement">كلمة المرور يجب ان تكون\nعلى الاقل 6 أحرف</string>
+
+    <string name="instruction_title_normal">كلمة مرورك, يجب ان تحتوي على :</string>
+    <string name="instruction_title_weak">كلمة مرور ضعيفة, يجب ان تحتوي على :</string>
+    <string name="instruction_title_medium">كلمة مرور متوسطة, يجب ان تحتوي على :</string>
+    <string name="instruction_title_strong">كلمة مرور قوية, يجب ان تحتوي على :</string>
+    <string name="instruction_1">٦ أحرف على الأقل</string>
+    <string name="instruction_2">رقم على الأقل</string>
+    <string name="instruction_3">رمز خاص واحد على الأقل</string>
+
     <string name="done">تم</string>
 
     <string name="code_expired">انتهت صلاحية الكود من فضلك اطلب اعادة ارساله مرة اخرى</string>
+    <string name="required_data">من فضلك قم بملئ جميع البيانات المطلوبة</string>
+
+    <string name="restart_required">تم التثبيت بنجاح … سيتم اعادة تشغيل التطبيق في خلال ٥ ثوان</string>
 </resources>

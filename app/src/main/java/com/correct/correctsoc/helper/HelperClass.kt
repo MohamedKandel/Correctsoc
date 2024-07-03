@@ -252,4 +252,39 @@ class HelperClass {
 
         return spannableString
     }
+
+    fun isEmpty(vararg edits: EditText): Boolean {
+        var isAnyEmpty = false
+        for (edit in edits) {
+            if (edit.text.isEmpty()) {
+                isAnyEmpty = true
+                break
+            }
+        }
+        return isAnyEmpty
+    }
+
+    fun mappingNumbers(txt: String): String {
+        var str = ""
+        val map = mapOf(
+            '1' to "١",
+            '2' to "٢",
+            '3' to "٣",
+            '4' to "٤",
+            '5' to "٥",
+            '6' to "٦",
+            '7' to "٧",
+            '8' to "٨",
+            '9' to "٩",
+            '0' to "٠"
+        )
+        for (c in txt) {
+            if (c in map.keys) {
+                str += map[c]
+            } else {
+                str += c
+            }
+        }
+        return str
+    }
 }
