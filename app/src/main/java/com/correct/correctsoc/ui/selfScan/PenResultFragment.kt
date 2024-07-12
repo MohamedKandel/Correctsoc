@@ -5,14 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentPenResultBinding
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
-import com.correct.correctsoc.helper.Constants.ITEM
 import com.correct.correctsoc.helper.Constants.ROUTER
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TYPE
@@ -93,16 +91,31 @@ class PenResultFragment : Fragment() {
     }
 
     fun getIPAddress() {
-        viewModel.getUserIP()
+        viewModel.getUserIP(helper.getToken(requireContext()))
         viewModel.userIPResponse.observe(viewLifecycleOwner) {
-            if (it.ipAddress != null) {
+            if (it.isSuccess) {
+                if (it.result != null) {
+                    if (it.result.ipAddress != null) {
+                        binding.txtBody.append(it.result.ipAddress)
+                        ipAddress = it.result.ipAddress
+                    } else {
+                        if (!ipAddress.equals(helper.getIPAddress(requireContext()))) {
+                            helper.setIPAddress(requireContext(), ipAddress)
+                        }
+                    }
+                }
+            } else {
+                Toast.makeText(requireContext(),it.errorMessages,Toast.LENGTH_SHORT)
+                    .show()
+            }
+            /*if (it.ipAddress != null) {
                 binding.txtBody.append(it.ipAddress)
                 ipAddress = it.ipAddress
             } else {
                 if (!ipAddress.equals(helper.getIPAddress(requireContext()))) {
                     helper.setIPAddress(requireContext(), ipAddress)
                 }
-            }
+            }*/
         }
     }
 

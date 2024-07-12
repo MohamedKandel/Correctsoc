@@ -13,6 +13,7 @@ import com.correct.correctsoc.R
 import com.correct.correctsoc.room.UsersDB
 import com.correct.correctsoc.databinding.FragmentSplashBinding
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.mappingNumbers
 import kotlinx.coroutines.launch
 
 class SplashFragment : Fragment() {
@@ -37,7 +38,13 @@ class SplashFragment : Fragment() {
         helper = HelperClass.getInstance()
         usersDB = UsersDB.getDBInstance(requireContext())
 
-        binding.txtVersion.append(" ${helper.getAppVersion(requireContext())}")
+        val version = if (helper.getLang(requireContext()).equals("ar")) {
+            helper.getAppVersion(requireContext()).mappingNumbers()
+        } else {
+            helper.getAppVersion(requireContext())
+        }
+
+        binding.txtVersion.append(" $version")
 
         helper.onBackPressed(this) {
             requireActivity().finish()
@@ -62,7 +69,12 @@ class SplashFragment : Fragment() {
                     findNavController().navigate(R.id.onBoardingFragment)
                     helper.setFirstStartApp(false, requireContext())
                 } else {
-                    checkForUsers()
+                    if (helper.getRemember(requireContext())) {
+                        findNavController().navigate(R.id.homeFragment)
+                    } else {
+                        findNavController().navigate(R.id.registerFragment)
+                    }
+                    //checkForUsers()
                 }
             }
 
@@ -92,18 +104,4 @@ class SplashFragment : Fragment() {
         super.onDestroyView()
         countDownTimer?.cancel()
     }
-
-    /*override fun onResume() {
-        super.onResume()
-        val millis = helper.getSplashTime(requireContext())
-        if (millis in 1..<duration) {
-            val remain = duration - millis
-            startSplash(remain)
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        helper.setSplashTime(milliFinished,requireContext())
-    }*/
 }

@@ -14,6 +14,7 @@ import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentAboutBinding
 import com.correct.correctsoc.helper.Constants
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.mappingNumbers
 
 
 class AboutFragment : Fragment() {
@@ -46,7 +47,12 @@ class AboutFragment : Fragment() {
             }
         }
 
-        binding.txtVersion.append(" : ${helper.getAppVersion(requireContext())}")
+        val version = if (helper.getLang(requireContext()).equals("ar")) {
+            helper.getAppVersion(requireContext()).mappingNumbers()
+        } else {
+            helper.getAppVersion(requireContext())
+        }
+        binding.txtVersion.append(" : $version")
 
         if (sourceLayout != 0) {
             onBackPressed(sourceLayout, requireArguments())

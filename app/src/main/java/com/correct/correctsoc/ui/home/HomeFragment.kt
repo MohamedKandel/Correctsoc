@@ -1,6 +1,8 @@
 package com.correct.correctsoc.ui.home
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
@@ -9,14 +11,17 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.adapter.MenuAdapter
 import com.correct.correctsoc.data.MenuData
+import com.correct.correctsoc.data.auth.SignOutBody
 import com.correct.correctsoc.databinding.FragmentHomeBinding
 import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
@@ -24,10 +29,11 @@ import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TYPE
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnSwipeGestureListener
-import com.google.android.play.core.review.ReviewException
-import com.google.android.play.core.review.ReviewManager
-import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.android.play.core.review.model.ReviewErrorCode
+import com.correct.correctsoc.helper.buildDialog
+import com.correct.correctsoc.helper.mappingNumbers
+import com.correct.correctsoc.room.UsersDB
+import com.correct.correctsoc.ui.auth.AuthViewModel
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment(), ClickListener {
@@ -48,6 +54,8 @@ class HomeFragment : Fragment(), ClickListener {
     private lateinit var fadeIn: Animation
     private lateinit var fadeOut: Animation
     private lateinit var gestureDetector: GestureDetector
+    private lateinit var usersDB: UsersDB
+    private lateinit var viewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,6 +64,8 @@ class HomeFragment : Fragment(), ClickListener {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
+        usersDB = UsersDB.getDBInstance(requireContext())
+        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
         list = mutableListOf()
         adapter = MenuAdapter(requireContext(), list, this)
@@ -64,6 +74,21 @@ class HomeFragment : Fragment(), ClickListener {
 
         fillList()
 
+        lifecycleScope.launch {
+            val id = usersDB.dao().getUserID() ?: ""
+            val user = usersDB.dao().getUser(id)
+            if (user != null) {
+                Log.v(TAG, user.id)
+                Log.v(TAG, user.phone)
+                Log.v(TAG, user.token)
+                Log.v(TAG, user.password)
+                Log.v(TAG, user.username)
+            }
+        }
+
+        if (!helper.getDeviceStatus(requireContext())) {
+            setDeviceOn(helper.getToken(requireContext()))
+        }
 
         fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
         fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
@@ -94,27 +119,39 @@ class HomeFragment : Fragment(), ClickListener {
                 binding.dialog.root.startAnimation(fadeOut)
                 binding.dialog.root.visibility = View.GONE
             }
-
-
-            //dialog.show()
         }
 
         binding.btnAppScan.setOnClickListener {
-            findNavController().navigate(R.id.applicationScanFragment)
+            validateToken(helper.getToken(requireContext()), R.id.applicationScanFragment)
         }
 
         binding.btnIpScan.setOnClickListener {
-            findNavController().navigate(R.id.deviceScanningFragment)
+            validateToken(helper.getToken(requireContext()), R.id.deviceScanningFragment)
         }
 
         binding.btnWebScan.setOnClickListener {
             findNavController().navigate(R.id.insertLinkFragment)
         }
 
-        binding.txtVersion.append(" ${helper.getAppVersion(requireContext())}")
+        val version = if (helper.getLang(requireContext()).equals("ar")) {
+            helper.getAppVersion(requireContext()).mappingNumbers()
+        } else {
+            helper.getAppVersion(requireContext())
+        }
+
+        binding.txtVersion.append(" $version")
 
         helper.onBackPressed(this) {
-            requireActivity().finish()
+            if (isDialogVisible) {
+                isDialogVisible = false
+                binding.placeholder.visibility = View.GONE
+                binding.dialog.root.startAnimation(fadeOut)
+                binding.dialog.root.visibility = View.GONE
+            } else if (isVisible) {
+                closeMenu()
+            } else {
+                requireActivity().finish()
+            }
         }
 
         if (helper.getLang(requireContext()).equals("en")) {
@@ -172,20 +209,97 @@ class HomeFragment : Fragment(), ClickListener {
             }
         }
 
+        if (helper.isUnknownSourcesEnabled(requireContext())) {
+            val dialog = AlertDialog.Builder(requireContext())
+            dialog.setTitle("Warning")
+            dialog.setIcon(R.drawable.warning)
+            dialog.setMessage("Unknown sources is enabled, for your security you can disable it")
+            dialog.setPositiveButton("ok") { dialog, which ->
+                dialog.dismiss()
+                dialog.cancel()
+                val intent = Intent(Settings.ACTION_SECURITY_SETTINGS)
+                startActivity(intent)
+            }
+            dialog.setNegativeButton("cancel") { dialog, which ->
+                dialog.dismiss()
+                dialog.cancel()
+            }
+            dialog.setCancelable(false)
+            dialog.show()
+        }
+
         return binding.root
     }
 
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Back is pressed... Finishing the activity
-                    requireActivity().finish()
+    private fun setDeviceOn(token: String) {
+        viewModel.setDeviceOn(token)
+        val observer = object : Observer<Boolean> {
+            override fun onChanged(value: Boolean) {
+                if (value) {
+                    helper.setDeviceOnline(true, requireContext())
+                    Log.v("device status", "account online")
+                } else {
+                    Log.v("device status", "account failed to be online")
                 }
-            })
-    }*/
+                viewModel.changeDeviceStatus.removeObserver(this)
+            }
+        }
+        viewModel.changeDeviceStatus.observe(viewLifecycleOwner, observer)
+    }
+
+    private fun setDeviceOff(token: String) {
+        viewModel.setDeviceOff(token)
+        val observer = object : Observer<Boolean> {
+            override fun onChanged(value: Boolean) {
+                if (value) {
+                    helper.setDeviceOnline(false, requireContext())
+                    Log.v("device status", "account offline")
+                } else {
+                    Log.v("device status", "account failed to be offline")
+                }
+                viewModel.changeDeviceStatus.removeObserver(this)
+            }
+        }
+        viewModel.changeDeviceStatus.observe(viewLifecycleOwner, observer)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!helper.getDeviceStatus(requireContext())) {
+            setDeviceOn(helper.getToken(requireContext()))
+        }
+    }
+
+    override fun onStop() {
+        if (helper.getDeviceStatus(requireContext())) {
+            setDeviceOff(helper.getToken(requireContext()))
+        }
+        super.onStop()
+    }
+
+    private fun validateToken(token: String, layoutRes: Int) {
+        viewModel.validateToken(token)
+        val observer = object : Observer<Boolean> {
+            override fun onChanged(value: Boolean) {
+                if (value) {
+                    findNavController().navigate(layoutRes)
+                } else {
+                    AlertDialog.Builder(requireContext())
+                        .buildDialog(title = resources.getString(R.string.warning),
+                            msg = resources.getString(R.string.subscription_end),
+                            positiveButton = resources.getString(R.string.ok),
+                            positiveButtonFunction = {
+                                Log.v("Premium version", "premium version requested")
+                            }, negativeButton = resources.getString(R.string.cancel),
+                            negativeButtonFunction = {
+
+                            })
+                }
+                viewModel.validateTokenResponse.removeObserver(this)
+            }
+        }
+        viewModel.validateTokenResponse.observe(viewLifecycleOwner, observer)
+    }
 
     private fun openMenu() {
         binding.placeholder.visibility = View.VISIBLE
@@ -206,27 +320,42 @@ class HomeFragment : Fragment(), ClickListener {
         list.add(MenuData(R.drawable.premium_icon, resources.getString(R.string.premium)))
         list.add(MenuData(R.drawable.support_icon, resources.getString(R.string.support)))
         list.add(MenuData(R.drawable.setting_icon, resources.getString(R.string.setting)))
-        list.add(MenuData(R.drawable.reward_icon, resources.getString(R.string.reward)))
-        list.add(MenuData(R.drawable.community_icon, resources.getString(R.string.community)))
-        list.add(MenuData(R.drawable.rate_icon, resources.getString(R.string.rate)))
         list.add(MenuData(R.drawable.about_icon, resources.getString(R.string.about)))
         list.add(MenuData(R.drawable.logout_icon, resources.getString(R.string.logout)))
+        val version = if (helper.getLang(requireContext()).equals("ar")) {
+            helper.getAppVersion(requireContext()).mappingNumbers()
+        } else {
+            helper.getAppVersion(requireContext())
+        }
         list.add(
             MenuData(
                 0,
-                "${resources.getString(R.string.version)} : ${helper.getAppVersion(requireContext())}"
+                "${resources.getString(R.string.version)} : $version"
             )
         )
 
         adapter.updateAdapter(list)
     }
 
+    private fun signOut(body: SignOutBody, token: String) {
+        viewModel.signOut(body, token)
+        viewModel.signOutResponse.observe(viewLifecycleOwner) {
+            if (it.isSuccess) {
+                helper.setRemember(requireContext(), false)
+                findNavController().navigate(R.id.registerFragment)
+            } else {
+                Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
 
     override fun onItemClickListener(position: Int, extras: Bundle?) {
         when (position) {
             //premium
             0 -> {
                 Log.i(TAG, "onItemClickListener: premium")
+                findNavController().navigate(R.id.parentPayFragment)
             }
             //support
             1 -> {
@@ -237,29 +366,27 @@ class HomeFragment : Fragment(), ClickListener {
                 Log.i(TAG, "onItemClickListener: settings")
                 findNavController().navigate(R.id.settingFragment)
             }
-            //reward
-            3 -> {
-                Log.i(TAG, "onItemClickListener: reward")
-            }
-            //community
-            4 -> {
-                Log.i(TAG, "onItemClickListener: community")
-            }
-            //rate
-            5 -> {
-                Log.i(TAG, "onItemClickListener: rate")
-                //Uncomment line below before publishing app on google play
-                //rateApp()
-            }
             //about
-            6 -> {
+            3 -> {
                 val bundle = Bundle()
                 bundle.putInt(SOURCE, R.id.homeFragment)
                 findNavController().navigate(R.id.aboutFragment, bundle)
                 Log.i(TAG, "onItemClickListener: about")
             }
             //logout
-            7 -> {
+            4 -> {
+                lifecycleScope.launch {
+                    val id = usersDB.dao().getUserID() ?: ""
+                    val phone = usersDB.dao().getUserPhone(id) ?: ""
+                    val body = SignOutBody(
+                        phoneNumber = phone,
+                        device = helper.getDeviceID(requireContext())
+                    )
+                    signOut(body, helper.getToken(requireContext()))
+                }
+//                helper.setRemember(requireContext(), false)
+//                findNavController().navigate(R.id.registerFragment)
+
                 Log.i(TAG, "onItemClickListener: logout")
             }
         }
@@ -267,17 +394,5 @@ class HomeFragment : Fragment(), ClickListener {
 
     override fun onLongItemClickListener(position: Int, extras: Bundle?) {
 
-    }
-
-    private fun rateApp() {
-        val manager = ReviewManagerFactory.create(requireContext())
-        manager.requestReviewFlow().addOnCompleteListener {
-            if (it.isSuccessful) {
-                manager.launchReviewFlow(requireActivity(), it.result)
-            } else {
-                @ReviewErrorCode val reviewErrorCode = (it.exception as ReviewException).errorCode
-                Log.e(TAG, "rateApp: Error code $reviewErrorCode", it.exception)
-            }
-        }
     }
 }

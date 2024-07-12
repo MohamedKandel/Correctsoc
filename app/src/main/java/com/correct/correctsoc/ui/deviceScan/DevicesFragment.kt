@@ -28,6 +28,7 @@ import com.correct.correctsoc.helper.Constants.ITEM
 import com.correct.correctsoc.helper.Constants.LIST
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnSwipeGestureListener
+import com.correct.correctsoc.helper.mappingNumbers
 import tej.androidnetworktools.lib.Device
 import tej.androidnetworktools.lib.scanner.NetworkScanner
 import tej.androidnetworktools.lib.scanner.OnNetworkScanListener
@@ -226,6 +227,13 @@ class DevicesFragment : Fragment(), ClickListener {
     }
 
     private fun fillList() {
+
+        val version = if (helper.getLang(requireContext()).equals("ar")) {
+            helper.getAppVersion(requireContext()).mappingNumbers()
+        } else {
+            helper.getAppVersion(requireContext())
+        }
+
         menuList.add(MenuData(R.drawable.premium_icon, resources.getString(R.string.premium)))
         menuList.add(MenuData(R.drawable.support_icon, resources.getString(R.string.support)))
         menuList.add(MenuData(R.drawable.setting_icon, resources.getString(R.string.setting)))
@@ -237,7 +245,7 @@ class DevicesFragment : Fragment(), ClickListener {
         menuList.add(
             MenuData(
                 0,
-                "${resources.getString(R.string.version)} : ${helper.getAppVersion(requireContext())}"
+                "${resources.getString(R.string.version)} : $version"
             )
         )
 

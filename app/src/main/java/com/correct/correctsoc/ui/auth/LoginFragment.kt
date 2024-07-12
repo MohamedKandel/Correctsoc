@@ -12,12 +12,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
+import com.correct.correctsoc.data.auth.LoginBody
 import com.correct.correctsoc.databinding.FragmentLoginBinding
-import com.correct.correctsoc.helper.Constants
 import com.correct.correctsoc.helper.Constants.SOURCE
+import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.setSpannable
+import com.correct.correctsoc.room.User
+import com.correct.correctsoc.room.UsersDB
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
@@ -31,6 +38,8 @@ class LoginFragment : Fragment() {
     private var startIndx = 0
     private var endIndx = 0
     private var source = -1
+    private lateinit var usersDB: UsersDB
+    private lateinit var viewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +48,11 @@ class LoginFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
+        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        usersDB = UsersDB.getDBInstance(requireContext())
+
+        binding.progress.visibility = View.GONE
+        binding.placeholder.visibility = View.GONE
 
         if (arguments != null) {
             source = requireArguments().getInt(SOURCE)
@@ -47,8 +61,10 @@ class LoginFragment : Fragment() {
         binding.rememberLayout.setOnClickListener {
             if (!isRemember) {
                 binding.rememberIcon.setImageResource(R.drawable.check_circle_icon)
+                helper.setRemember(requireContext(), true)
             } else {
                 binding.rememberIcon.setImageResource(R.drawable.dot_icon)
+                helper.setRemember(requireContext(), false)
             }
             isRemember = !isRemember
         }
@@ -60,7 +76,7 @@ class LoginFragment : Fragment() {
             startIndx = 16
             endIndx = 28
         }
-        val span = helper.setSpannable(
+        /*val span = helper.setSpannable(
             startIndx,
             endIndx,
             resources.getString(R.string.new_user),
@@ -71,7 +87,17 @@ class LoginFragment : Fragment() {
             findNavController().navigate(R.id.signUpFragment, bundle)
         }
 
-        binding.txtSignup.text = span
+        binding.txtSignup.text = span*/
+        binding.txtSignup.setSpannable(
+            startIndx,
+            endIndx,
+            resources.getString(R.string.new_user),
+            resources.getColor(R.color.white, context?.theme)
+        ) {
+            val bundle = Bundle()
+            bundle.putInt(SOURCE, R.id.loginFragment)
+            findNavController().navigate(R.id.signUpFragment, bundle)
+        }
         binding.txtSignup.movementMethod = LinkMovementMethod.getInstance()
 
         // accept + in first of edit text only
@@ -106,7 +132,17 @@ class LoginFragment : Fragment() {
                 ).show()
             } else {
                 // send credentials to server here
+                binding.placeholder.visibility = View.VISIBLE
+                binding.progress.visibility = View.VISIBLE
+                val phone = binding.txtPhone.text.toString()
+                val password = binding.txtPassword.text.toString()
+                val body = LoginBody(
+                    deviceId = helper.getDeviceID(requireContext()),
+                    password = password,
+                    phoneNumber = phone
+                )
 
+                login(body)
             }
         }
 
@@ -131,11 +167,79 @@ class LoginFragment : Fragment() {
         }
 
         binding.txtForget.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt(SOURCE, R.id.loginFragment)
-            findNavController().navigate(R.id.OTPFragment, bundle)
+            binding.progress.visibility = View.VISIBLE
+            binding.placeholder.visibility = View.VISIBLE
+            val userPhone = binding.txtPhone.text.toString()
+            lifecycleScope.launch {
+                val id = usersDB.dao().getUserID() ?: ""
+                val phone = usersDB.dao().getUserPhone(id) ?: userPhone
+                if (phone.isNotEmpty()) {
+                    forgotPassword(phone)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        resources.getString(R.string.phone_empty),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
 
         return binding.root
+    }
+
+    private fun login(body: LoginBody) {
+        viewModel.login(body)
+        viewModel.loginResponse.observe(viewLifecycleOwner) {
+            if (it.isSuccess && it.result != null) {
+                binding.progress.visibility = View.GONE
+                binding.placeholder.visibility = View.GONE
+                lifecycleScope.launch {
+                    val id = usersDB.dao().getUserID() ?: ""
+                    if (id.isEmpty()) {
+                        val user = User(
+                            it.result.userid,
+                            it.result.name,
+                            body.password,
+                            body.phoneNumber,
+                            it.result.token
+                        )
+                        usersDB.dao().insert(user)
+                    } else {
+                        usersDB.dao().updateToken(it.result.token, it.result.userid)
+                        helper.setToken(it.result.token, requireContext())
+                        usersDB.dao().updateUsername(it.result.name, it.result.userid)
+                    }
+                    findNavController().navigate(R.id.homeFragment)
+                }
+            } else {
+                binding.progress.visibility = View.GONE
+                binding.placeholder.visibility = View.GONE
+                Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
+
+    private fun forgotPassword(phone: String) {
+        viewModel.forgetPassword(phone)
+        viewModel.forgetResponse.observe(viewLifecycleOwner) {
+            if (it.isSuccess) {
+                binding.progress.visibility = View.GONE
+                binding.placeholder.visibility = View.GONE
+                val bundle = Bundle()
+                if (it.result != null) {
+                    //bundle.putString(CODE, it.result.otp)
+                    bundle.putString(TOKEN_KEY, it.result)
+                    bundle.putInt(SOURCE, R.id.loginFragment)
+                    findNavController().navigate(R.id.OTPFragment, bundle)
+                }
+            } else {
+                binding.progress.visibility = View.GONE
+                binding.placeholder.visibility = View.GONE
+                Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 }

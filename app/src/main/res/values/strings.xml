@@ -92,7 +92,7 @@
     <string name="new_user">Don\'t have account ? Sign up</string>
     <string name="create_account">Create account</string>
     <string name="full_name">Full name</string>
-    <string name="code">Code</string>
+    <string name="code">Verification Code</string>
     <string name="verification">Check your phone</string>
     <string name="verification_msg">Please enter the verification code sent\nto</string>
 
@@ -103,14 +103,26 @@
     <string name="request_new_password">Please enter your new password</string>
 
 
-    <string name="instruction_title_normal">Your password, Should contain :</string>
-    <string name="instruction_title_weak">Weak password, Should contain :</string>
-    <string name="instruction_title_medium">Medium password, Should contain :</string>
-    <string name="instruction_title_strong">Strong password, Should contain :</string>
-    <string name="instruction_1">At least 6 characters</string>
-    <string name="instruction_2">At least 1 number</string>
-    <string name="instruction_3">At least 1 special character</string>
+    <string name="password_instruction">Your Password must be at least 6 characters and contain one number, one uppercase letter , one lowercase letter and one symbol</string>
 
+    <string name="update_password">Update password</string>
+
+    <string name="update_ur_pass">Update your password</string>
+    <string name="current_password">Current Password *</string>
+    <string name="new_password">New Password *</string>
+    <string name="confirm_password">Confirm New Password *</string>
+    <string name="astrisc" translatable="false">************</string>
+    <string name="update">Update</string>
+
+    <string name="update_details">Update details</string>
+    <string name="edit_info">Edit Information</string>
+    <string name="fname">First name</string>
+    <string name="enter_fname">Enter your first name</string>
+    <string name="enter_lname">Enter your last name</string>
+    <string name="enter_phone">Enter your phone number</string>
+    <string name="lname">Last name</string>
+
+    <string name="save">Save</string>
 
     <string name="done">Done</string>
 
@@ -118,4 +130,41 @@
     <string name="required_data">Please fill all required data</string>
 
     <string name="restart_required">Installing successfully… application will restart in 5 seconds</string>
+
+    <string name="pay_details">Payment Details</string>
+    <string name="request_info">Enter your information</string>
+    <string name="device_number">Device Number</string>
+    <string name="enter_device_number">Enter number of your devices</string>
+    <string name="duration">Duration</string>
+    <string name="total_price">Total price : </string>
+
+    <array name="durations">
+        <item>6 months</item>
+        <item>1 year</item>
+    </array>
+
+    <string name="select">Select duration</string>
+    <string name="checkout">Checkout</string>
+    <string name="payment_method">Payment method</string>
+
+    <string name="not_match">Password doesn\'t match with confirm password</string>
+    <string name="username_updated">Username updated successfully</string>
+    <string name="phone_updated">Phone updated successfully</string>
+    <string name="password_updated">Password updated successfully</string>
+    <string name="subscription_end">Your subscription is being ended, please buy a premium version</string>
+    <string name="select_payment">Select one of the payment methods</string>
+    <string name="google_pay" translatable="false">Google Pay</string>
+    <string name="activation_code">Activation Code</string>
+    <string name="google_pay_msg">Pay directly from your bank card</string>
+    <string name="activation_msg">The code that sent by Distributors</string>
+
+    <string name="phone_not_found">There is no user registered in this device before</string>
+
+    <string name="phone_empty">There is no user registered in this device before\nplease register user first or enter your phone number first</string>
+    <string name="empty_device_duration">Please enter devices number and duration first</string>
+    <string name="choose_pay">Please choose one payment method</string>
+
+    <string name="call">Call</string>
+    <string name="distributors">Distributors</string>
+    <string name="temp_phone" translatable="false">01234567890</string>
 </resources>

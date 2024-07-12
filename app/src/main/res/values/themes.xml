@@ -5,7 +5,16 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="colorPrimary">@color/dark_purple</item>
+
     </style>
+
+    <!--
+    <style name="Spinner" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:background">@drawable/spn_duration_drawable</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+    </style>
+    -->
 
     <style name="Theme.CorrectSoc" parent="Base.Theme.CorrectSoc" />
     
@@ -24,6 +33,22 @@
         <item name="hintAnimationEnabled">false</item>
         <item name="hintEnabled">false</item>
         <item name="hintTextAppearance">@color/alphaWhite</item>
+    </style>
+
+    <style name="Spinner" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxCornerRadiusBottomEnd">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusTopStart">@dimen/_8sdp</item>
+        <item name="boxStrokeColor">@color/box_stroke_color</item>
+        <item name="boxStrokeWidth">@dimen/_2sdp</item>
+        <item name="hintAnimationEnabled">false</item>
+        <item name="hintEnabled">false</item>
+        <item name="hintTextAppearance">@color/alphaWhite</item>
+    </style>
+
+    <style name="CustomAutoCompleteTextViewStyle" parent="Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox">
+        <item name="android:popupBackground">@drawable/spn_menu_drawable</item>
     </style>
 
 </resources>

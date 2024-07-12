@@ -2,19 +2,17 @@ package com.correct.correctsoc.ui.selfScan
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.correct.correctsoc.Retrofit.APIService
 import com.correct.correctsoc.Retrofit.ClientVendorRetrofit
 import com.correct.correctsoc.Retrofit.RetrofitClient
+import com.correct.correctsoc.data.ResultResponse
 import com.correct.correctsoc.data.UserIPResponse
 import com.correct.correctsoc.data.openPorts.OpenPorts
-import com.correct.correctsoc.helper.Constants.API_TAG
-import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.RetrofitResponse
 import kotlinx.coroutines.launch
 
@@ -31,33 +29,35 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
             .create(APIService::class.java)
     )
 
-    var userIPResponse = MutableLiveData<UserIPResponse>()
-    val scanResponse = MutableLiveData<OpenPorts>()
+
     val vendorResponse = MutableLiveData<String>()
     val isRequestSuccessfull = MutableLiveData<Boolean>()
+    private val _userIPResponse = MutableLiveData<UserIPResponse>()
+    private val _scanResponse = MutableLiveData<OpenPorts>()
 
-    fun getUserIP() = viewModelScope.launch {
-        val result = scanRepository.getUserIP()
+    val scanResponse: LiveData<OpenPorts> get() = _scanResponse
+    val userIPResponse:LiveData<UserIPResponse> get() = _userIPResponse
+
+    fun getUserIP(token: String) = viewModelScope.launch {
+        val result = scanRepository.getUserIP(token)
         if (result.isSuccessful) {
-            userIPResponse.postValue(result.body())
+            _userIPResponse.postValue(result.body())
         } else {
-            Log.e(API_TAG, "getUserIP: ${result.code()}")
+            _userIPResponse.postValue(result.body())
         }
     }
 
-    fun scan(input: String, context: Context) = viewModelScope.launch {
-        val result = scanRepository.scan(input)
+    fun scan(context: Context, input: String, token:String) = viewModelScope.launch {
+        val result = scanRepository.scan(input, token)
         if (result.isSuccessful) {
-            scanResponse.postValue(result.body())
+            _scanResponse.postValue(result.body())
             isRequestSuccessfull.postValue(true)
         } else {
-            Log.e(API_TAG, "scan: ${result.code()}")
-            Log.e(API_TAG, "scan: ${result.message()}")
+            _scanResponse.postValue(result.body())
             isRequestSuccessfull.postValue(false)
             Toast.makeText(context, result.message(), Toast.LENGTH_SHORT).show()
         }
     }
-
 
     fun fetchResponse(macAddress: String) {
         vendorScanRepo.getVendor(macAddress, object : RetrofitResponse<String> {

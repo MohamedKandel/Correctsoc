@@ -1,36 +1,33 @@
 package com.correct.correctsoc.helper
 
-import android.content.ClipboardManager
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import android.content.SharedPreferences.Editor
 import android.content.pm.PackageManager
-import android.graphics.LinearGradient
-import android.graphics.Shader
 import android.graphics.drawable.Drawable
-import android.os.CountDownTimer
+import android.os.Build
+import android.provider.Settings
 import android.text.SpannableString
 import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
-import android.widget.TextView
+import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import com.correct.correctsoc.data.openPorts.Port
 import com.correct.correctsoc.helper.Constants.FIRST_TIME
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
+import com.correct.correctsoc.helper.Constants.IS_LOGGED
 import com.correct.correctsoc.helper.Constants.LANG
 import com.correct.correctsoc.helper.Constants.SPLASH_TIME
-import android.text.Spannable
-import android.util.Log
-import android.widget.EditText
-import androidx.navigation.fragment.findNavController
-import com.correct.correctsoc.R
+import com.correct.correctsoc.helper.Constants.STATUS
+import com.correct.correctsoc.helper.Constants.TOKEN_KEY
+import com.correct.correctsoc.helper.Constants.TOKEN_VALUE
 
 class HelperClass {
     private lateinit var sp: SharedPreferences
@@ -51,20 +48,6 @@ class HelperClass {
         editor = sp.edit()
     }
 
-    fun setSplashTime(duration: Long, context: Context) {
-        initSP(context)
-        editor.apply {
-            putLong(SPLASH_TIME, duration)
-            commit()
-            apply()
-        }
-    }
-
-    fun getSplashTime(context: Context): Long {
-        initSP(context)
-        return sp.getLong(SPLASH_TIME, 0)
-    }
-
     fun deleteSplashTime(context: Context) {
         initSP(context)
         editor.apply {
@@ -79,6 +62,34 @@ class HelperClass {
             context.packageName, 0
         )
         return pkgInfo.versionName
+    }
+
+    fun setToken(token: String, context: Context) {
+        initSP(context)
+        editor.apply {
+            putString(TOKEN_KEY, "$TOKEN_VALUE $token")
+            commit()
+            apply()
+        }
+    }
+
+    fun getToken(context: Context): String {
+        initSP(context)
+        return sp.getString(TOKEN_KEY, "") ?: ""
+    }
+
+    fun setRemember(context: Context, isLoggedIn: Boolean) {
+        initSP(context)
+        editor.apply {
+            putBoolean(IS_LOGGED, isLoggedIn)
+            commit()
+            apply()
+        }
+    }
+
+    fun getRemember(context: Context): Boolean {
+        initSP(context)
+        return sp.getBoolean(IS_LOGGED, false)
     }
 
     fun setLang(lang: String, context: Context) {
@@ -110,7 +121,6 @@ class HelperClass {
     }
 
     fun circularAnimation(duration: Long): RotateAnimation {
-
         val anim = RotateAnimation(
             0.0f,
             360.0f,
@@ -128,17 +138,6 @@ class HelperClass {
         return anim
     }
 
-    fun gradientText(startColor: Int, endColor: Int, txtView: TextView) {
-        val paint = txtView.paint
-        val width = paint.measureText(txtView.text.toString())
-        val shader = LinearGradient(
-            0f, 0f, 0f, txtView.textSize,
-            intArrayOf(startColor, endColor),
-            floatArrayOf(0f, 1f), Shader.TileMode.CLAMP
-        )
-        txtView.paint.shader = shader
-    }
-
     fun getAppIcon(context: Context, packageName: String): Drawable? {
         val packageManager = context.packageManager
         try {
@@ -149,7 +148,7 @@ class HelperClass {
         return null
     }
 
-    fun getDeviceType(vendorName: String): String {
+    /*fun getDeviceType(vendorName: String): String {
         val map = mapOf(
             "Apple" to "Mobile Phone",
             "Samsung" to "Mobile Phone",
@@ -172,7 +171,7 @@ class HelperClass {
             }
         }
         return value
-    }
+    }*/
 
     fun isSecureSite(list: MutableList<Port>): Boolean {
         var isSecure = true
@@ -199,31 +198,6 @@ class HelperClass {
         return sp.getString(IP_ADDRESS, "") ?: ""
     }
 
-    fun setSpannable(
-        startIndex: Int,
-        endIndex: Int,
-        text: String,
-        color: Int,
-        executableFun: () -> Unit
-    ): SpannableString {
-        val spannableString = SpannableString(text)
-        val clickableSpan: ClickableSpan = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                executableFun()
-            }
-        }
-
-        spannableString.setSpan(clickableSpan, startIndex, endIndex, 0)
-        spannableString.setSpan(
-            android.text.style.ForegroundColorSpan(color),
-            startIndex,
-            endIndex,
-            0
-        )
-
-        return spannableString
-    }
-
     fun onBackPressed(fragment: Fragment, navFunction: () -> Unit) {
         (fragment.activity as AppCompatActivity).supportFragmentManager
         fragment.requireActivity().onBackPressedDispatcher.addCallback(
@@ -233,24 +207,6 @@ class HelperClass {
                     navFunction()
                 }
             })
-    }
-
-    fun colorfulTextView(
-        startIndex: Int,
-        endIndex: Int,
-        color: Int,
-        text: String
-    ): SpannableString {
-        val spannableString = SpannableString(text)
-        val colorSpan = ForegroundColorSpan(color)
-
-        // Apply the color span to the spannable string
-        spannableString.setSpan(
-            colorSpan, startIndex, endIndex,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
-        return spannableString
     }
 
     fun isEmpty(vararg edits: EditText): Boolean {
@@ -264,27 +220,58 @@ class HelperClass {
         return isAnyEmpty
     }
 
-    fun mappingNumbers(txt: String): String {
-        var str = ""
-        val map = mapOf(
-            '1' to "١",
-            '2' to "٢",
-            '3' to "٣",
-            '4' to "٤",
-            '5' to "٥",
-            '6' to "٦",
-            '7' to "٧",
-            '8' to "٨",
-            '9' to "٩",
-            '0' to "٠"
-        )
-        for (c in txt) {
-            if (c in map.keys) {
-                str += map[c]
-            } else {
-                str += c
-            }
+    @SuppressLint("HardwareIds")
+    fun getDeviceID(context: Context) =
+        Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+
+    fun generateFirstCode(): String {
+        val string = "ZXCVBNMASDFGHJKLQWERTYUIOP1234567890"
+        var code = ""
+        code += string.generatNRandom(8)
+        code += "-"
+        code += string.generatNRandom(4)
+        code += "-"
+        code += string.generatNRandom(4)
+        code += "-"
+        code += string.generatNRandom(4)
+        code += "-"
+        code += string.generatNRandom(12)
+
+        return code
+    }
+
+    private fun String.generatNRandom(length: Int): String {
+        var randomStr = ""
+        for (i in 0..<length) {
+            val random = this.indices.random()
+            randomStr += this[random]
         }
-        return str
+        return randomStr
+    }
+
+    fun isUnknownSourcesEnabled(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return context.packageManager.canRequestPackageInstalls()
+        } else {
+            val unknownSources = Settings.Secure.getInt(
+                context.contentResolver, Settings
+                    .Secure.INSTALL_NON_MARKET_APPS, 0
+            )
+            return unknownSources == 1
+        }
+    }
+
+    fun setDeviceOnline(isOnline: Boolean, context: Context) {
+        initSP(context)
+        editor.apply {
+            putBoolean(STATUS, isOnline)
+            commit()
+            apply()
+        }
+    }
+
+    fun getDeviceStatus(context: Context): Boolean {
+        initSP(context)
+        return sp.getBoolean(STATUS,false) ?: false
     }
 }

@@ -145,4 +145,39 @@
         android:name="com.correct.correctsoc.ui.auth.ResetPasswordFragment"
         android:label="fragment_reset_password"
         tools:layout="@layout/fragment_reset_password" />
+    <fragment
+        android:id="@+id/updatePasswordFragment"
+        android:name="com.correct.correctsoc.ui.auth.UpdatePasswordFragment"
+        android:label="fragment_update_password"
+        tools:layout="@layout/fragment_update_password" />
+    <fragment
+        android:id="@+id/editInfoFragment"
+        android:name="com.correct.correctsoc.ui.auth.EditInfoFragment"
+        android:label="fragment_edit_info"
+        tools:layout="@layout/fragment_edit_info" />
+    <fragment
+        android:id="@+id/parentPayFragment"
+        android:name="com.correct.correctsoc.ui.pay.ParentPayFragment"
+        android:label="fragment_parent_pay"
+        tools:layout="@layout/fragment_parent_pay" />
+    <fragment
+        android:id="@+id/paymentDetailsFragment"
+        android:name="com.correct.correctsoc.ui.pay.PaymentDetailsFragment"
+        android:label="fragment_payment_details"
+        tools:layout="@layout/fragment_payment_details" />
+    <fragment
+        android:id="@+id/paymentMethodFragment"
+        android:name="com.correct.correctsoc.ui.pay.PaymentMethodFragment"
+        android:label="fragment_payment_method"
+        tools:layout="@layout/fragment_payment_method" />
+    <fragment
+        android:id="@+id/paymentSuccessFragment"
+        android:name="com.correct.correctsoc.ui.pay.PaymentSuccessFragment"
+        android:label="fragment_payment_success"
+        tools:layout="@layout/fragment_payment_success" />
+    <fragment
+        android:id="@+id/distributorsFragment"
+        android:name="com.correct.correctsoc.ui.pay.DistributorsFragment"
+        android:label="fragment_distributors"
+        tools:layout="@layout/fragment_distributors" />
 </navigation>

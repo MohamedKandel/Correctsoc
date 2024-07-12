@@ -8,6 +8,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
+import android.util.JsonToken
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -16,11 +17,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.correct.correctsoc.databinding.ActivityMainBinding
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.room.UsersDB
+import com.correct.correctsoc.ui.auth.AuthViewModel
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
@@ -30,13 +35,12 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
-import com.google.android.play.core.ktx.startUpdateFlowForResult
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity()  {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController

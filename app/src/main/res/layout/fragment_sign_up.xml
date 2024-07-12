@@ -30,10 +30,10 @@
         android:id="@+id/layout_fields"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layoutDirection="locale"
-        android:textDirection="locale"
         android:layout_marginStart="@dimen/_18sdp"
         android:layout_marginEnd="@dimen/_18sdp"
+        android:layoutDirection="locale"
+        android:textDirection="locale"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,10 +64,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:autofillHints="phone"
+                android:digits="0123456789+"
                 android:drawableStart="@drawable/phone_icon"
                 android:drawablePadding="@dimen/_7sdp"
                 android:hint="@string/phone"
-                android:digits="0123456789+"
                 android:inputType="phone"
                 android:textColor="@color/white"
                 android:textColorHint="@color/alphaWhite" />
@@ -116,6 +116,8 @@
                 android:inputType="textPassword"
                 android:textColor="@color/white"
                 android:textColorHint="@color/alphaWhite" />
+            <include android:id="@+id/layout_pass_instructions"
+                layout="@layout/msg_bubble"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -145,42 +147,61 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="@dimen/_31sdp"
         android:layout_marginStart="@dimen/_34sdp"
         android:layout_marginEnd="@dimen/_34sdp"
+        android:layout_marginBottom="@dimen/_31sdp"
+        android:layoutDirection="locale"
         android:textDirection="locale"
-        android:layoutDirection="locale">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/register_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:backgroundTint="@color/white"
             android:fontFamily="@font/roboto_bold"
+            android:paddingTop="@dimen/_9sdp"
+            android:paddingBottom="@dimen/_9sdp"
             android:text="@string/signup"
             android:textAllCaps="false"
             android:textColor="@color/dark_purple"
-            android:paddingBottom="@dimen/_9sdp"
-            android:paddingTop="@dimen/_9sdp"
-            app:cornerRadius="@dimen/_15sdp"
-            android:layout_alignParentTop="true"
-            android:textSize="@dimen/_15ssp" />
+            android:textSize="@dimen/_15ssp"
+            app:cornerRadius="@dimen/_15sdp" />
 
         <TextView
+            android:id="@+id/txt_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/register_btn"
-            android:layout_marginTop="@dimen/_6sdp"
-            android:text="@string/already_have_account"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/roboto_medium"
-            android:textColor="@color/alphaWhite"
             android:gravity="center"
-            android:id="@+id/txt_login"
-            android:textSize="@dimen/_12ssp"/>
+            android:text="@string/already_have_account"
+            android:textColor="@color/alphaWhite"
+            android:textSize="@dimen/_12ssp" />
 
     </RelativeLayout>
+
+    <View
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/alphaBlack" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/purple"
+        android:indeterminateTintMode="src_atop"
+        app:layout_constraintBottom_toBottomOf="@id/placeholder"
+        app:layout_constraintEnd_toEndOf="@id/placeholder"
+        app:layout_constraintStart_toStartOf="@id/placeholder"
+        app:layout_constraintTop_toTopOf="@id/placeholder" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -53,6 +53,14 @@ class SettingFragment : Fragment() {
             onBackPressed(R.id.homeFragment, null)
         }
 
+        binding.detailsLayout.setOnClickListener {
+            findNavController().navigate(R.id.editInfoFragment)
+        }
+
+        binding.passwordLayout.setOnClickListener {
+            findNavController().navigate(R.id.updatePasswordFragment)
+        }
+
         binding.aboutLayout.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt(SOURCE, R.id.settingFragment)

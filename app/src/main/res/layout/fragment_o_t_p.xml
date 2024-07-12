@@ -85,9 +85,8 @@
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:background="#80868181"
-                android:digits="0123456789"
                 android:gravity="center"
-                android:inputType="number"
+
                 android:maxLength="1"
                 android:paddingTop="@dimen/_9sdp"
                 android:paddingBottom="@dimen/_9sdp"
@@ -103,9 +102,8 @@
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:background="#80868181"
-                android:digits="0123456789"
                 android:gravity="center"
-                android:inputType="number"
+
                 android:maxLength="1"
                 android:paddingTop="@dimen/_9sdp"
                 android:paddingBottom="@dimen/_9sdp"
@@ -121,9 +119,9 @@
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:background="#80868181"
-                android:digits="0123456789"
+
                 android:gravity="center"
-                android:inputType="number"
+
                 android:maxLength="1"
                 android:paddingTop="@dimen/_9sdp"
                 android:paddingBottom="@dimen/_9sdp"
@@ -139,9 +137,9 @@
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:background="#80868181"
-                android:digits="0123456789"
+
                 android:gravity="center"
-                android:inputType="number"
+
                 android:maxLength="1"
                 android:paddingTop="@dimen/_9sdp"
                 android:paddingBottom="@dimen/_9sdp"
@@ -157,9 +155,9 @@
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
                 android:background="#80868181"
-                android:digits="0123456789"
+
                 android:gravity="center"
-                android:inputType="number"
+
                 android:maxLength="1"
                 android:paddingTop="@dimen/_9sdp"
                 android:paddingBottom="@dimen/_9sdp"
@@ -174,9 +172,9 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="#80868181"
-                android:digits="0123456789"
+
                 android:gravity="center"
-                android:inputType="number"
+
                 android:maxLength="1"
                 android:paddingTop="@dimen/_9sdp"
                 android:paddingBottom="@dimen/_9sdp"
@@ -254,5 +252,22 @@
             app:strokeWidth="@dimen/_1sdp" />
     </RelativeLayout>
 
+    <View
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/alphaBlack" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/purple"
+        android:indeterminateTintMode="src_atop"
+        app:layout_constraintBottom_toBottomOf="@id/placeholder"
+        app:layout_constraintEnd_toEndOf="@id/placeholder"
+        app:layout_constraintStart_toStartOf="@id/placeholder"
+        app:layout_constraintTop_toTopOf="@id/placeholder" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

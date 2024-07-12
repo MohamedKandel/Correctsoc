@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/radius_card_drawable"
+    tools:context=".ui.pay.PaymentDetailsFragment">
+
+
+    <TextView
+        android:id="@+id/txt_pay_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
+        android:fontFamily="@font/barlow_semi_condensed_semibold"
+        android:text="@string/pay_details"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_15ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
+        android:fontFamily="@font/barlow_regular"
+        android:text="@string/request_info"
+        android:textColor="@color/alphaWhite"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_pay_details" />
+
+    <TextView
+        android:id="@+id/txtView_device_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/device_number"
+        android:textColor="@color/alphaWhite"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_info" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_device_number"
+        style="@style/AuthInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
+        app:endIconMode="clear_text"
+        app:layout_constraintTop_toBottomOf="@id/txtView_device_number">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txt_device_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autofillHints="phone"
+            android:digits="0123456789"
+            android:drawablePadding="@dimen/_7sdp"
+            android:hint="@string/enter_device_number"
+            android:inputType="number"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/alphaWhite"
+            android:textColorHint="@color/alphaWhite" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/txtView_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_18sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/duration"
+        android:textColor="@color/alphaWhite"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_device_number" />
+
+    <!--            <Spinner-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                style="@style/Spinner"-->
+    <!--                android:layout_marginStart="@dimen/_24sdp"-->
+    <!--                android:layout_marginEnd="@dimen/_24sdp"-->
+    <!--                app:layout_constraintTop_toBottomOf="@id/txtView_duration"-->
+    <!--                android:popupBackground="@drawable/spn_menu_drawable"-->
+    <!--                android:layout_marginTop="@dimen/_12sdp"-->
+    <!--                android:id="@+id/spn_duration"/>-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_duration"
+        style="@style/Spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
+        app:layout_constraintTop_toBottomOf="@+id/txtView_duration">
+
+        <AutoCompleteTextView
+            android:id="@+id/spn_duration"
+            style="@style/CustomAutoCompleteTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/select"
+            android:inputType="none"
+            android:textColor="@color/alphaWhite"
+            android:fontFamily="@font/roboto_bold"
+            android:textColorHint="@color/alphaWhite" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:layout_marginBottom="@dimen/_16sdp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/totalceck" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/totalceck"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginBottom="@dimen/_23sdp"
+        android:layout_marginEnd="@dimen/_18sdp"
+        android:backgroundTint="@android:color/transparent"
+        app:contentPadding="@dimen/_18sdp"
+        app:cornerRadius="@dimen/_8sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/next_btn"
+        app:strokeColor="@color/white"
+        app:strokeWidth="@dimen/_2sdp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutDirection="locale"
+            android:textDirection="locale">
+
+            <TextView
+                android:id="@+id/txtView_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/barlow_semi_condensed_semibold"
+                android:text="@string/total_price"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_15ssp" />
+
+            <TextView
+                android:id="@+id/txt_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:layout_toEndOf="@+id/txtView_total"
+                android:fontFamily="@font/barlow_black"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_18ssp" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/next_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:backgroundTint="@color/white"
+        android:fontFamily="@font/roboto_bold"
+        android:paddingTop="@dimen/_9sdp"
+        android:paddingBottom="@dimen/_9sdp"
+        android:text="@string/next"
+        android:textAllCaps="false"
+        android:textColor="@color/dark_purple"
+        android:textSize="@dimen/_15ssp"
+        app:cornerRadius="@dimen/_15sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/_25sdp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

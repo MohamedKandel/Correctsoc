@@ -5,7 +5,7 @@ object Constants {
     const val LANG = "lang"
     const val FIRST_TIME = "first start"
     const val IP_ADDRESS = "ip address"
-    const val BASE_URL = "http://correctsoc.somee.com/api/ExternalScanner/"
+    const val BASE_URL = "http://correctsocandroid.somee.com/api/"
     const val VENDOR_BASE_URL = "https://api.macvendors.com/"
     const val API_TAG = "api message"
     const val PKG_NAME = "package name"
@@ -20,4 +20,14 @@ object Constants {
     const val PORTS_LIST = "ports list"
     const val ROUTER = "router ip"
     const val DEVICE_NAME = "device name"
+    const val TAG = "Tag mohamed"
+    const val TOKEN_KEY = "token"
+    const val TOKEN_VALUE = "Bearer"
+    const val IS_LOGGED = "is logged in"
+    const val MONTHS = "months"
+    const val DEVICES = "devices"
+    const val PRICE = "price"
+    const val STATUS = "device status"
+    // problem with EGP
+    const val CURRENCY = "USD"
 }

@@ -1,19 +1,15 @@
 package com.correct.correctsoc.ui.selfScan
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.format.Formatter
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
@@ -79,10 +75,17 @@ class DetectingFragment : Fragment() {
     }
 
     private fun getAPIAddress() {
-        viewModel.getUserIP()
+        viewModel.getUserIP(helper.getToken(requireContext()))
         viewModel.userIPResponse.observe(viewLifecycleOwner) {
-            ipAddress = it.ipAddress
-            helper.setIPAddress(requireContext(), ipAddress)
+            if (it.isSuccess) {
+                if (it.result != null) {
+                    ipAddress = it.result.ipAddress
+                    helper.setIPAddress(requireContext(), ipAddress)
+                }
+            } else {
+                Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 
@@ -109,21 +112,4 @@ class DetectingFragment : Fragment() {
         }
 
     }
-
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    findNavController().navigate(R.id.selfPenFragment)
-                }
-            })
-    }*/
-
-    /*fun getRouterIpAddress(context: Context): String {
-        val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        val dhcpInfo = wifiManager.dhcpInfo
-        return Formatter.formatIpAddress(dhcpInfo.gateway)
-    }*/
 }

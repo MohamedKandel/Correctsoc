@@ -13,13 +13,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
+import com.correct.correctsoc.data.auth.AuthResponse
+import com.correct.correctsoc.data.auth.ConfirmPhoneBody
+import com.correct.correctsoc.data.auth.UpdatePhoneBody
+import com.correct.correctsoc.data.auth.ValidateOTPBody
 import com.correct.correctsoc.databinding.FragmentOTPBinding
 import com.correct.correctsoc.helper.Constants.SOURCE
+import com.correct.correctsoc.helper.Constants.TAG
+import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.VerificationTextFilledListener
+import com.correct.correctsoc.room.User
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
 
@@ -37,6 +47,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
     //private var smsReceiver: SmsReceiver? = null
     private var countDownTimer: CountDownTimer? = null
     private lateinit var usersDB: UsersDB
+    private lateinit var viewModel: AuthViewModel
 
 
     override fun onCreateView(
@@ -47,6 +58,10 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         binding = FragmentOTPBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
         usersDB = UsersDB.getDBInstance(requireContext())
+        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+
+        binding.placeholder.visibility = View.GONE
+        binding.progress.visibility = View.GONE
 
         if (arguments != null) {
             source = requireArguments().getInt(SOURCE)
@@ -63,6 +78,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         )
         changeFocus(array, this)
 
+        getUserPhone()
 
         if (helper.getLang(requireContext()).equals("ar")) {
             binding.btnBack.rotation = 180f
@@ -86,10 +102,17 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
 
         startCountDownTimer()
 
-        getUserPhone()
+        //startCountDownTimer()
 
         binding.btnResend.setOnClickListener {
             countDownTimer?.cancel()
+            lifecycleScope.launch {
+                binding.placeholder.visibility = View.VISIBLE
+                binding.progress.visibility = View.VISIBLE
+                val id = usersDB.dao().getUserID() ?: ""
+                val phone = usersDB.dao().getUserPhone(id) ?: ""
+                resendOTP(phone)
+            }
             startCountDownTimer()
         }
 
@@ -100,16 +123,86 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
 
     private fun getUserPhone() {
         lifecycleScope.launch {
-            val phone = usersDB.dao().getUserPhone() ?: "+201066168221"
+            val id = usersDB.dao().getUserID() ?: ""
+            val phone = if (id.isNotEmpty()) {
+                usersDB.dao().getUserPhone(id) ?: ""
+            } else {
+                usersDB.dao().getUserPhone("1")
+            }
             binding.txtMsg.append(" $phone")
         }
     }
 
+    private fun confirmOTP(body: ConfirmPhoneBody) {
+        viewModel.confirmOTP(body)
+        viewModel.otpResponse.observe(viewLifecycleOwner) {
+            if (it.isSuccess) {
+                binding.placeholder.visibility = View.GONE
+                binding.progress.visibility = View.GONE
+                if (it.result != null) {
+                    lifecycleScope.launch {
+                        Log.v(TAG, it.result.userid)
+                        Log.v(TAG, it.result.name)
+                        Log.v(TAG, it.result.token)
+                        val password = usersDB.dao().getPassword("1") ?: ""
+                        val phone = usersDB.dao().getUserPhone("1") ?: ""
+                        val user = User(
+                            it.result.userid, it.result.name,
+                            password, phone, it.result.token
+                        )
+                        usersDB.dao().insert(user)
+                        usersDB.dao().deleteUser("1")
+                        helper.setToken(it.result.token, requireContext())
+                        Log.i(TAG, it.result.token)
+                        findNavController().navigate(R.id.homeFragment)
+                    }
+                }
+            } else {
+                binding.placeholder.visibility = View.GONE
+                binding.progress.visibility = View.GONE
+                Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun resendOTP(phone: String) {
+        viewModel.resendOTP(phone)
+        viewModel.otpResponse.observe(viewLifecycleOwner) {
+            if (it.isSuccess) {
+                binding.placeholder.visibility = View.GONE
+                binding.progress.visibility = View.GONE
+                if (it.result != null) {
+                    lifecycleScope.launch {
+                        Log.v(TAG, it.result.userid)
+                        Log.v(TAG, it.result.name)
+                        Log.v(TAG, it.result.token)
+                        val password = usersDB.dao().getPassword("1") ?: ""
+                        val phone = usersDB.dao().getUserPhone("1") ?: ""
+                        val user = User(
+                            it.result.userid, it.result.name,
+                            password, phone, it.result.token
+                        )
+                        helper.setToken(it.result.token, requireContext())
+                        usersDB.dao().insert(user)
+                        usersDB.dao().deleteUser("1")
+                        findNavController().navigate(R.id.homeFragment)
+                    }
+                }
+            } else {
+                binding.placeholder.visibility = View.GONE
+                binding.progress.visibility = View.GONE
+                Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun startCountDownTimer() {
-        countDownTimer = object : CountDownTimer(120000, 1000) {
+        binding.txtTime.visibility = View.VISIBLE
+        binding.txtExpires.text = resources.getString(R.string.verification_expires)
+        // 3 minute valid
+        countDownTimer = object : CountDownTimer(180000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 binding.txtTime.text = reformatMillis(millisUntilFinished)
-                //Log.i(TAG, "onTick: millisUntilFinished=$millisUntilFinished")
             }
 
             override fun onFinish() {
@@ -117,12 +210,6 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                 binding.txtTime.visibility = View.GONE
                 binding.txtExpires.text = resources.getString(R.string.code_expired)
                 Log.i("Timer finished mohamed", "onFinish:")
-                /*if (helper.isFirstStartApp(requireContext())) {
-                    findNavController().navigate(R.id.onBoardingFragment)
-                    helper.setFirstStartApp(false, requireContext())
-                } else {
-                    checkForUsers()
-                }*/
             }
 
         }.start()
@@ -255,7 +342,95 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
 
         // send verification code to server
         Log.i("Verification mohamed", "onCreateView: $verification")
+        lifecycleScope.launch {
+            val id = usersDB.dao().getUserID() ?: ""
+            val phone = usersDB.dao().getUserPhone(id) ?: ""
+            binding.placeholder.visibility = View.VISIBLE
+            binding.progress.visibility = View.VISIBLE
+            when (source) {
+                R.id.loginFragment -> {
+                    // forgot password clicked
+                    if (phone.isNotEmpty()) {
+                        val body = ValidateOTPBody(verification, phone)
+                        validateOTP(body)
+                    } else {
+                        Toast.makeText(
+                            requireContext(), resources.getString(R.string.phone_not_found),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    /*if (code.equals(verification) || code.isEmpty()) {
+                    // correct
+//                    } else {
+//                        // wrong
+//                        Toast.makeText(
+//                            requireContext(),
+//                            resources.getString(R.string.not_match),
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }*/
+                }
 
+                R.id.signUpFragment -> {
+                    // register account clicked
+                    confirmOTP(ConfirmPhoneBody(phone, verification))
+                }
+
+                R.id.editInfoFragment -> {
+                    // update phone clicked
+                    lifecycleScope.launch {
+                        val id = usersDB.dao().getUserID() ?: ""
+                        val phone = usersDB.dao().getUserPhone(id) ?: ""
+                        val body = UpdatePhoneBody(
+                            userId = id, newPhone = phone,
+                            otp = verification
+                        )
+                        updatePhone(body, helper.getToken(requireContext()))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun validateOTP(body: ValidateOTPBody) {
+        viewModel.validateOTP(body)
+        val observer = object : Observer<AuthResponse> {
+            override fun onChanged(value: AuthResponse) {
+                if (value.isSuccess) {
+                    binding.placeholder.visibility = View.GONE
+                    binding.progress.visibility = View.GONE
+                    val token = requireArguments().getString(TOKEN_KEY, "") ?: ""
+                    val bundle = Bundle()
+                    bundle.putString(TOKEN_KEY, token)
+                    findNavController().navigate(R.id.resetPasswordFragment, bundle)
+                } else {
+                    binding.placeholder.visibility = View.GONE
+                    binding.progress.visibility = View.GONE
+                    Toast.makeText(requireContext(), value.errorMessages, Toast.LENGTH_SHORT)
+                        .show()
+                }
+                viewModel.validateOTPResponse.removeObserver(this)
+            }
+        }
+        viewModel.validateOTPResponse.observe(viewLifecycleOwner, observer)
+    }
+
+    private fun updatePhone(body: UpdatePhoneBody, token: String) {
+        viewModel.updatePhone(body, token)
+        viewModel.updatePhoneResponse.observe(viewLifecycleOwner) {
+            if (it.isSuccess) {
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.phone_updated),
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+                findNavController().navigate(R.id.homeFragment)
+            } else {
+                Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 
     /*override fun onStart() {

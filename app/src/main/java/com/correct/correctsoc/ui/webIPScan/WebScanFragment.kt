@@ -201,7 +201,7 @@ class WebScanFragment : Fragment(), ClickListener {
     }
 
     private fun scanning(input: String) {
-        viewModel.scan(input, requireContext())
+        viewModel.scan(requireContext(), input, helper.getToken(requireContext()))
         val mediatorLiveData = MediatorLiveData<Pair<OpenPorts, Boolean>>()
         mediatorLiveData.addSource(viewModel.scanResponse) {
             val isSuccessful = viewModel.isRequestSuccessfull.value ?: false
@@ -211,8 +211,7 @@ class WebScanFragment : Fragment(), ClickListener {
         mediatorLiveData.addSource(viewModel.isRequestSuccessfull) {
             val openPorts = viewModel.scanResponse.value ?: OpenPorts(
                 "", "",
-                "", "", "", "", "", "",
-                "", listOf(Port("", 0, "", "", "", listOf(CvEs(0.0, "", ""))))
+                listOf(Port("", 0, "", "", "", listOf(CvEs(0.0, "", ""))))
             )
             mediatorLiveData.value = Pair(openPorts, it)
         }
@@ -264,8 +263,10 @@ class WebScanFragment : Fragment(), ClickListener {
                     binding.imgSecurity.visibility = View.VISIBLE
                 } else {
                     Log.v("Error mohamed", "null")
-                    Toast.makeText(requireContext(),resources.getString(R.string.invalid_link),
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(), resources.getString(R.string.invalid_link),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             binding.loadingLayout.visibility = View.GONE

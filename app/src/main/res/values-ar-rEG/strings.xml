@@ -6,7 +6,7 @@
     <string name="self_test">فحص سلامة الراوتر</string>
     <string name="device_scan">فحص الاجهزة المتصلة بالواي فاي</string>
     <string name="apps_scan">كشف تطبيقات التجسس</string>
-    <string name="premium">شراء النسخة المتطورة</string>
+    <string name="premium">شراء النسخة البريميم</string>
     <string name="support">الدعم الفني</string>
     <string name="setting">الإعدادات</string>
     <string name="reward">الهدية المجانية</string>
@@ -89,7 +89,7 @@
     <string name="new_user">لا تمتلك حساب ؟ تسجيل مستخدم</string>
     <string name="create_account">إنشاء حساب</string>
     <string name="full_name">الاسم بالكامل</string>
-    <string name="code">الكود</string>
+    <string name="code">رمز التفعيل</string>
     <string name="verification">تحقق من هاتفك المحمول</string>
     <string name="verification_msg">من فضلك ادخل كود التفعيل الذي وصل\nعلى</string>
 
@@ -99,13 +99,28 @@
     <string name="reset_password">إعادة تعيين كلمة المرور</string>
     <string name="request_new_password">من فضلك ادخل كلمة المرور الجديدة</string>
 
-    <string name="instruction_title_normal">كلمة مرورك, يجب ان تحتوي على :</string>
-    <string name="instruction_title_weak">كلمة مرور ضعيفة, يجب ان تحتوي على :</string>
-    <string name="instruction_title_medium">كلمة مرور متوسطة, يجب ان تحتوي على :</string>
-    <string name="instruction_title_strong">كلمة مرور قوية, يجب ان تحتوي على :</string>
-    <string name="instruction_1">٦ أحرف على الأقل</string>
-    <string name="instruction_2">رقم على الأقل</string>
-    <string name="instruction_3">رمز خاص واحد على الأقل</string>
+    <string name="password_instruction">كلمة المرور يجب ان تكون على الاقل 6 احرف ، تحتوي على رقم، حرف كبير، حرف صغير و رمز خاص</string>
+
+    <string name="update_password">تحديث كلمة المرور</string>
+
+    <string name="update_ur_pass">تحديث كلمة المرور الخاصة بك</string>
+    <string name="current_password">كلمة المرور الحالية *</string>
+    <string name="new_password">كلمة المرور الجديدة *</string>
+    <string name="confirm_password">تأكيد كلمة المرور الجديدة *</string>
+
+    <string name="update">تحديث</string>
+
+    <string name="update_details">تحديث البيانات</string>
+    <string name="edit_info">تعديل البيانات</string>
+
+    <string name="fname">الاسم الأول</string>
+    <string name="lname">الاسم الأخير</string>
+
+    <string name="enter_fname">ادخل اسمك الاول</string>
+    <string name="enter_lname">ادخل اسمك الاخير</string>
+    <string name="enter_phone">ادخل رقم هاتفك</string>
+
+    <string name="save">حفظ</string>
 
     <string name="done">تم</string>
 
@@ -113,4 +128,36 @@
     <string name="required_data">من فضلك قم بملئ جميع البيانات المطلوبة</string>
 
     <string name="restart_required">تم التثبيت بنجاح … سيتم اعادة تشغيل التطبيق في خلال ٥ ثوان</string>
+
+    <string name="pay_details">تفاصيل الدفع</string>
+    <string name="request_info">أدخل بياناتك</string>
+    <string name="device_number">عدد الأجهزة</string>
+    <string name="enter_device_number">أدخل عدد الأجهزة</string>
+    <string name="duration">المدة</string>
+    <string name="total_price">السعر الإجمالي : </string>
+    <array name="durations">
+        <item>٦ أشهر</item>
+        <item>سنة واحدة</item>
+    </array>
+
+    <string name="select">أختار المدة</string>
+    <string name="checkout">الدفع</string>
+
+    <string name="payment_method">طريقة الدفع</string>
+    <string name="not_match">كلمة المرور لا تتطابق مع تأكيد كلمة المرور</string>
+    <string name="username_updated">تم تعديل كلمة المرور بنجاح</string>
+    <string name="phone_updated">تم تعديل رقم الهاتف المحمول بنجاح</string>
+    <string name="password_updated">تم تعديل كلمة المرور بنجاح</string>
+    <string name="subscription_end">تم انتهاء صلاحية اشتراكك من فضلك ادفع للنسخة البريميم</string>
+    <string name="select_payment">أختار واحدة من طرق الدفع التالية</string>
+    <string name="activation_code">كود التفعيل</string>
+    <string name="google_pay_msg">ادفع مباشرة من بطاقتك المصرفية</string>
+    <string name="activation_msg">الرمز الذي أرسله الموزعون</string>
+    <string name="phone_not_found">لا يوجد مستخدم مسجل على هذا الهاتف من قبل</string>
+    <string name="phone_empty">لا يوجد مستخدم مسجل على هذا الهاتف من قبل\nمن فضلك سجل مستخدم أولًا او ادخل رقم هاتفك</string>
+    <string name="empty_device_duration">من فضلك ادخل عدد الاجهزة والمدة المراد شرائها</string>
+    <string name="choose_pay">من فضلك اختار طريقة الدفع</string>
+
+    <string name="call">مكالمة</string>
+    <string name="distributors">الموزعون</string>
 </resources>

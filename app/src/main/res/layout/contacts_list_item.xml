@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_9sdp">
+
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="@dimen/_2sdp"
+        android:layout_height="0dp"
+        android:background="@drawable/contact_view_drawable"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/view">
+
+        <ImageView
+            android:id="@+id/phone_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/call"
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/phone_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/txt_contact_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:text="@string/call"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp"
+
+            app:layout_constraintBottom_toBottomOf="@+id/phone_icon"
+            app:layout_constraintStart_toEndOf="@id/phone_icon"
+            app:layout_constraintTop_toTopOf="@id/phone_icon" />
+
+        <ImageView
+            android:id="@+id/more_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/call"
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/arrow_down_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/phone_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/phone_icon" />
+
+        <ImageView
+            android:id="@+id/call_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:contentDescription="@string/call"
+            android:paddingStart="@dimen/_1sdp"
+            android:paddingTop="@dimen/_5sdp"
+            android:paddingEnd="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_5sdp"
+            android:src="@drawable/phone_icon"
+            app:layout_constraintStart_toEndOf="@id/phone_icon"
+            app:layout_constraintTop_toBottomOf="@id/txt_contact_name"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/txt_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:text="@string/temp_phone"
+            android:textColor="@color/alphaWhite"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toBottomOf="@+id/call_icon"
+            app:layout_constraintStart_toEndOf="@id/call_icon"
+            app:layout_constraintTop_toTopOf="@+id/call_icon" />
+
+        <ImageView
+            android:id="@+id/wa_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:paddingStart="@dimen/_1sdp"
+            android:paddingEnd="@dimen/_4sdp"
+            android:src="@drawable/wa"
+            app:layout_constraintBottom_toBottomOf="@+id/call_icon"
+            app:layout_constraintStart_toEndOf="@id/txt_phone_number"
+            app:layout_constraintTop_toBottomOf="@id/txt_contact_name" />
+
+        <TextView
+            android:id="@+id/txt_wa_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:text="@string/temp_phone"
+            android:textColor="@color/alphaWhite"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toBottomOf="@+id/wa_icon"
+            app:layout_constraintStart_toEndOf="@id/wa_icon"
+            app:layout_constraintTop_toTopOf="@+id/wa_icon" />
+
+        <ImageView
+            android:id="@+id/img_vod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:src="@drawable/vod"
+            app:layout_constraintStart_toStartOf="@id/call_icon"
+            app:layout_constraintTop_toBottomOf="@id/call_icon" />
+
+        <ImageView
+            android:id="@+id/img_etisalat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_7sdp"
+            android:src="@drawable/etisalat"
+            app:layout_constraintBottom_toBottomOf="@+id/img_vod"
+            app:layout_constraintStart_toEndOf="@+id/img_vod"
+            app:layout_constraintTop_toTopOf="@+id/img_vod" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_7sdp"
+            android:src="@drawable/ip"
+            app:layout_constraintBottom_toBottomOf="@+id/img_etisalat"
+            app:layout_constraintStart_toEndOf="@+id/img_etisalat"
+            app:layout_constraintTop_toTopOf="@+id/img_etisalat" />
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_1sdp"
+            app:layout_constraintTop_toBottomOf="@+id/img_vod"
+            app:layout_constraintStart_toStartOf="@+id/txt_contact_name"
+            app:layout_constraintEnd_toEndOf="@+id/more_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@color/alphaWhite"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

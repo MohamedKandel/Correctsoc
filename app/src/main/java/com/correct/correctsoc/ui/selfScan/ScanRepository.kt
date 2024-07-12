@@ -1,6 +1,5 @@
 package com.correct.correctsoc.ui.selfScan
 
-import android.net.MacAddress
 import com.correct.correctsoc.Retrofit.APIService
 import com.correct.correctsoc.data.UserIPResponse
 import com.correct.correctsoc.data.openPorts.OpenPorts
@@ -14,22 +13,18 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class ScanRepository(private val apiService: APIService) {
-    suspend fun getUserIP(): Response<UserIPResponse> =
+
+    suspend fun getUserIP(token: String): Response<UserIPResponse> =
         withContext(Dispatchers.IO) {
-            apiService.getUserIP()
+            apiService.getUserIP(token)
         }
 
-    suspend fun scan(input: String): Response<OpenPorts> =
+    suspend fun scan(input: String, token: String): Response<OpenPorts> =
         withContext(Dispatchers.IO) {
-            apiService.Scan(input)
+            apiService.scan(input, token)
         }
 
-    /*suspend fun getVendor(macAddress: String): Response<ResponseBody> =
-        withContext(Dispatchers.IO) {
-            apiService.getVendor(macAddress)
-        }*/
-
-    fun getVendor(macAddress: String, callback: RetrofitResponse<String>){
+    fun getVendor(macAddress: String, callback: RetrofitResponse<String>) {
         apiService.getVendor(macAddress).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful && response.body() != null) {
@@ -44,12 +39,13 @@ class ScanRepository(private val apiService: APIService) {
                         if (errorBody != null) {
                             val jsonParser = JsonParser()
                             val errorJson = jsonParser.parse(errorBody).asJsonObject
-                            val errorDetail = errorJson.getAsJsonObject("errors").get("detail").asString
+                            val errorDetail =
+                                errorJson.getAsJsonObject("errors").get("detail").asString
                             callback.onSuccess(errorDetail)
                         } else {
                             callback.onFailed("Unknown error")
                         }
-                    }catch (ex: Exception) {
+                    } catch (ex: Exception) {
                         callback.onFailed(ex.message.toString())
                     }
                 }
