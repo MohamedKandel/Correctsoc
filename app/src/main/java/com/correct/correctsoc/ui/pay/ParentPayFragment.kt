@@ -68,6 +68,9 @@ class ParentPayFragment : Fragment(), NextStepListener {
         } else if (currentFragment is PaymentMethodFragment) {
             replaceFragment(PaymentDetailsFragment())
             changeSteps(1)
+        } else if (currentFragment is DistributorsFragment) {
+            replaceFragment(PaymentMethodFragment())
+            changeSteps(2)
         } else if (currentFragment is PaymentSuccessFragment) {
             replaceFragment(PaymentMethodFragment())
             changeSteps(2)
@@ -101,6 +104,16 @@ class ParentPayFragment : Fragment(), NextStepListener {
         transaction.replace(R.id.frame_layout, fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    fun displayHeader(isHeaderVisible: Boolean) {
+        if (isHeaderVisible) {
+            binding.layoutStepper.visibility = View.VISIBLE
+            binding.txtTitle.visibility = View.GONE
+        } else {
+            binding.layoutStepper.visibility = View.INVISIBLE
+            binding.txtTitle.visibility = View.VISIBLE
+        }
     }
 
     fun changeSteps(index: Int) {

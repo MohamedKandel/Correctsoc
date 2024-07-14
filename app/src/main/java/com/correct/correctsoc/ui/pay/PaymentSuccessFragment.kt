@@ -37,8 +37,8 @@ class PaymentSuccessFragment : Fragment() {
                     childFragmentManager.popBackStack()
                     return
                 }
-                val registerFragment = this@PaymentSuccessFragment.parentFragment as ParentPayFragment
-                registerFragment.changeSteps(2)
+                val parentPayFragment = this@PaymentSuccessFragment.parentFragment as ParentPayFragment
+                parentPayFragment.changeSteps(2)
                 parentFragmentManager.popBackStack()
             }
         }

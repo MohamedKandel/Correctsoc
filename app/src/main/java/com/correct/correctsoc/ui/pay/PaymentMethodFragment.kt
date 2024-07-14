@@ -134,6 +134,10 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                     binding.placeholder.visibility = View.GONE
                     binding.progress.visibility = View.GONE
                     googlePayClient.requestPayment(requireActivity(), googlePayRequest)
+                } else {
+                    (parentFragment as? ParentPayFragment)?.replaceFragment(
+                        DistributorsFragment()
+                    , isHeaderVisible = false)
                 }
             }
 

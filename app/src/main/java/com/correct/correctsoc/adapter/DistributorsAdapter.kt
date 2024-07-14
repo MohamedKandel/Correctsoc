@@ -2,6 +2,7 @@ package com.correct.correctsoc.adapter;
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.correct.correctsoc.R
 import com.correct.correctsoc.data.pay.DistributorsModel
 import com.correct.correctsoc.helper.ClickListener
+import com.correct.correctsoc.helper.Constants.PHONE_NUMBER
+import com.correct.correctsoc.helper.Constants.WA_NUMBER
 
 class DistributorsAdapter(
     private val context: Context,
@@ -77,19 +80,41 @@ class DistributorsAdapter(
 
             hideViews(true, this)
 
+            // open whatsapp for that number
+            txt_wa_number.setOnClickListener {
+                val number = txt_wa_number.text.toString().trim()
+                val bundle = Bundle()
+                bundle.putString(WA_NUMBER, number)
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
+            }
+            wa_icon.setOnClickListener {
+                val number = txt_wa_number.text.toString().trim()
+                val bundle = Bundle()
+                bundle.putString(WA_NUMBER, number)
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
+            }
+            // open call dial for that number
+            txt_phone_number.setOnClickListener {
+                val number = txt_phone_number.text.toString().trim()
+                val bundle = Bundle()
+                bundle.putString(PHONE_NUMBER, number)
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
+            }
+            call_icon.setOnClickListener {
+                val number = txt_phone_number.text.toString().trim()
+                val bundle = Bundle()
+                bundle.putString(PHONE_NUMBER, number)
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
+            }
+
             more_icon.setOnClickListener {
-                /*if (!moreDetails) {
-                    hideViews(true, this)
-                } else {
-                    hideViews(false, this)
-                }*/
-                hideViews(false,this)
+                hideViews(false, this)
                 moreDetails = true
                 listener.onItemClickListener(bindingAdapterPosition, null)
             }
 
             less_icon.setOnClickListener {
-                hideViews(true,this)
+                hideViews(true, this)
                 moreDetails = false
             }
 

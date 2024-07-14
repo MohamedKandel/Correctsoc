@@ -61,7 +61,6 @@ class PaymentDetailsFragment : Fragment() {
                     return
                 }
                 findNavController().navigate(R.id.homeFragment)
-
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)

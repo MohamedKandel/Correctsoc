@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
@@ -30,6 +31,7 @@ import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.VerificationTextFilledListener
+import com.correct.correctsoc.helper.appendFilter
 import com.correct.correctsoc.room.User
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
@@ -78,6 +80,15 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
 
         if (arguments != null) {
             source = requireArguments().getInt(SOURCE)
+        }
+
+        binding.apply {
+            txtFirstDigit.appendFilter(InputFilter.AllCaps())
+            txtSecondDigit.appendFilter(InputFilter.AllCaps())
+            txtThirdDigit.appendFilter(InputFilter.AllCaps())
+            txtFourthDigit.appendFilter(InputFilter.AllCaps())
+            txtFifthDigit.appendFilter(InputFilter.AllCaps())
+            txtSixthDigit.appendFilter(InputFilter.AllCaps())
         }
 
         binding.txtFirstDigit.requestFocus()
