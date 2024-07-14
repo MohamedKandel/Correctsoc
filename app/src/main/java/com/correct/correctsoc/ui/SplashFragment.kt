@@ -79,7 +79,6 @@ class SplashFragment : Fragment() {
                 Log.i(TAG, "onFinish: ${milliFinished}")
                 if (helper.isFirstStartApp(requireContext())) {
                     findNavController().navigate(R.id.onBoardingFragment)
-                    helper.setFirstStartApp(false, requireContext())
                 } else {
                     if (helper.getRemember(requireContext())) {
                         findNavController().navigate(R.id.homeFragment)

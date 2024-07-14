@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
         }
 
         checkForUpdate()
-        Toast.makeText(this, "${helper.getDeviceStatus(this)}", Toast.LENGTH_SHORT).show()
+        Log.d("account status", "${helper.getDeviceStatus(this)}")
 
         val navHost = supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
         navController = navHost.navController

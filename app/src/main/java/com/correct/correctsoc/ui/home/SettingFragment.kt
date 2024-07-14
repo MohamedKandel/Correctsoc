@@ -62,9 +62,15 @@ class SettingFragment : Fragment() {
         }
 
         if (sourceFragment != R.id.homeFragment) {
-            onBackPressed(sourceFragment, requireArguments())
+//            helper.onBackPressed(sourceFragment, requireArguments())
+            helper.onBackPressed(this) {
+                findNavController().navigate(sourceFragment, requireArguments())
+            }
         } else {
-            onBackPressed(R.id.homeFragment, null)
+            helper.onBackPressed(this) {
+                findNavController().navigate(R.id.homeFragment)
+            }
+            //onBackPressed(R.id.homeFragment, null)
         }
 
         binding.detailsLayout.setOnClickListener {
@@ -94,7 +100,7 @@ class SettingFragment : Fragment() {
         return binding.root
     }
 
-    private fun onBackPressed(layoutID: Int, bundle: Bundle?) {
+    /*private fun onBackPressed(layoutID: Int, bundle: Bundle?) {
         (activity as AppCompatActivity).supportFragmentManager
         requireActivity().onBackPressedDispatcher.addCallback(
             requireActivity() /* lifecycle owner */,
@@ -104,7 +110,7 @@ class SettingFragment : Fragment() {
                     findNavController().navigate(layoutID, bundle)
                 }
             })
-    }
+    }*/
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.settingFragment)

@@ -21,6 +21,7 @@ import com.correct.correctsoc.data.auth.LoginBody
 import com.correct.correctsoc.databinding.FragmentLoginBinding
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
+import com.correct.correctsoc.helper.Constants.TOKEN_VALUE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.setSpannable
@@ -216,11 +217,11 @@ class LoginFragment : Fragment() {
                             it.result.name,
                             body.password,
                             body.phoneNumber,
-                            it.result.token
+                            "$TOKEN_VALUE ${it.result.token}"
                         )
                         usersDB.dao().insert(user)
                     } else {
-                        usersDB.dao().updateToken(it.result.token, it.result.userid)
+                        usersDB.dao().updateToken("$TOKEN_VALUE ${it.result.token}", it.result.userid)
                         helper.setToken(it.result.token, requireContext())
                         usersDB.dao().updateUsername(it.result.name, it.result.userid)
                     }

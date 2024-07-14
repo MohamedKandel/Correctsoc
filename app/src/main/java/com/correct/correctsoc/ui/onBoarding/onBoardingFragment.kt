@@ -75,6 +75,7 @@ class onBoardingFragment : Fragment() {
                 pageNumber++
                 binding.viewPager.currentItem = pageNumber
             } else {
+                helper.setFirstStartApp(false, requireContext())
                 findNavController().navigate(R.id.langFragment)
             }
             Log.v("Page number", "$pageNumber")
@@ -89,26 +90,9 @@ class onBoardingFragment : Fragment() {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
                 Log.d("page number","$position")
                 pageNumber = position
-//                if (position <= 2) {
-//                    pageNumber = position
-//                } else {
-//                    findNavController().navigate(R.id.langFragment)
-//                }
             }
         })
 
         return binding.root
     }
-
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Back is pressed... Finishing the activity
-                    requireActivity().finish()
-                }
-            })
-    }*/
 }

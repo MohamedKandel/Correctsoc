@@ -91,23 +91,6 @@ class CVEsFragment : Fragment(), ClickListener {
         return binding.root
     }
 
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    Log.i(
-                        "device name mohamed", "handleOnBackPressed: ${
-                            requireArguments()
-                                .getString(DEVICE_NAME)
-                        }"
-                    )
-                    findNavController().navigate(R.id.webScanFragment, requireArguments())
-                }
-            })
-    }*/
-
     override fun onItemClickListener(position: Int, extras: Bundle?) {
 //        TODO("Not yet implemented")
         val url = extras?.getString(URL, "") ?: ""

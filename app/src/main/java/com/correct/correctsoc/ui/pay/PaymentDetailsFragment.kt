@@ -151,15 +151,25 @@ class PaymentDetailsFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
                     devices = s.toString().toInt()
+                    binding.totalceck.visibility = View.VISIBLE
+                    binding.line.visibility = View.VISIBLE
+                } else {
+                    binding.totalceck.visibility = View.GONE
+                    binding.line.visibility = View.GONE
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty()) {
                     devices = s.toString().toInt()
+                    binding.totalceck.visibility = View.VISIBLE
+                    binding.line.visibility = View.VISIBLE
                     if (devices > 0 && months > 0) {
                         getCost(devices, months, years)
                     }
+                } else {
+                    binding.totalceck.visibility = View.GONE
+                    binding.line.visibility = View.GONE
                 }
             }
         })

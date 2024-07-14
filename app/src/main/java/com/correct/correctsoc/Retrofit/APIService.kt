@@ -15,6 +15,7 @@ import com.correct.correctsoc.data.auth.UpdateUsernameBody
 import com.correct.correctsoc.data.auth.ValidateOTPBody
 import com.correct.correctsoc.data.openPorts.OpenPorts
 import com.correct.correctsoc.data.pay.SubscibeGooglePayBody
+import com.correct.correctsoc.data.pay.SubscribeCodeBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -118,6 +119,9 @@ interface APIService {
 
     @POST("Payment/Subscribe")
     suspend fun subscribeWithGooglePay(@Body body: SubscibeGooglePayBody): Response<ForgotResponse>
+
+    @POST("User/Subscribe")
+    suspend fun subscribeWithCode(@Body body: SubscribeCodeBody): Response<ForgotResponse>
 
     // get vendor name of device with mac address
     @GET("{macAddress}")

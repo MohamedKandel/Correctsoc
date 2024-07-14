@@ -291,18 +291,6 @@ class DevicesFragment : Fragment(), ClickListener {
         isVisible = false
     }
 
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Back is pressed... Finishing the activity
-                    findNavController().navigate(R.id.homeFragment)
-                }
-            })
-    }*/
-
     override fun onItemClickListener(position: Int, extras: Bundle?) {
         //TODO("Not yet implemented")
         val model: DevicesData

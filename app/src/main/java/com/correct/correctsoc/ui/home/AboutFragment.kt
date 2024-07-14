@@ -69,9 +69,22 @@ class AboutFragment : Fragment() {
         binding.txtVersion.append(" : $version")
 
         if (sourceLayout != 0) {
-            onBackPressed(sourceLayout, requireArguments())
+//            onBackPressed(sourceLayout, requireArguments())
+            helper.onBackPressed(this) {
+                if (arguments != null) {
+                    val source = requireArguments().getInt(Constants.SOURCE, 0)
+                    if (source != 0) {
+                        findNavController().navigate(sourceLayout, requireArguments())
+                    } else {
+                        findNavController().navigate(R.id.settingFragment)
+                    }
+                }
+            }
         } else {
-            onBackPressed(R.id.settingFragment, null)
+            helper.onBackPressed(this) {
+                findNavController().navigate(R.id.settingFragment)
+            }
+//            onBackPressed(R.id.settingFragment, null)
         }
 
         val url = ""
@@ -109,7 +122,7 @@ class AboutFragment : Fragment() {
         return binding.root
     }
 
-    private fun onBackPressed(layoutRes: Int, bundle: Bundle?) {
+    /*private fun onBackPressed(layoutRes: Int, bundle: Bundle?) {
         (activity as AppCompatActivity).supportFragmentManager
         requireActivity().onBackPressedDispatcher.addCallback(
             requireActivity() /* lifecycle owner */,
@@ -125,7 +138,7 @@ class AboutFragment : Fragment() {
                     }
                 }
             })
-    }
+    }*/
 
     override fun onResume() {
         super.onResume()

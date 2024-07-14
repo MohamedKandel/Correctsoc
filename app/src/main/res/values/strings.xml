@@ -167,4 +167,6 @@
     <string name="call">Call</string>
     <string name="distributors">Distributors</string>
     <string name="temp_phone" translatable="false">01234567890</string>
+
+    <string name="invalid_code">Invalid activation code</string>
 </resources>

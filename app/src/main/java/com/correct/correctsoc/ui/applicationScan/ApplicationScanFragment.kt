@@ -44,7 +44,10 @@ class ApplicationScanFragment : Fragment() {
         fragmentListener.onFragmentChangedListener(R.id.applicationScanFragment)
         binding.circularImage.startAnimation(helper.circularAnimation(3000))
 
-        onBackPressed()
+        helper.onBackPressed(this) {
+            findNavController().navigate(R.id.homeFragment)
+        }
+
         binding.btnScan.setOnClickListener {
             findNavController().navigate(R.id.scanningFragment)
         }
@@ -63,18 +66,6 @@ class ApplicationScanFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.applicationScanFragment)
-    }
-
-    private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Back is pressed... Finishing the activity
-                    findNavController().navigate(R.id.homeFragment)
-                }
-            })
     }
 
 }

@@ -67,7 +67,9 @@ class AppScanResultFragment : Fragment() {
                 findNavController().navigate(R.id.APKsFragment, requireArguments())
             }
         }
-        onBackPressed()
+        helper.onBackPressed(this) {
+            findNavController().navigate(R.id.applicationScanFragment)
+        }
 
         return binding.root
     }
@@ -75,18 +77,6 @@ class AppScanResultFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.appScanResultFragment)
-    }
-
-    private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Back is pressed... Finishing the activity
-                    findNavController().navigate(R.id.applicationScanFragment)
-                }
-            })
     }
 
     override fun onDestroyView() {

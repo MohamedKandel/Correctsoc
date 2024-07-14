@@ -101,7 +101,10 @@ class ScanningFragment : Fragment() {
 
 
 
-        onBackPressed()
+        helper.onBackPressed(this) {
+            stopOperations()
+            findNavController().navigate(R.id.applicationScanFragment)
+        }
 
         return binding.root
     }
@@ -212,19 +215,6 @@ class ScanningFragment : Fragment() {
         // Cancel fetch devices job
         fetchAppssJob?.cancel()
         findNavController().navigate(R.id.applicationScanFragment)
-    }
-
-    private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Back is pressed... Finishing the activity
-                    stopOperations()
-                    findNavController().navigate(R.id.applicationScanFragment)
-                }
-            })
     }
 
 }

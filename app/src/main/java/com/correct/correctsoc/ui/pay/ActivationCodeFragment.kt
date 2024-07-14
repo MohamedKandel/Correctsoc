@@ -14,11 +14,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.correct.correctsoc.R
+import com.correct.correctsoc.data.auth.forget.ForgotResponse
+import com.correct.correctsoc.data.pay.SubscribeCodeBody
 import com.correct.correctsoc.databinding.FragmentActivationCodeBinding
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.appendFilter
+import com.correct.correctsoc.room.UsersDB
+import kotlinx.coroutines.launch
 
 class ActivationCodeFragment : Fragment() {
 
@@ -26,6 +33,8 @@ class ActivationCodeFragment : Fragment() {
     private lateinit var helper: HelperClass
     private var deletePressed = false
     private lateinit var fragmentListener: FragmentChangedListener
+    private lateinit var viewModel: PayViewModel
+    private lateinit var usersDB: UsersDB
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,6 +56,8 @@ class ActivationCodeFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentActivationCodeBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
+        usersDB = UsersDB.getDBInstance(requireContext())
+        viewModel = ViewModelProvider(this)[PayViewModel::class.java]
 
         fragmentListener.onFragmentChangedListener(R.id.activationCodeFragment)
         // make edit text accept uppercase letters only
@@ -80,7 +91,44 @@ class ActivationCodeFragment : Fragment() {
             }
         })
 
+        binding.btnDone.setOnClickListener {
+            val code = binding.txtActivationCode.text.toString()
+            if (code.isNotEmpty() && code.length == 39) {
+                lifecycleScope.launch {
+                    val id = usersDB.dao().getUserID() ?: ""
+                    val phone = usersDB.dao().getUserPhone(id) ?: ""
+                    if (phone.isNotEmpty()) {
+                        val body = SubscribeCodeBody(
+                            code = code,
+                            deviceId = helper.getDeviceID(requireContext()),
+                            phone = phone
+                        )
+                        subscribe(body)
+                    }
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.invalid_code),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
         return binding.root
+    }
+
+    private fun subscribe(body: SubscribeCodeBody) {
+        viewModel.subscribeWithCode(body)
+        val observer = object : Observer<ForgotResponse> {
+            override fun onChanged(value: ForgotResponse) {
+                if (value.isSuccess) {
+                    Log.v("subscription", "Subscribed successfully")
+                }
+                viewModel.subscribeWithCodeResponse.removeObserver(this)
+            }
+        }
+        viewModel.subscribeWithCodeResponse.observe(viewLifecycleOwner, observer)
     }
 
     override fun onResume() {

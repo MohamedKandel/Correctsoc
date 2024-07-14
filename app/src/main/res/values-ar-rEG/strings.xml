@@ -160,4 +160,6 @@
 
     <string name="call">مكالمة</string>
     <string name="distributors">الموزعون</string>
+
+    <string name="invalid_code">كود تفعيل غير صالح</string>
 </resources>

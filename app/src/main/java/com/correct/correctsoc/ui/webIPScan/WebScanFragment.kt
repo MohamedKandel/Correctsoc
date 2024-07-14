@@ -311,17 +311,6 @@ class WebScanFragment : Fragment(), ClickListener {
 //        TODO("Not yet implemented")
     }
 
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    onBackButtonPressed()
-                }
-            })
-    }*/
-
     private fun onBackButtonPressed() {
         val source = requireArguments().getString(TYPE, "")
         if (source.isNotEmpty()) {
