@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:digits="0123456789."
+            android:autofillHints="name"
             android:layout_marginBottom="@dimen/_6sdp"
             android:background="@drawable/search_drawable"
             android:drawableEnd="@drawable/search_icon"
@@ -56,6 +57,7 @@
             android:layout_below="@id/txt_search"
             android:background="@android:color/transparent"
             android:padding="@dimen/_7sdp"
+            android:contentDescription="@string/welcome_back"
             android:src="@drawable/arrow_icon" />
 
         <TextView
