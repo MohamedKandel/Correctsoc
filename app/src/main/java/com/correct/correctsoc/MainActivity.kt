@@ -8,8 +8,6 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -86,8 +84,6 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
 //        enableEdgeToEdge()
         setContentView(binding.root)
 
-        //setDeviceOff()
-
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
@@ -114,8 +110,6 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
             override fun onChanged(value: Boolean) {
                 if (value) {
                     helper.setDeviceOnline(false,this@MainActivity)
-                } else {
-                    //Toast.makeText(this@MainActivity, "Failed", Toast.LENGTH_SHORT).show()
                 }
                 viewModel.changeDeviceStatus.removeObserver(this)
             }
