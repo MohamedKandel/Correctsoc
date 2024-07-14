@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.webIPScan
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -29,6 +30,7 @@ import com.correct.correctsoc.helper.Constants.PORTS_LIST
 import com.correct.correctsoc.helper.Constants.ROUTER
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TYPE
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.ui.selfScan.ScanViewModel
 
@@ -48,6 +50,16 @@ class WebScanFragment : Fragment(), ClickListener {
     private var deviceName = ""
     private var isSafe = false
     private lateinit var audioUtils: AudioUtils
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,6 +71,7 @@ class WebScanFragment : Fragment(), ClickListener {
         viewModel = ViewModelProvider(this)[ScanViewModel::class.java]
         audioUtils = AudioUtils.getInstance()
 
+        fragmentListener.onFragmentChangedListener(R.id.webScanFragment)
         binding.loadingLayout.visibility = View.VISIBLE
         binding.txtDeviceName.visibility = View.GONE
         binding.txtNameTitle.visibility = View.GONE
@@ -339,6 +352,11 @@ class WebScanFragment : Fragment(), ClickListener {
     override fun onDestroyView() {
         audioUtils.releaseMedia()
         super.onDestroyView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.webScanFragment)
     }
 
 }

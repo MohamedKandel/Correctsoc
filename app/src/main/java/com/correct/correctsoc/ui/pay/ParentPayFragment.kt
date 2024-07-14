@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.pay
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentParentPayBinding
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
 
@@ -23,6 +25,16 @@ class ParentPayFragment : Fragment(), NextStepListener {
     private lateinit var binding: FragmentParentPayBinding
     private lateinit var helper: HelperClass
     private lateinit var currentFragment: Fragment
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +43,7 @@ class ParentPayFragment : Fragment(), NextStepListener {
         // Inflate the layout for this fragment
         binding = FragmentParentPayBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
-
+        fragmentListener.onFragmentChangedListener(R.id.parentPayFragment)
         if (helper.getLang(requireContext()).equals("ar")) {
             binding.btnBack.rotation = 180f
         }
@@ -169,5 +181,9 @@ class ParentPayFragment : Fragment(), NextStepListener {
                 changeSteps(3)
             }
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.parentPayFragment)
     }
 }

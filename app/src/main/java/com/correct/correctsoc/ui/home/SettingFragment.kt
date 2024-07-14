@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentSettingBinding
 import com.correct.correctsoc.helper.Constants.SOURCE
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 
 
@@ -24,6 +26,16 @@ class SettingFragment : Fragment() {
     private lateinit var binding: FragmentSettingBinding
     private var sourceFragment = 0
     private lateinit var helper: HelperClass
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +44,8 @@ class SettingFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentSettingBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
+
+        fragmentListener.onFragmentChangedListener(R.id.settingFragment)
 
         if (arguments != null) {
             sourceFragment = requireArguments().getInt(SOURCE, 0)
@@ -90,6 +104,10 @@ class SettingFragment : Fragment() {
                     findNavController().navigate(layoutID, bundle)
                 }
             })
+    }
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.settingFragment)
     }
 
 }

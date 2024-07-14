@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.onBoarding
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.correct.correctsoc.MainActivity
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentLangBinding
 import com.correct.correctsoc.helper.Constants.SOURCE
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -32,6 +34,16 @@ class LangFragment : Fragment() {
 
     private lateinit var binding: FragmentLangBinding
     private lateinit var helper: HelperClass
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +53,7 @@ class LangFragment : Fragment() {
         binding = FragmentLangBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
 
+        fragmentListener.onFragmentChangedListener(R.id.langFragment)
         helper.onBackPressed(this) {
             if (arguments != null) {
                 val source = requireArguments().getInt(SOURCE, 0)
@@ -93,24 +106,8 @@ class LangFragment : Fragment() {
         dialog.show()
     }
 
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (arguments != null) {
-                        val source = requireArguments().getInt(SOURCE, 0)
-                        if (source != 0) {
-                            findNavController().navigate(source)
-                        } else {
-                            requireActivity().finish()
-                        }
-                    } else {
-                        // Back is pressed... Finishing the activity
-                        requireActivity().finish()
-                    }
-                }
-            })
-    }*/
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.langFragment)
+    }
 }

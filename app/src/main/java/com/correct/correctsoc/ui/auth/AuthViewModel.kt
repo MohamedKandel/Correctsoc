@@ -5,7 +5,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.correct.correctsoc.Retrofit.APIService
+import com.correct.correctsoc.Retrofit.APIWorker
 import com.correct.correctsoc.Retrofit.RetrofitClient
 import com.correct.correctsoc.data.auth.AuthResponse
 import com.correct.correctsoc.data.auth.ConfirmPhoneBody
@@ -19,6 +26,8 @@ import com.correct.correctsoc.data.auth.UpdatePasswordBody
 import com.correct.correctsoc.data.auth.UpdatePhoneBody
 import com.correct.correctsoc.data.auth.UpdateUsernameBody
 import com.correct.correctsoc.data.auth.ValidateOTPBody
+import com.correct.correctsoc.helper.Constants.STATUS
+import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import kotlinx.coroutines.launch
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
@@ -26,6 +35,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val authRepository = AuthRepository(
         RetrofitClient.getClient().create(APIService::class.java)
     )
+    private val workManager = WorkManager.getInstance(application)
 
     private val _registerResponse = MutableLiveData<AuthResponse>()
     private val _OTPResponse = MutableLiveData<AuthResponse>()
@@ -40,7 +50,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _validateTokenResponse = MutableLiveData<Boolean>()
     private val _validateOTPResponse = MutableLiveData<AuthResponse>()
     private val _changeDeviceStatus = MutableLiveData<Boolean>()
+    private val _workManagerStatus = MutableLiveData<WorkInfo.State>()
 
+    val workManagerStatus: LiveData<WorkInfo.State> get() = _workManagerStatus
     val changeDeviceStatus: LiveData<Boolean> get() = _changeDeviceStatus
     val validateOTPResponse: LiveData<AuthResponse> get() = _validateOTPResponse
     val validateTokenResponse: LiveData<Boolean> get() = _validateTokenResponse
@@ -171,7 +183,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun setDeviceOn(token:String) = viewModelScope.launch {
+    fun setDeviceOn(token: String) = viewModelScope.launch {
         val result = authRepository.setDeviceOn(token)
         _changeDeviceStatus.postValue(result.isSuccessful)
     }

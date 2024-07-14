@@ -28,6 +28,7 @@ object Constants {
     const val DEVICES = "devices"
     const val PRICE = "price"
     const val STATUS = "device status"
+    const val ACTION_APP_CLOSED = "com.correct.correctsoc.appclosed"
     // problem with EGP
     const val CURRENCY = "USD"
 }

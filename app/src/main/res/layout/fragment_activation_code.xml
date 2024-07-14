@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.pay.ActivationCodeFragment">
+
+    <TextView
+        android:id="@+id/txtView_activation_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_19sdp"
+        android:layout_marginTop="@dimen/_56sdp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/activation_code"
+        android:textSize="@dimen/_13ssp"
+        android:textColor="@color/alphaWhite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_device_number"
+        style="@style/AuthInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
+        app:endIconMode="clear_text"
+        app:layout_constraintTop_toBottomOf="@id/txtView_activation_code">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txt_activation_code"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autofillHints="name"
+            android:maxLength="36"
+            android:maxLines="1"
+            android:minLines="1"
+            android:scrollHorizontally="true"
+            android:digits="ZXCVBNMASDFGHJKLQWERTYUIOP1234567890-"
+            android:fontFamily="@font/roboto_bold"
+            android:hint="@string/activation_code"
+            android:inputType="text"
+            android:textColor="@color/alphaWhite"
+            android:textColorHint="@color/alphaWhite" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

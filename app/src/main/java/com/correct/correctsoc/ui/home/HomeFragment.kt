@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.home
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -27,6 +28,7 @@ import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TYPE
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnSwipeGestureListener
 import com.correct.correctsoc.helper.buildDialog
@@ -56,6 +58,16 @@ class HomeFragment : Fragment(), ClickListener {
     private lateinit var gestureDetector: GestureDetector
     private lateinit var usersDB: UsersDB
     private lateinit var viewModel: AuthViewModel
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +78,8 @@ class HomeFragment : Fragment(), ClickListener {
         helper = HelperClass.getInstance()
         usersDB = UsersDB.getDBInstance(requireContext())
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+
+        fragmentListener.onFragmentChangedListener(R.id.homeFragment)
 
         list = mutableListOf()
         adapter = MenuAdapter(requireContext(), list, this)
@@ -86,9 +100,9 @@ class HomeFragment : Fragment(), ClickListener {
             }
         }
 
-        if (!helper.getDeviceStatus(requireContext())) {
+        /*if (!helper.getDeviceStatus(requireContext())) {
             setDeviceOn(helper.getToken(requireContext()))
-        }
+        }*/
 
         fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
         fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
@@ -265,17 +279,18 @@ class HomeFragment : Fragment(), ClickListener {
 
     override fun onResume() {
         super.onResume()
-        if (!helper.getDeviceStatus(requireContext())) {
+        fragmentListener.onFragmentChangedListener(R.id.homeFragment)
+        /*if (!helper.getDeviceStatus(requireContext())) {
             setDeviceOn(helper.getToken(requireContext()))
-        }
+        }*/
     }
 
-    override fun onStop() {
+    /*override fun onStop() {
         if (helper.getDeviceStatus(requireContext())) {
             setDeviceOff(helper.getToken(requireContext()))
         }
         super.onStop()
-    }
+    }*/
 
     private fun validateToken(token: String, layoutRes: Int) {
         viewModel.validateToken(token)

@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.deviceScan
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import com.correct.correctsoc.R
 import com.correct.correctsoc.data.DevicesData
 import com.correct.correctsoc.databinding.FragmentDeviceDataBinding
 import com.correct.correctsoc.helper.Constants.ITEM
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.ui.selfScan.ScanViewModel
 
@@ -28,6 +30,16 @@ class DeviceDataFragment : Fragment() {
     private lateinit var binding: FragmentDeviceDataBinding
     private lateinit var viewModel: ScanViewModel
     private lateinit var helper: HelperClass
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +49,8 @@ class DeviceDataFragment : Fragment() {
         binding = FragmentDeviceDataBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[ScanViewModel::class.java]
         helper = HelperClass.getInstance()
+
+        fragmentListener.onFragmentChangedListener(R.id.deviceDataFragment)
 
         if (arguments != null) {
             val model: DevicesData
@@ -92,5 +106,10 @@ class DeviceDataFragment : Fragment() {
             Log.i("TextVendor name", "getVendorName: $vendor")
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.deviceDataFragment)
     }
 }

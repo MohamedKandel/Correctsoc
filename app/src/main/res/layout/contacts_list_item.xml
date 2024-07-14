@@ -20,7 +20,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/view">
+        app:layout_constraintStart_toEndOf="@id/view"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/phone_icon"
@@ -42,10 +43,9 @@
             android:text="@string/call"
             android:textColor="@color/white"
             android:textSize="@dimen/_13ssp"
-
-            app:layout_constraintBottom_toBottomOf="@+id/phone_icon"
+            android:layout_marginTop="@dimen/_6sdp"
             app:layout_constraintStart_toEndOf="@id/phone_icon"
-            app:layout_constraintTop_toTopOf="@id/phone_icon" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/more_icon"
@@ -54,9 +54,21 @@
             android:contentDescription="@string/call"
             android:padding="@dimen/_5sdp"
             android:src="@drawable/arrow_down_icon"
-            app:layout_constraintBottom_toBottomOf="@+id/phone_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_contact_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/phone_icon" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/less_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/call"
+            android:padding="@dimen/_5sdp"
+            android:rotation="180"
+            android:src="@drawable/arrow_down_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_contact_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/call_icon"
@@ -109,39 +121,54 @@
             app:layout_constraintStart_toEndOf="@id/wa_icon"
             app:layout_constraintTop_toTopOf="@+id/wa_icon" />
 
-        <ImageView
-            android:id="@+id/img_vod"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_height="wrap_content"
+            android:id="@+id/payment_method_layout"
             android:layout_marginTop="@dimen/_12sdp"
-            android:src="@drawable/vod"
             app:layout_constraintStart_toStartOf="@id/call_icon"
-            app:layout_constraintTop_toBottomOf="@id/call_icon" />
+            app:layout_constraintTop_toBottomOf="@+id/call_icon">
 
-        <ImageView
-            android:id="@+id/img_etisalat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_7sdp"
-            android:src="@drawable/etisalat"
-            app:layout_constraintBottom_toBottomOf="@+id/img_vod"
-            app:layout_constraintStart_toEndOf="@+id/img_vod"
-            app:layout_constraintTop_toTopOf="@+id/img_vod" />
+            <ImageView
+                android:id="@+id/img_vod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_7sdp"
-            android:src="@drawable/ip"
-            app:layout_constraintBottom_toBottomOf="@+id/img_etisalat"
-            app:layout_constraintStart_toEndOf="@+id/img_etisalat"
-            app:layout_constraintTop_toTopOf="@+id/img_etisalat" />
+                android:src="@drawable/vod"
+                android:layout_alignParentStart="true"/>
+
+            <ImageView
+                android:id="@+id/img_etisalat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_7sdp"
+                android:src="@drawable/etisalat"
+                android:layout_toEndOf="@+id/img_vod"/>
+
+            <ImageView
+                android:id="@+id/img_orange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_7sdp"
+                android:src="@drawable/orange"
+                android:layout_toEndOf="@+id/img_etisalat"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_7sdp"
+                android:src="@drawable/ip"
+                android:id="@+id/img_insta_pay"
+                android:layout_toEndOf="@+id/img_orange" />
+
+        </RelativeLayout>
 
 
         <View
             android:layout_width="0dp"
             android:layout_height="@dimen/_1sdp"
-            app:layout_constraintTop_toBottomOf="@+id/img_vod"
+            app:layout_constraintTop_toBottomOf="@+id/payment_method_layout"
             app:layout_constraintStart_toStartOf="@+id/txt_contact_name"
             app:layout_constraintEnd_toEndOf="@+id/more_icon"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.room.UsersDB
 import com.correct.correctsoc.databinding.FragmentSplashBinding
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.mappingNumbers
 import kotlinx.coroutines.launch
@@ -28,6 +30,16 @@ class SplashFragment : Fragment() {
     private var countDownTimer: CountDownTimer? = null
     private val TAG = "SplashFragment mohamed"
     private lateinit var usersDB: UsersDB
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +55,7 @@ class SplashFragment : Fragment() {
         } else {
             helper.getAppVersion(requireContext())
         }
-
+        fragmentListener.onFragmentChangedListener(R.id.splashFragment)
         binding.txtVersion.append(" $version")
 
         helper.onBackPressed(this) {

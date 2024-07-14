@@ -180,4 +180,9 @@
         android:name="com.correct.correctsoc.ui.pay.DistributorsFragment"
         android:label="fragment_distributors"
         tools:layout="@layout/fragment_distributors" />
+    <fragment
+        android:id="@+id/activationCodeFragment"
+        android:name="com.correct.correctsoc.ui.pay.ActivationCodeFragment"
+        android:label="fragment_activation_code"
+        tools:layout="@layout/fragment_activation_code" />
 </navigation>

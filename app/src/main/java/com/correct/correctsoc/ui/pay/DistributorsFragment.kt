@@ -1,30 +1,68 @@
 package com.correct.correctsoc.ui.pay
 
+import android.Manifest
 import android.content.Context
-import android.graphics.Bitmap
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Canvas
-import android.graphics.Typeface
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
+import android.telephony.TelephonyManager
+import android.util.Log
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.correct.correctsoc.R
+import com.correct.correctsoc.adapter.DistributorsAdapter
+import com.correct.correctsoc.data.pay.DistributorsModel
 import com.correct.correctsoc.databinding.FragmentDistributorsBinding
+import com.correct.correctsoc.helper.ClickListener
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
-class DistributorsFragment : Fragment() {
+class DistributorsFragment : Fragment(), ClickListener {
 
     private lateinit var binding: FragmentDistributorsBinding
     private lateinit var helper: HelperClass
+    private lateinit var list: MutableList<DistributorsModel>
+    private lateinit var adapter: DistributorsAdapter
+    private var phoneNumber: String? = null
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
+    //private var swippedPosition: Int ?= null
+
+    private val arl: ActivityResultLauncher<String> = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        // permission granted
+        if (isGranted) {
+            phoneNumber?.let { makeCall(it) }
+        } else {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri = Uri.fromParts("package", "com.correct.correctsoc", null)
+            intent.data = uri
+            startActivity(intent)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +75,12 @@ class DistributorsFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentDistributorsBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
+        fragmentListener.onFragmentChangedListener(R.id.distributorsFragment)
+        list = mutableListOf()
+        adapter = DistributorsAdapter(requireContext(), list, this)
+        binding.contactsRecyclerView.adapter = adapter
+
+        fillList()
 
         val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             override fun onMove(
@@ -49,6 +93,12 @@ class DistributorsFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // action for swiped item
+                val position = viewHolder.bindingAdapterPosition
+                //swippedPosition = position
+                val bundle = Bundle()
+                bundle.putString("name", list[position].contact_name)
+                bundle.putString("phone", list[position].phone_number)
+                onItemClickListener(position, bundle)
             }
 
             override fun onChildDraw(
@@ -56,9 +106,8 @@ class DistributorsFragment : Fragment() {
                 viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
                 actionState: Int, isCurrentlyActive: Boolean
             ) {
-//                val icon = getTintedDrawable(requireContext(), R.drawable.phone_icon, R.color.white)
-
-                val typeface = ResourcesCompat.getFont(requireContext(),R.font.barlow_semi_condensed_semibold)
+                val typeface =
+                    ResourcesCompat.getFont(requireContext(), R.font.barlow_semi_condensed_semibold)
 
                 RecyclerViewSwipeDecorator.Builder(
                     c,
@@ -76,11 +125,13 @@ class DistributorsFragment : Fragment() {
                         )
                     )
                     .addSwipeRightActionIcon(R.drawable.phone_icon)
-                    .setSwipeRightActionIconTint(R.color.white)
+                    .setSwipeRightActionIconTint(Color.rgb(255, 255, 255))
                     .addSwipeRightLabel(resources.getString(R.string.call))
-                    .setSwipeRightLabelColor(R.color.white)
-                    .setSwipeRightLabelTextSize(TypedValue.COMPLEX_UNIT_SP,16f)
+                    .setSwipeRightLabelColor(Color.rgb(255, 255, 255))
+                    .setSwipeRightLabelTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
                     .setSwipeRightLabelTypeface(typeface)
+                    .create()
+                    .decorate()
 
                 super.onChildDraw(
                     c, recyclerView,
@@ -88,7 +139,6 @@ class DistributorsFragment : Fragment() {
                     actionState, isCurrentlyActive
                 )
             }
-
         }
 
         val itemTouchHelper = ItemTouchHelper(callback)
@@ -97,29 +147,79 @@ class DistributorsFragment : Fragment() {
         return binding.root
     }
 
-    /*private fun getTintedDrawable(context: Context, drawableId: Int, color: Int): Int {
-        val drawable = ContextCompat.getDrawable(context, drawableId) ?: return drawableId
-        drawable.mutate().setTint(ContextCompat.getColor(context, color))
-
-        val bitmap = Bitmap.createBitmap(
-            drawable.intrinsicWidth,
-            drawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
-        drawable.draw(canvas)
-
-        return BitmapDrawable(context.resources, bitmap).toBitmapDrawableResource(context)
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.distributorsFragment)
+        resetSwipedItem()
     }
 
-    private fun BitmapDrawable.toBitmapDrawableResource(context: Context): Int {
-        // Generate a unique ID for the new drawable
-        val resourceId = View.generateViewId()
-        // You need to save this drawable in a way that it can be referenced by its resource ID.
-        // For simplicity, this example just returns the original drawable ID.
-        // Implement a mechanism to save and retrieve the drawable by ID.
-        return resourceId
-    }*/
+    // fill list with dummy data
+    private fun fillList() {
+        list.add(
+            DistributorsModel(
+                "Ahmed mohamed", "01234567890",
+                "0123456789", false, false, true,
+                true
+            )
+        )
+
+        list.add(
+            DistributorsModel(
+                "Ibrahim Adel", "01111111111",
+                "01111111111", false, true, false,
+                true
+            )
+        )
+
+        list.add(
+            DistributorsModel(
+                "Islam Elwy", "01000000000",
+                "01000000000", true, false, false,
+                false
+            )
+        )
+
+        list.add(
+            DistributorsModel(
+                "Mostafa Ahmed", "01276200486",
+                "01068411302", true, false, true,
+                true
+            )
+        )
+
+        adapter.updateAdapter(list)
+    }
+
+    override fun onItemClickListener(position: Int, extras: Bundle?) {
+        if (extras != null) {
+            Log.v("Contacts mohamed", extras.getString("name") ?: "")
+            Log.v("Contacts mohamed", extras.getString("phone") ?: "")
+            if (extras.getString("phone") != null) {
+                // make call
+                phoneNumber = extras.getString("phone")
+                arl.launch(Manifest.permission.CALL_PHONE)
+            }
+        }
+    }
+
+    override fun onLongItemClickListener(position: Int, extras: Bundle?) {
+
+    }
+
+    private fun makeCall(phoneNumber: String) {
+        val callIntent = Intent(Intent.ACTION_CALL)
+        callIntent.data = Uri.parse("tel:$phoneNumber")
+        startActivity(callIntent)
+    }
+
+    private fun resetSwipedItem() {
+        /*swippedPosition?.let {
+            adapter.notifyItemChanged(it)
+            swippedPosition = null
+        }*/
+        for (i in 0..<list.size) {
+            adapter.notifyItemChanged(i)
+        }
+    }
 
 }

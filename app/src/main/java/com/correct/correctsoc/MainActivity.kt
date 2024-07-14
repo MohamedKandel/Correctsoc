@@ -8,7 +8,8 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
-import android.util.JsonToken
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -23,8 +24,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.correct.correctsoc.databinding.ActivityMainBinding
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
-import com.correct.correctsoc.room.UsersDB
 import com.correct.correctsoc.ui.auth.AuthViewModel
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -39,19 +40,36 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-
-class MainActivity : AppCompatActivity()  {
+class MainActivity : AppCompatActivity(), FragmentChangedListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var helper: HelperClass
     private var appUpdateType = AppUpdateType.IMMEDIATE
     private lateinit var appUpdateManager: AppUpdateManager
+    private lateinit var expectArray: Array<Int>
+    private var acceptFragment = false
+    private lateinit var viewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         helper = HelperClass.getInstance()
+        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+
+        expectArray = arrayOf(
+            R.id.signUpFragment,
+            R.id.loginFragment,
+            R.id.registerFragment,
+            R.id.onBoardingFragment,
+            R.id.firstFragment,
+            R.id.secondFragment,
+            R.id.thirdFragment,
+            R.id.fourthFragment,
+            R.id.splashFragment,
+            R.id.loginFragment,
+            R.id.resetPasswordFragment
+        )
 
         appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
         if (appUpdateType == AppUpdateType.FLEXIBLE) {
@@ -59,6 +77,7 @@ class MainActivity : AppCompatActivity()  {
         }
 
         checkForUpdate()
+        Toast.makeText(this, "${helper.getDeviceStatus(this)}", Toast.LENGTH_SHORT).show()
 
         val navHost = supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
         navController = navHost.navController
@@ -67,8 +86,41 @@ class MainActivity : AppCompatActivity()  {
 //        enableEdgeToEdge()
         setContentView(binding.root)
 
+        //setDeviceOff()
+
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+    }
+
+    private fun setDeviceOn(token: String) {
+        viewModel.setDeviceOn(token)
+        val observer = object : Observer<Boolean> {
+            override fun onChanged(value: Boolean) {
+                if (value) {
+                    helper.setDeviceOnline(true, this@MainActivity)
+                    Log.v("device status", "account online")
+                } else {
+                    Log.v("device status", "account failed to be online")
+                }
+                viewModel.changeDeviceStatus.removeObserver(this)
+            }
+        }
+        viewModel.changeDeviceStatus.observe(this, observer)
+    }
+
+    private fun setDeviceOff(token: String) {
+        viewModel.setDeviceOff(token)
+        val observer = object : Observer<Boolean> {
+            override fun onChanged(value: Boolean) {
+                if (value) {
+                    helper.setDeviceOnline(false,this@MainActivity)
+                } else {
+                    //Toast.makeText(this@MainActivity, "Failed", Toast.LENGTH_SHORT).show()
+                }
+                viewModel.changeDeviceStatus.removeObserver(this)
+            }
+        }
+        viewModel.changeDeviceStatus.observe(this, observer)
     }
 
     private fun setLocale(lang: String) {
@@ -143,8 +195,19 @@ class MainActivity : AppCompatActivity()  {
         }
     }
 
+
+    override fun onPause() {
+        if (acceptFragment) {
+            setDeviceOff(helper.getToken(this))
+        }
+        super.onPause()
+    }
+
     override fun onResume() {
         super.onResume()
+        if (acceptFragment) {
+            setDeviceOn(helper.getToken(this))
+        }
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
         appUpdateInfoTask.addOnSuccessListener {
             if (it.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
@@ -228,4 +291,13 @@ class MainActivity : AppCompatActivity()  {
                 }
             }
         }
+
+    override fun onFragmentChangedListener(fragmentID: Int) {
+        if (fragmentID in expectArray) {
+            Log.v("Except array", "Except")
+            acceptFragment = false
+        } else {
+            acceptFragment = true
+        }
+    }
 }

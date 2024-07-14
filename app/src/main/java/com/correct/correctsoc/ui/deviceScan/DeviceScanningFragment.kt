@@ -1,6 +1,7 @@
 package com.correct.correctsoc.ui.deviceScan
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import com.correct.correctsoc.R
 import com.correct.correctsoc.data.DevicesData
 import com.correct.correctsoc.databinding.FragmentDeviceScanningBinding
 import com.correct.correctsoc.helper.Constants.LIST
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnDevicesFetchedListener
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
@@ -42,6 +44,16 @@ class DeviceScanningFragment : Fragment() {
     private lateinit var helper: HelperClass
     private var progressJob: Job? = null
     private var fetchDevicesJob: Job? = null
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
 
     override fun onCreateView(
@@ -52,6 +64,7 @@ class DeviceScanningFragment : Fragment() {
         binding = FragmentDeviceScanningBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
 
+        fragmentListener.onFragmentChangedListener(R.id.deviceScanningFragment)
 
         helper.onBackPressed(this) {
             stopOperations()
@@ -176,16 +189,8 @@ class DeviceScanningFragment : Fragment() {
     }
 
 
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Back is pressed... Finishing the activity
-                    stopOperations()
-                    findNavController().navigate(R.id.homeFragment)
-                }
-            })
-    }*/
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.deviceScanningFragment)
+    }
 }

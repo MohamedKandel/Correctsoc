@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.lifecycle:lifecycle-process:2.8.3")
     val room_version = "2.6.1"
 
     implementation("androidx.core:core-ktx:1.13.1")
@@ -99,4 +100,7 @@ dependencies {
 
     // recyclerview swipe decorator
     implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
+
+    // work manager
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 }

@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.data.auth.UpdatePasswordBody
 import com.correct.correctsoc.databinding.FragmentUpdatePasswordBinding
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.add
 import com.correct.correctsoc.helper.clear
@@ -55,6 +56,16 @@ class UpdatePasswordFragment : Fragment() {
     private var specialEndIndx = 0
     private lateinit var usersDB: UsersDB
     private lateinit var viewModel: AuthViewModel
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,6 +76,8 @@ class UpdatePasswordFragment : Fragment() {
         helper = HelperClass.getInstance()
         usersDB = UsersDB.getDBInstance(requireContext())
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+
+        fragmentListener.onFragmentChangedListener(R.id.updatePasswordFragment)
 
         binding.layoutPassInstructionsNew.root.visibility = View.GONE
 
@@ -232,60 +245,8 @@ class UpdatePasswordFragment : Fragment() {
         }
     }
 
-    /*private fun updateRequirements(password: String) {
-        val requirementsText = resources.getString(R.string.password_instruction)
-        val spannableString = SpannableString(requirementsText)
-
-        if (password.length >= 6) {
-            val start = lenStrtIndx
-            val end = lenEndIndx
-            spannableString.setSpan(ForegroundColorSpan(resources.getColor(R.color.safe_color,context?.theme)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        } else {
-            val start = lenStrtIndx
-            val end = lenEndIndx
-            spannableString.setSpan(ForegroundColorSpan(resources.getColor(R.color.black,context?.theme)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-
-        if (password.any { it.isDigit() }) {
-            val start = numberStrtIndx
-            val end = numberEndIndx
-            spannableString.setSpan(ForegroundColorSpan(resources.getColor(R.color.safe_color,context?.theme)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        } else {
-            val start = numberStrtIndx
-            val end = numberEndIndx
-            spannableString.setSpan(ForegroundColorSpan(resources.getColor(R.color.black,context?.theme)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-
-        if (password.any { it.isUpperCase() }) {
-            val start = upperStrtIndx
-            val end = upperEndIndx
-            spannableString.setSpan(ForegroundColorSpan(resources.getColor(R.color.safe_color,context?.theme)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        } else {
-            val start = upperStrtIndx
-            val end = upperEndIndx
-            spannableString.setSpan(ForegroundColorSpan(resources.getColor(R.color.black,context?.theme)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-
-        if (password.any { it.isLowerCase() }) {
-            val start = lowerStrtIndx
-            val end = lowerEndIndx
-            spannableString.setSpan(ForegroundColorSpan(resources.getColor(R.color.safe_color,context?.theme)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        } else {
-            val start = lowerStrtIndx
-            val end = lowerEndIndx
-            spannableString.setSpan(ForegroundColorSpan(resources.getColor(R.color.black,context?.theme)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-
-        if (password.any { !it.isLetterOrDigit() }) {
-            val start = specialStrtIndx
-            val end = specialEndIndx
-            spannableString.setSpan(ForegroundColorSpan(resources.getColor(R.color.safe_color,context?.theme)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        } else {
-            val start = specialStrtIndx
-            val end = specialEndIndx
-            spannableString.setSpan(ForegroundColorSpan(resources.getColor(R.color.black,context?.theme)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-
-        binding.layoutPassInstructionsNew.txtInstructionConfirm.text = spannableString
-    }*/
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.updatePasswordFragment)
+    }
 }

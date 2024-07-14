@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.auth
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,6 +20,7 @@ import com.correct.correctsoc.databinding.FragmentResetPasswordBinding
 
 import com.correct.correctsoc.helper.Constants.TAG
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.isContainsSpecialCharacter
 import com.correct.correctsoc.helper.isContainsNumbers
@@ -53,6 +55,16 @@ class ResetPasswordFragment : Fragment() {
 
     private lateinit var viewModel: AuthViewModel
     private lateinit var usersDB: UsersDB
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +76,7 @@ class ResetPasswordFragment : Fragment() {
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         usersDB = UsersDB.getDBInstance(requireContext())
 
+        fragmentListener.onFragmentChangedListener(R.id.resetPasswordFragment)
 
         binding.progress.visibility = View.GONE
         binding.placeholder.visibility = View.GONE
@@ -245,6 +258,10 @@ class ResetPasswordFragment : Fragment() {
                     .show()
             }
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.resetPasswordFragment)
     }
 
 }

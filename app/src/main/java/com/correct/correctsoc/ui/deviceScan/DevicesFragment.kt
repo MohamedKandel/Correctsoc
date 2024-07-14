@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.deviceScan
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -26,6 +27,7 @@ import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.Constants
 import com.correct.correctsoc.helper.Constants.ITEM
 import com.correct.correctsoc.helper.Constants.LIST
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnSwipeGestureListener
 import com.correct.correctsoc.helper.mappingNumbers
@@ -54,6 +56,16 @@ class DevicesFragment : Fragment(), ClickListener {
     private lateinit var menuList: MutableList<MenuData>
     private lateinit var helper: HelperClass
     private val TAG = "DevicesFragment mohamed"
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +79,7 @@ class DevicesFragment : Fragment(), ClickListener {
             findNavController().navigate(R.id.homeFragment)
         }
 
+        fragmentListener.onFragmentChangedListener(R.id.devicesFragment)
         list = mutableListOf()
         adapter = DevicesAdapter(requireContext(), helper, list, this)
         binding.devicesRecyclerView.adapter = adapter
@@ -307,5 +320,9 @@ class DevicesFragment : Fragment(), ClickListener {
 
     override fun onLongItemClickListener(position: Int, extras: Bundle?) {
         //TODO("Not yet implemented")
+    }
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.devicesFragment)
     }
 }

@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.webIPScan
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -21,6 +22,7 @@ import com.correct.correctsoc.helper.Constants
 import com.correct.correctsoc.helper.Constants.DEVICE_NAME
 import com.correct.correctsoc.helper.Constants.TYPE
 import com.correct.correctsoc.helper.Constants.URL
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 
 class CVEsFragment : Fragment(), ClickListener {
@@ -33,6 +35,16 @@ class CVEsFragment : Fragment(), ClickListener {
     private lateinit var list: MutableList<CvEs>
     private lateinit var adapter: CVEAdapter
     private lateinit var helper: HelperClass
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +57,7 @@ class CVEsFragment : Fragment(), ClickListener {
         list = mutableListOf()
         adapter = CVEAdapter(list, this)
         binding.recyclerView.adapter = adapter
-
+        fragmentListener.onFragmentChangedListener(R.id.CVEsFragment)
         binding.txtTitle.text = binding.txtTitle.text.toString().replace(":","").trim()
 
         if (arguments != null) {
@@ -111,5 +123,10 @@ class CVEsFragment : Fragment(), ClickListener {
 
     override fun onLongItemClickListener(position: Int, extras: Bundle?) {
 //        TODO("Not yet implemented")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.CVEsFragment)
     }
 }

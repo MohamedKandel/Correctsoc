@@ -4,12 +4,14 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.LinearGradient
 import android.graphics.Shader
+import android.text.InputFilter
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.AutoCompleteTextView
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.MutableLiveData
@@ -347,4 +349,12 @@ fun AlertDialog.Builder.buildDialog(
     }
     dialog.setCancelable(false)
     dialog.show()
+}
+
+fun EditText.appendFilter(newFilter: InputFilter) {
+    val editFilters = this.filters
+    val newFilters = editFilters.copyOf(editFilters.size + 1)
+    System.arraycopy(editFilters, 0, newFilters, 0, editFilters.size)
+    newFilters[editFilters.size] = newFilter
+    this.filters = newFilters
 }

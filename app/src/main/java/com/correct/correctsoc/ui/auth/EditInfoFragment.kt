@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.auth
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.correct.correctsoc.data.auth.GenerateOTPBody
 import com.correct.correctsoc.data.auth.UpdateUsernameBody
 import com.correct.correctsoc.databinding.FragmentEditInfoBinding
 import com.correct.correctsoc.helper.Constants.SOURCE
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
@@ -28,6 +30,16 @@ class EditInfoFragment : Fragment() {
     private lateinit var helper: HelperClass
     private lateinit var usersDB: UsersDB
     private lateinit var viewModel: AuthViewModel
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +50,8 @@ class EditInfoFragment : Fragment() {
         helper = HelperClass.getInstance()
         usersDB = UsersDB.getDBInstance(requireContext())
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+
+        fragmentListener.onFragmentChangedListener(R.id.editInfoFragment)
 
         binding.btnBack.setOnClickListener {
             findNavController().navigate(R.id.settingFragment)
@@ -104,6 +118,11 @@ class EditInfoFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.editInfoFragment)
     }
 
     private fun updateUsername(body: UpdateUsernameBody, token: String, updatePhone: Boolean) {

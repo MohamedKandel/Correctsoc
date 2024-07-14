@@ -21,6 +21,7 @@ import com.correct.correctsoc.helper.Constants.DEVICES
 import com.correct.correctsoc.helper.Constants.MONTHS
 import com.correct.correctsoc.helper.Constants.PRICE
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
 
@@ -35,6 +36,8 @@ class PaymentDetailsFragment : Fragment() {
     private var price = 0.0
     private lateinit var viewModel: PayViewModel
     private var token = ""
+    private lateinit var fragmentListener: FragmentChangedListener
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +47,11 @@ class PaymentDetailsFragment : Fragment() {
         super.onAttach(context)
         if (parentFragment is NextStepListener) {
             listener = parentFragment as NextStepListener
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
         } else {
             throw ClassCastException("Super class doesn't implement interface class")
         }
@@ -70,7 +78,7 @@ class PaymentDetailsFragment : Fragment() {
 
         binding.line.visibility = View.GONE
         binding.totalceck.visibility = View.GONE
-
+        fragmentListener.onFragmentChangedListener(R.id.paymentDetailsFragment)
         val durations = resources.getStringArray(R.array.durations)
         val arrayAdapter = ArrayAdapter(
             requireContext(), R.layout.duration_spn_item,
@@ -200,5 +208,9 @@ class PaymentDetailsFragment : Fragment() {
                 Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.paymentDetailsFragment)
     }
 }

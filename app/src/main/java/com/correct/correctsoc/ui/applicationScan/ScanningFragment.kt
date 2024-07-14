@@ -1,6 +1,7 @@
 package com.correct.correctsoc.ui.applicationScan
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
@@ -18,6 +19,7 @@ import com.correct.correctsoc.data.AppInfo
 import com.correct.correctsoc.databinding.FragmentScanningBinding
 import com.correct.correctsoc.helper.AppsFetchedListener
 import com.correct.correctsoc.helper.Constants.LIST
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
 import kotlinx.coroutines.CoroutineScope
@@ -40,6 +42,16 @@ class ScanningFragment : Fragment() {
     private lateinit var helper: HelperClass
     private var progressJob: Job? = null
     private var fetchAppssJob: Job? = null
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +60,8 @@ class ScanningFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentScanningBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
+
+        fragmentListener.onFragmentChangedListener(R.id.scanningFragment)
 
         binding.progressCircular.startAnimation(helper.circularAnimation(3000))
 
@@ -90,6 +104,11 @@ class ScanningFragment : Fragment() {
         onBackPressed()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.scanningFragment)
     }
 
     private fun displayAppName(list: MutableList<AppInfo>) {

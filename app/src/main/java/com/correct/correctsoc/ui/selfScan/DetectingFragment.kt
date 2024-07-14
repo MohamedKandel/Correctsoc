@@ -1,6 +1,7 @@
 package com.correct.correctsoc.ui.selfScan
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentDetectingBinding
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 
 class DetectingFragment : Fragment() {
@@ -29,6 +31,16 @@ class DetectingFragment : Fragment() {
     private var isRun = true
     private lateinit var viewModel: ScanViewModel
     private var ipAddress = ""
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
 
     override fun onCreateView(
@@ -39,7 +51,7 @@ class DetectingFragment : Fragment() {
         binding = FragmentDetectingBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
         viewModel = ViewModelProvider(this)[ScanViewModel::class.java]
-
+        fragmentListener.onFragmentChangedListener(R.id.detectingFragment)
         helper.onBackPressed(this) {
             findNavController().navigate(R.id.selfPenFragment)
         }
@@ -111,5 +123,10 @@ class DetectingFragment : Fragment() {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.detectingFragment)
     }
 }

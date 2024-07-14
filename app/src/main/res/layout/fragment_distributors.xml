@@ -8,6 +8,7 @@
     tools:context=".ui.pay.DistributorsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="@dimen/_24sdp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/contacts_recyclerView"

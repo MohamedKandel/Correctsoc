@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.selfScan
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.correct.correctsoc.helper.Constants.IP_ADDRESS
 import com.correct.correctsoc.helper.Constants.ROUTER
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TYPE
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 
 class PenResultFragment : Fragment() {
@@ -27,6 +29,16 @@ class PenResultFragment : Fragment() {
     private lateinit var viewModel: ScanViewModel
     private var ipAddress = ""
     private var ip = ""
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +48,7 @@ class PenResultFragment : Fragment() {
         binding = FragmentPenResultBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
         viewModel = ViewModelProvider(this)[ScanViewModel::class.java]
-
+        fragmentListener.onFragmentChangedListener(R.id.penResultFragment)
         binding.progressCircular.startAnimation(helper.circularAnimation(3000))
 
         helper.onBackPressed(this) {
@@ -119,15 +131,8 @@ class PenResultFragment : Fragment() {
         }
     }
 
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Back is pressed... Finishing the activity
-                    findNavController().navigate(R.id.selfPenFragment)
-                }
-            })
-    }*/
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.penResultFragment)
+    }
 }

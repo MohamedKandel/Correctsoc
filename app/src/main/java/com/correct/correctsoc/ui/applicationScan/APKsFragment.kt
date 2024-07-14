@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.applicationScan
 
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
@@ -26,6 +27,7 @@ import com.correct.correctsoc.helper.Constants.DELETE
 import com.correct.correctsoc.helper.Constants.LIST
 import com.correct.correctsoc.helper.Constants.PKG_NAME
 import com.correct.correctsoc.helper.DeleteReceiver
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.PackageListener
 
@@ -43,6 +45,16 @@ class APKsFragment : Fragment(), ClickListener, PackageListener {
     private lateinit var helper: HelperClass
     private var index = 0
     private lateinit var audioUtils: AudioUtils
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +65,7 @@ class APKsFragment : Fragment(), ClickListener, PackageListener {
         helper = HelperClass.getInstance()
         audioUtils = AudioUtils.getInstance()
 
+        fragmentListener.onFragmentChangedListener(R.id.APKsFragment)
         //list = getAppsInstalledFromUnknownSources().toMutableList()
         list = mutableListOf()
         adapter = APKAdapter(requireContext(), list, this)
@@ -179,6 +192,11 @@ class APKsFragment : Fragment(), ClickListener, PackageListener {
                 //TODO("Not yet implemented")
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.APKsFragment)
     }
 
     override fun onLongItemClickListener(position: Int, extras: Bundle?) {

@@ -7,7 +7,7 @@
     <color name="gold">#CCC2A7</color>
     <color name="selectedDots">#FCFDFF</color>
     <color name="borderDots">#726D6D</color>
-    <color name="alpha">#00FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
     <color name="gray">#999999</color>
     <color name="purple">#663CA6</color>
     <color name="dark_purple">#401744</color>

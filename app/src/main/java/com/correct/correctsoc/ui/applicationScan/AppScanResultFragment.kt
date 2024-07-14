@@ -1,6 +1,7 @@
 package com.correct.correctsoc.ui.applicationScan
 
 
+import android.content.Context
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
@@ -14,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentAppScanResultBinding
 import com.correct.correctsoc.helper.AudioUtils
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +33,16 @@ class AppScanResultFragment : Fragment() {
     private lateinit var binding: FragmentAppScanResultBinding
     private lateinit var helper: HelperClass
     private lateinit var audioUtils: AudioUtils
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
 
     override fun onCreateView(
@@ -42,6 +54,7 @@ class AppScanResultFragment : Fragment() {
         helper = HelperClass.getInstance()
         audioUtils = AudioUtils.getInstance()
 
+        fragmentListener.onFragmentChangedListener(R.id.appScanResultFragment)
         if (helper.getLang(requireContext()).equals("en")) {
             audioUtils.playAudio(requireContext(),R.raw.scan_successful_en)
         } else {
@@ -59,6 +72,10 @@ class AppScanResultFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.appScanResultFragment)
+    }
 
     private fun onBackPressed() {
         (activity as AppCompatActivity).supportFragmentManager

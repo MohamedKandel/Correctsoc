@@ -1,6 +1,7 @@
 package com.correct.correctsoc.ui.onBoarding
 
 import ViewPagerAdapter
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentOnBoardingBinding
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 
 
@@ -25,6 +27,16 @@ class onBoardingFragment : Fragment() {
     private lateinit var binding: FragmentOnBoardingBinding
     private var pageNumber = 0
     private lateinit var helper:HelperClass
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +47,8 @@ class onBoardingFragment : Fragment() {
         helper = HelperClass.getInstance()
 
         helper.deleteSplashTime(requireContext())
+
+        fragmentListener.onFragmentChangedListener(R.id.onBoardingFragment)
 
         helper.onBackPressed(this) {
             requireActivity().finish()

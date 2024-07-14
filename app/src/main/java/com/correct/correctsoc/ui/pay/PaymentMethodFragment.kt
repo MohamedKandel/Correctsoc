@@ -29,6 +29,7 @@ import com.correct.correctsoc.helper.Constants.DEVICES
 import com.correct.correctsoc.helper.Constants.MONTHS
 import com.correct.correctsoc.helper.Constants.PRICE
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
 import com.correct.correctsoc.room.UsersDB
@@ -54,6 +55,7 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
     private var months = 0
     private lateinit var usersDB: UsersDB
     private var token = ""
+    private lateinit var fragmentListener: FragmentChangedListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +65,11 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
         super.onAttach(context)
         if (parentFragment is NextStepListener) {
             listener = parentFragment as NextStepListener
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
         } else {
             throw ClassCastException("Super class doesn't implement interface class")
         }
@@ -91,7 +98,7 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
         helper = HelperClass.getInstance()
         viewModel = ViewModelProvider(this)[PayViewModel::class.java]
         usersDB = UsersDB.getDBInstance(requireContext())
-
+        fragmentListener.onFragmentChangedListener(R.id.paymentMethodFragment)
         binding.placeholder.visibility = View.GONE
         binding.progress.visibility = View.GONE
 
@@ -261,6 +268,11 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
         } else {
             Log.e("error mohamed", "onGooglePayFailure: ", error)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.paymentMethodFragment)
     }
 
 }

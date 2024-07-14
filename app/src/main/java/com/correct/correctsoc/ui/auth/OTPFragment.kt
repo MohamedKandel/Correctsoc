@@ -27,6 +27,7 @@ import com.correct.correctsoc.databinding.FragmentOTPBinding
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TAG
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.VerificationTextFilledListener
 import com.correct.correctsoc.room.User
@@ -48,6 +49,16 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
     private var countDownTimer: CountDownTimer? = null
     private lateinit var usersDB: UsersDB
     private lateinit var viewModel: AuthViewModel
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
 
     override fun onCreateView(
@@ -59,6 +70,8 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         helper = HelperClass.getInstance()
         usersDB = UsersDB.getDBInstance(requireContext())
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+
+        fragmentListener.onFragmentChangedListener(R.id.OTPFragment)
 
         binding.placeholder.visibility = View.GONE
         binding.progress.visibility = View.GONE
@@ -433,127 +446,8 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         }
     }
 
-    /*override fun onStart() {
-        super.onStart()
-        registerReceiver()
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.OTPFragment)
     }
-    private val arl: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == RESULT_OK && it.data != null) {
-            val message = it.data?.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
-            getOTPFromSms(message)
-        }
-    }
-
-    private fun getOTPFromSms(message: String?) {
-        val otpPattern = Pattern.compile("(|^)\\d{6}")
-        val matcher = otpPattern.matcher(message)
-        if (matcher.find()) {
-            // otp fetched from sms
-            val otp = matcher.group(0)
-        }
-    }
-    private fun startSmartUserConsent() {
-        val client = SmsRetriever.getClient(requireContext())
-        client.startSmsUserConsent(null)
-    }
-
-    private fun registerReceiver() {
-        smsReceiver = SmsReceiver()
-        smsReceiver!!.listener = object : SmsReceiver.SmsReceiverListener {
-            override fun onSuccess(intent: Intent?) {
-                arl.launch(intent)
-            }
-
-            override fun onFailure() {
-
-            }
-        }
-
-        val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
-        requireActivity().registerReceiver(smsReceiver, intentFilter)
-    }
-
-    private fun changeFocus(
-        previousTxt: EditText,
-        currentTxt: EditText,
-        nextText: EditText,
-        functionToExecute: () -> Unit = {}
-    ) {
-        currentTxt.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-                // user deleted text
-                if (after < count) {
-                    previousTxt.requestFocus()
-                }
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                val string = s.toString()
-                if (string.length == 1) {
-                    nextText.requestFocus()
-                }
-            }
-        })
-
-        // last editText
-        if (nextText == currentTxt) {
-            nextText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (s.toString().length == 1) {
-                        functionToExecute()
-                    }
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                }
-            })
-        }
-
-        currentTxt.setOnKeyListener { v, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
-                if (currentTxt.text.isEmpty()) {
-                    previousTxt.requestFocus()
-                } else {
-                    currentTxt.setText("")
-                }
-                return@setOnKeyListener true
-            }
-            return@setOnKeyListener false
-        }
-    }
-
-    private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (source != -1) {
-                        findNavController().navigate(source)
-                    } else {
-                        findNavController().navigate(R.id.signUpFragment)
-                    }
-                }
-            })
-    }*/
 }

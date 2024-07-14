@@ -1,5 +1,6 @@
 package com.correct.correctsoc.ui.webIPScan
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -20,6 +21,7 @@ import com.correct.correctsoc.databinding.FragmentInsertLinkBinding
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TYPE
+import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 
 class InsertLinkFragment : Fragment() {
@@ -30,6 +32,16 @@ class InsertLinkFragment : Fragment() {
 
     private lateinit var binding: FragmentInsertLinkBinding
     private lateinit var helper: HelperClass
+    private lateinit var fragmentListener: FragmentChangedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangedListener) {
+            fragmentListener = context
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +50,7 @@ class InsertLinkFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentInsertLinkBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
+        fragmentListener.onFragmentChangedListener(R.id.insertLinkFragment)
 
         helper.onBackPressed(this) {
             findNavController().navigate(R.id.homeFragment)
@@ -133,14 +146,8 @@ class InsertLinkFragment : Fragment() {
         return binding.root
     }
 
-    /*private fun onBackPressed() {
-        (activity as AppCompatActivity).supportFragmentManager
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity() /* lifecycle owner */,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    findNavController().navigate(R.id.homeFragment)
-                }
-            })
-    }*/
+    override fun onResume() {
+        super.onResume()
+        fragmentListener.onFragmentChangedListener(R.id.insertLinkFragment)
+    }
 }
