@@ -63,6 +63,10 @@ class ActivationCodeFragment : Fragment() {
         // make edit text accept uppercase letters only
         binding.txtActivationCode.appendFilter(InputFilter.AllCaps())
 
+        if (helper.getLang(requireContext()).equals("ar")) {
+            binding.btnBack.rotation = 180f
+        }
+
         val hyphenPositions = intArrayOf(8, 13, 18, 23)
 
         binding.txtActivationCode.addTextChangedListener(object : TextWatcher {

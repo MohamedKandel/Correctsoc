@@ -48,12 +48,12 @@ class DevicesFragment : Fragment(), ClickListener {
     private lateinit var binding: FragmentDevicesBinding
     private lateinit var list: MutableList<DevicesData>
     private lateinit var adapter: DevicesAdapter
-    private var isVisible = false
+    /*private var isVisible = false
     private lateinit var slideIn: Animation
     private lateinit var slideOut: Animation
     private lateinit var gestureDetector: GestureDetector
     private lateinit var menuAdapter: MenuAdapter
-    private lateinit var menuList: MutableList<MenuData>
+    private lateinit var menuList: MutableList<MenuData>*/
     private lateinit var helper: HelperClass
     private val TAG = "DevicesFragment mohamed"
     private lateinit var fragmentListener: FragmentChangedListener
@@ -83,59 +83,6 @@ class DevicesFragment : Fragment(), ClickListener {
         list = mutableListOf()
         adapter = DevicesAdapter(requireContext(), helper, list, this)
         binding.devicesRecyclerView.adapter = adapter
-
-        menuList = mutableListOf()
-        menuAdapter = MenuAdapter(requireContext(), menuList, object : ClickListener {
-            override fun onItemClickListener(position: Int, extras: Bundle?) {
-                when (position) {
-                    //premium
-                    0 -> {
-                        Log.i(TAG, "onItemClickListener: premium")
-                    }
-                    //support
-                    1 -> {
-                        Log.i(TAG, "onItemClickListener: support")
-                    }
-                    //setting
-                    2 -> {
-                        Log.i(TAG, "onItemClickListener: settings")
-                        val bundle = Bundle()
-                        bundle.putInt(Constants.SOURCE, R.id.devicesFragment)
-                        bundle.putParcelableArrayList(LIST, ArrayList(list))
-                        findNavController().navigate(R.id.settingFragment, bundle)
-                    }
-                    //reward
-                    3 -> {
-                        Log.i(TAG, "onItemClickListener: reward")
-                    }
-                    //community
-                    4 -> {
-                        Log.i(TAG, "onItemClickListener: community")
-                    }
-                    //rate
-                    5 -> {
-                        Log.i(TAG, "onItemClickListener: rate")
-                    }
-                    //about
-                    6 -> {
-                        val bundle = Bundle()
-                        bundle.putInt(Constants.SOURCE, R.id.devicesFragment)
-                        bundle.putParcelableArrayList(LIST, ArrayList(list))
-                        findNavController().navigate(R.id.aboutFragment, bundle)
-                        Log.i(TAG, "onItemClickListener: about")
-                    }
-                    //logout
-                    7 -> {
-                        Log.i(TAG, "onItemClickListener: logout")
-                    }
-                }
-            }
-
-            override fun onLongItemClickListener(position: Int, extras: Bundle?) {
-//                TODO("Not yet implemented")
-            }
-        })
-        binding.drawerMenu.recyclerView.adapter = menuAdapter
 
 
         binding.btnBack.setOnClickListener {
@@ -184,7 +131,7 @@ class DevicesFragment : Fragment(), ClickListener {
             })
         }
 
-        fillList()
+        /*fillList()
 
         if (helper.getLang(requireContext()).equals("en")) {
             slideIn = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_en)
@@ -230,7 +177,7 @@ class DevicesFragment : Fragment(), ClickListener {
         binding.root.setOnTouchListener { _, event ->
             gestureDetector.onTouchEvent(event)
             true
-        }
+        }*/
 
         if (helper.getLang(requireContext()).equals("ar")) {
             binding.btnBack.rotation = 180f
@@ -239,7 +186,7 @@ class DevicesFragment : Fragment(), ClickListener {
         return binding.root
     }
 
-    private fun fillList() {
+    /*private fun fillList() {
 
         val version = if (helper.getLang(requireContext()).equals("ar")) {
             helper.getAppVersion(requireContext()).mappingNumbers()
@@ -263,7 +210,7 @@ class DevicesFragment : Fragment(), ClickListener {
         )
 
         menuAdapter.updateAdapter(menuList)
-    }
+    }*/
 
     private fun search(keyword: String): MutableList<DevicesData> {
         var filterList = mutableListOf<DevicesData>()
@@ -276,7 +223,7 @@ class DevicesFragment : Fragment(), ClickListener {
         return filterList
     }
 
-    private fun openMenu() {
+    /*private fun openMenu() {
         binding.placeholder.visibility = View.VISIBLE
         binding.drawerMenu.root.visibility = View.VISIBLE
         binding.drawerMenu.root.startAnimation(slideIn)
@@ -289,7 +236,7 @@ class DevicesFragment : Fragment(), ClickListener {
         binding.drawerMenu.root.startAnimation(slideOut)
         binding.drawerMenu.root.visibility = View.GONE
         isVisible = false
-    }
+    }*/
 
     override fun onItemClickListener(position: Int, extras: Bundle?) {
         //TODO("Not yet implemented")

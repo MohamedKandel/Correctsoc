@@ -2,6 +2,7 @@ package com.correct.correctsoc.data.pay
 
 data class SubscibeGooglePayBody(
     val amount: Int,
+    val devicesNumber: Int,
     val currencyIsoCode: String,
     val deviceData: String,
     val months: Int,

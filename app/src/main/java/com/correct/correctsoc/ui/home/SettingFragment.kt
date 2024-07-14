@@ -47,7 +47,7 @@ class SettingFragment : Fragment() {
 
         fragmentListener.onFragmentChangedListener(R.id.settingFragment)
 
-        if (arguments != null) {
+        /*if (arguments != null) {
             sourceFragment = requireArguments().getInt(SOURCE, 0)
             if (sourceFragment != 0) {
                 binding.btnBack.setOnClickListener {
@@ -60,7 +60,6 @@ class SettingFragment : Fragment() {
                 findNavController().navigate(sourceFragment)
             }
         }
-
         if (sourceFragment != R.id.homeFragment) {
 //            helper.onBackPressed(sourceFragment, requireArguments())
             helper.onBackPressed(this) {
@@ -71,6 +70,14 @@ class SettingFragment : Fragment() {
                 findNavController().navigate(R.id.homeFragment)
             }
             //onBackPressed(R.id.homeFragment, null)
+        }*/
+
+        binding.btnBack.setOnClickListener {
+            findNavController().navigate(R.id.homeFragment)
+        }
+
+        helper.onBackPressed(this) {
+            findNavController().navigate(R.id.homeFragment)
         }
 
         binding.detailsLayout.setOnClickListener {

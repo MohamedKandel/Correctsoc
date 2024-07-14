@@ -160,7 +160,7 @@ class PaymentDetailsFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if (s.toString().isNotEmpty()) {
+                if (s.toString().isNotEmpty() && months > 0) {
                     devices = s.toString().toInt()
                     binding.totalceck.visibility = View.VISIBLE
                     binding.line.visibility = View.VISIBLE
@@ -209,9 +209,9 @@ class PaymentDetailsFragment : Fragment() {
                     bundle.putDouble(PRICE, price)
                     bundle.putString(TOKEN_KEY, token)
                     (parentFragment as? ParentPayFragment)?.replaceFragment(
-                            PaymentMethodFragment(),
-                            bundle
-                        )
+                        PaymentMethodFragment(),
+                        bundle
+                    )
                     listener.onNextStepListener(1)
                 }
             } else {
@@ -219,6 +219,7 @@ class PaymentDetailsFragment : Fragment() {
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.paymentDetailsFragment)

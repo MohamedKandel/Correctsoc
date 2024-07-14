@@ -230,6 +230,7 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                     val phone = usersDB.dao().getUserPhone(id) ?: ""
                     val body = SubscibeGooglePayBody(
                         amount = price.toInt(),
+                        devicesNumber = amount,
                         currencyIsoCode = CURRENCY,
                         deviceData = deviceData,
                         months = months,
@@ -251,6 +252,7 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                     val phone = usersDB.dao().getUserPhone(id) ?: ""
                     val body = SubscibeGooglePayBody(
                         amount = price.toInt(),
+                        devicesNumber = amount,
                         currencyIsoCode = CURRENCY,
                         deviceData = helper.getDeviceID(requireContext()),
                         months = months,

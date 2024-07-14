@@ -8,8 +8,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentAboutBinding
@@ -51,8 +49,8 @@ class AboutFragment : Fragment() {
 
         binding.btnBack.setOnClickListener {
             if (arguments != null) {
-                val source = requireArguments().getInt(Constants.SOURCE, 0)
-                if (source != 0) {
+                val source = requireArguments().getInt(Constants.SOURCE, -1)
+                if (source != -1) {
                     findNavController().navigate(source, requireArguments())
                     sourceLayout = source
                 } else {
@@ -68,13 +66,26 @@ class AboutFragment : Fragment() {
         }
         binding.txtVersion.append(" : $version")
 
-        if (sourceLayout != 0) {
-//            onBackPressed(sourceLayout, requireArguments())
+        helper.onBackPressed(this) {
+            if (arguments != null) {
+                val source = requireArguments().getInt(Constants.SOURCE, -1)
+                if (source != -1) {
+                    findNavController().navigate(source, requireArguments())
+                    //sourceLayout = source
+                } else {
+                    findNavController().navigate(R.id.settingFragment)
+                }
+            }
+        }
+
+        /*if (sourceLayout != 0) {
+            //onBackPressed(sourceLayout, requireArguments())
             helper.onBackPressed(this) {
                 if (arguments != null) {
                     val source = requireArguments().getInt(Constants.SOURCE, 0)
                     if (source != 0) {
-                        findNavController().navigate(sourceLayout, requireArguments())
+                        findNavController().navigate(source, requireArguments())
+                        sourceLayout = source
                     } else {
                         findNavController().navigate(R.id.settingFragment)
                     }
@@ -84,8 +95,8 @@ class AboutFragment : Fragment() {
             helper.onBackPressed(this) {
                 findNavController().navigate(R.id.settingFragment)
             }
-//            onBackPressed(R.id.settingFragment, null)
-        }
+            //onBackPressed(R.id.settingFragment, null)
+        }*/
 
         val url = ""
         val facebook = ""
@@ -129,9 +140,10 @@ class AboutFragment : Fragment() {
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (arguments != null) {
-                        val source = requireArguments().getInt(Constants.SOURCE, 0)
-                        if (source != 0) {
-                            findNavController().navigate(layoutRes, bundle)
+                        val source = requireArguments().getInt(Constants.SOURCE, -1)
+                        if (source != -1) {
+                            findNavController().navigate(source, requireArguments())
+                            sourceLayout = source
                         } else {
                             findNavController().navigate(R.id.settingFragment)
                         }

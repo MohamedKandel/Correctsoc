@@ -80,6 +80,10 @@ class DistributorsFragment : Fragment(), ClickListener {
         adapter = DistributorsAdapter(requireContext(), list, this)
         binding.contactsRecyclerView.adapter = adapter
 
+        if (helper.getLang(requireContext()).equals("ar")) {
+            binding.btnBack.rotation = 180f
+        }
+
         fillList()
 
         val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
