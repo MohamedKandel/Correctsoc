@@ -43,7 +43,6 @@
             android:inputType="number"
             android:digits="0123456789."
             android:layout_marginBottom="@dimen/_6sdp"
-            android:layout_toEndOf="@id/menuIcon"
             android:background="@drawable/search_drawable"
             android:drawableEnd="@drawable/search_icon"
             android:drawablePadding="@dimen/_6sdp"
