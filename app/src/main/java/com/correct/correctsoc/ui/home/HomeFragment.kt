@@ -245,38 +245,6 @@ class HomeFragment : Fragment(), ClickListener {
         return binding.root
     }
 
-    private fun setDeviceOn(token: String) {
-        viewModel.setDeviceOn(token)
-        val observer = object : Observer<Boolean> {
-            override fun onChanged(value: Boolean) {
-                if (value) {
-                    helper.setDeviceOnline(true, requireContext())
-                    Log.v("device status", "account online")
-                } else {
-                    Log.v("device status", "account failed to be online")
-                }
-                viewModel.changeDeviceStatus.removeObserver(this)
-            }
-        }
-        viewModel.changeDeviceStatus.observe(viewLifecycleOwner, observer)
-    }
-
-    private fun setDeviceOff(token: String) {
-        viewModel.setDeviceOff(token)
-        val observer = object : Observer<Boolean> {
-            override fun onChanged(value: Boolean) {
-                if (value) {
-                    helper.setDeviceOnline(false, requireContext())
-                    Log.v("device status", "account offline")
-                } else {
-                    Log.v("device status", "account failed to be offline")
-                }
-                viewModel.changeDeviceStatus.removeObserver(this)
-            }
-        }
-        viewModel.changeDeviceStatus.observe(viewLifecycleOwner, observer)
-    }
-
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.homeFragment)

@@ -42,7 +42,7 @@
 
     <string name="applications">Threats application</string>
     <string name="scan_device">Scanning connected devices…</string>
-    <string name="conntected_devices">Connected devices</string>
+    <string name="conntected_devices">Wifi connected devices information</string>
     <string name="web_scan">Scan secure link</string>
     <string name="about_txt">At CorrectSOC, our mission is to protect your privacy and ensure the security of your personal information.\nWe understand the increasing threats in the digital world, and our app is designed to provide you with top-notch protection against spyware and malicious activities.\nOur app is designed to detect and neutralize spyware, ensuring that your personal information remains confidential.</string>
     <string name="enter_link">Enter Link</string>
@@ -156,7 +156,9 @@
     <string name="google_pay" translatable="false">Google Pay</string>
     <string name="activation_code">Activation Code</string>
     <string name="google_pay_msg">Pay directly from your bank card</string>
-    <string name="activation_msg">The code that sent by Distributors</string>
+    <string name="activation_msg">Get code through WhatsApp</string>
+    <string name="activation_msg_2">The code that you got</string>
+    <string name="delete_account">Delete account</string>
 
     <string name="phone_not_found">There is no user registered in this device before</string>
 
@@ -169,4 +171,15 @@
     <string name="temp_phone" translatable="false">01234567890</string>
 
     <string name="invalid_code">Invalid activation code</string>
+
+    <string name="share_with">Share with …</string>
+    <string name="not_supported">Not supported yet</string>
+    <string name="click_here">Click here</string>
+    <string name="receipt_summary">Receipt Summary</string>
+    <string name="promo_code">Promo code</string>
+    <string name="apply">Apply</string>
+    <string name="six_months">6 months</string>
+    <string name="one_year">1 year</string>
+    <string name="more_devices">devices</string>
+    <string name="one_device">device</string>
 </resources>

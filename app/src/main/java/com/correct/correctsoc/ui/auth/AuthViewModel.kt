@@ -50,9 +50,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _validateTokenResponse = MutableLiveData<Boolean>()
     private val _validateOTPResponse = MutableLiveData<AuthResponse>()
     private val _changeDeviceStatus = MutableLiveData<Boolean>()
-    private val _workManagerStatus = MutableLiveData<WorkInfo.State>()
+    private val _deleteAccountResponse = MutableLiveData<ForgotResponse>()
 
-    val workManagerStatus: LiveData<WorkInfo.State> get() = _workManagerStatus
+    val deleteAccountResponse:LiveData<ForgotResponse> get() = _deleteAccountResponse
     val changeDeviceStatus: LiveData<Boolean> get() = _changeDeviceStatus
     val validateOTPResponse: LiveData<AuthResponse> get() = _validateOTPResponse
     val validateTokenResponse: LiveData<Boolean> get() = _validateTokenResponse
@@ -191,6 +191,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun setDeviceOff(token: String) = viewModelScope.launch {
         val result = authRepository.setDeviceOff(token)
         _changeDeviceStatus.postValue(result.isSuccessful)
+    }
+
+    fun deleteAccount(userID: String, token: String) = viewModelScope.launch {
+        val result = authRepository.deleteAccount(userID,token)
+        _deleteAccountResponse.postValue(result.body())
     }
 
 }

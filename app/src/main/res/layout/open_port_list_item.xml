@@ -174,16 +174,37 @@
                     android:layout_toEndOf="@id/cve"
                     android:layout_below="@id/txt_cpe"/>
 
-                <ImageButton
+
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/hand_icon"
-                    android:layout_alignParentEnd="true"
+                    android:layoutDirection="locale"
+                    android:textDirection="locale"
                     android:layout_below="@+id/txt_cpe"
-                    android:padding="@dimen/_7sdp"
-                    android:background="@android:color/transparent"
-                    android:id="@+id/btn_see_more"/>
+                    android:layout_alignParentEnd="true">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@id/btn_see_more"
+                        android:text="@string/click_here"
+                        android:id="@+id/txt_click_here"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_12ssp"
+                        android:fontFamily="@font/roboto_medium"/>
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/hand_icon"
+                        android:layout_alignParentEnd="true"
+                        android:padding="@dimen/_7sdp"
+                        android:background="@android:color/transparent"
+                        android:id="@+id/btn_see_more"/>
+
+
+                </RelativeLayout>
             </RelativeLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -63,18 +63,26 @@ class ParentPayFragment : Fragment(), NextStepListener {
     }
 
     private fun back() {
-        if (currentFragment is PaymentDetailsFragment) {
-            findNavController().navigate(R.id.homeFragment)
-        } else if (currentFragment is PaymentMethodFragment) {
-            replaceFragment(PaymentDetailsFragment())
-            changeSteps(1)
-        } else if (currentFragment is DistributorsFragment) {
-            replaceFragment(PaymentMethodFragment())
-            changeSteps(2)
-        } else if (currentFragment is PaymentSuccessFragment) {
-            replaceFragment(PaymentMethodFragment())
-            changeSteps(2)
+        if (childFragmentManager.backStackEntryCount > 1) {
+            childFragmentManager.popBackStack()
+            return
         }
+        val parentPayFragment = currentFragment.parentFragment as ParentPayFragment
+        when (currentFragment) {
+            is PaymentMethodFragment -> {
+                changeSteps(1)
+            }
+
+            is DistributorsFragment -> {
+                changeSteps(2)
+            }
+
+            is PaymentSuccessFragment -> {
+                changeSteps(2)
+            }
+        }
+        parentPayFragment.changeSteps(2)
+        parentFragmentManager.popBackStack()
     }
 
     fun replaceFragment(
@@ -92,13 +100,6 @@ class ParentPayFragment : Fragment(), NextStepListener {
         currentFragment = fragment
         if (bundle != null) {
             fragment.arguments = bundle
-        }
-        if (currentFragment is PaymentMethodFragment) {
-            Log.v("current mohamed", "payment method")
-        } else if (currentFragment is PaymentDetailsFragment) {
-            Log.v("current mohamed", "payment details")
-        } else {
-            Log.v("current mohamed", "payment success")
         }
         val transaction = childFragmentManager.beginTransaction()
         transaction.replace(R.id.frame_layout, fragment)
@@ -195,6 +196,7 @@ class ParentPayFragment : Fragment(), NextStepListener {
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.parentPayFragment)

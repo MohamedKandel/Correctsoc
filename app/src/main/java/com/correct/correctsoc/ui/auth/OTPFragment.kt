@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
-import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
@@ -31,7 +30,6 @@ import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.VerificationTextFilledListener
-import com.correct.correctsoc.helper.appendFilter
 import com.correct.correctsoc.room.User
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
@@ -82,14 +80,14 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
             source = requireArguments().getInt(SOURCE)
         }
 
-        binding.apply {
+        /*binding.apply {
             txtFirstDigit.appendFilter(InputFilter.AllCaps())
             txtSecondDigit.appendFilter(InputFilter.AllCaps())
             txtThirdDigit.appendFilter(InputFilter.AllCaps())
             txtFourthDigit.appendFilter(InputFilter.AllCaps())
             txtFifthDigit.appendFilter(InputFilter.AllCaps())
             txtSixthDigit.appendFilter(InputFilter.AllCaps())
-        }
+        }*/
 
         binding.txtFirstDigit.requestFocus()
         val array = arrayOf(
@@ -284,6 +282,16 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
+                    editTexts[i].removeTextChangedListener(this) // Remove listener to prevent infinite loop
+                    s?.let {
+                        val upperCaseText = it.toString().uppercase()
+                        if (upperCaseText != it.toString()) {
+                            editTexts[i].setText(upperCaseText)
+                            editTexts[i].setSelection(upperCaseText.length) // Set cursor to end of text
+                        }
+                    }
+                    editTexts[i].addTextChangedListener(this) // Re-attach listener
+
                     if (s.toString().length == 1) {
                         if (i < editTexts.size - 1) {
                             editTexts[i + 1].requestFocus()

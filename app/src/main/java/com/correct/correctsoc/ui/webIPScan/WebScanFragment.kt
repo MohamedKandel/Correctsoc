@@ -1,8 +1,11 @@
 package com.correct.correctsoc.ui.webIPScan
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,7 +14,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
@@ -32,13 +37,26 @@ import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TYPE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.OnDataFetchedListener
+import com.correct.correctsoc.helper.OnProgressUpdatedListener
+import com.correct.correctsoc.helper.mappingNumbers
 import com.correct.correctsoc.ui.selfScan.ScanViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 
 class WebScanFragment : Fragment(), ClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
+    private lateinit var value: OpenPorts
 
     private lateinit var binding: FragmentWebScanBinding
     private lateinit var helper: HelperClass
@@ -51,6 +69,14 @@ class WebScanFragment : Fragment(), ClickListener {
     private var isSafe = false
     private lateinit var audioUtils: AudioUtils
     private lateinit var fragmentListener: FragmentChangedListener
+    private var progressJob: Job? = null
+    private var fetchDevicesJob: Job? = null
+
+    /*
+    * 1 -> web scan
+    * 2 -> ip scan
+    * 3 -> router scan*/
+    private var scan_type = 1
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -90,19 +116,24 @@ class WebScanFragment : Fragment(), ClickListener {
                 R.id.insertLinkFragment -> {
                     if (type.isNotEmpty()) {
                         binding.txtTitle.text = resources.getString(R.string.ip_scan)
+                        scan_type = 2
                     } else {
                         binding.txtTitle.text = resources.getString(R.string.web_scan)
+                        scan_type = 1
                     }
                 }
 
                 R.id.penResultFragment -> {
                     binding.txtTitle.text = resources.getString(R.string.self_test)
+                    scan_type = 3
                 }
             }
             if (type.equals(IP_ADDRESS)) {
                 binding.txtTitle.text = resources.getString(R.string.ip_scan)
+                scan_type = 2
             } else if (type.equals(ROUTER)) {
                 binding.txtTitle.text = resources.getString(R.string.self_test)
+                scan_type = 3
             }
 
 
@@ -123,9 +154,9 @@ class WebScanFragment : Fragment(), ClickListener {
                             )
                         )
                         if (helper.getLang(requireContext()).equals("en")) {
-                            audioUtils.playAudio(requireContext(), R.raw.secure_en)
+                            playSound(scan_type, "en", true)
                         } else {
-                            audioUtils.playAudio(requireContext(), R.raw.secure_ar)
+                            playSound(scan_type, "ar", true)
                         }
                         isSafe = true
                     } else {
@@ -137,12 +168,15 @@ class WebScanFragment : Fragment(), ClickListener {
                             )
                         )
                         if (helper.getLang(requireContext()).equals("en")) {
-                            audioUtils.playAudio(requireContext(), R.raw.danger_en)
+                            playSound(scan_type, "en", false)
                         } else {
-                            audioUtils.playAudio(requireContext(), R.raw.danger_ar)
+                            playSound(scan_type, "ar", false)
                         }
                         isSafe = false
                     }
+                    binding.txtDeviceName.visibility = View.VISIBLE
+                    binding.txtNameTitle.visibility = View.VISIBLE
+                    binding.imgSecurity.visibility = View.VISIBLE
                     binding.loadingLayout.visibility = View.GONE
                     adapter.updateAdapter(list)
                 }
@@ -160,9 +194,9 @@ class WebScanFragment : Fragment(), ClickListener {
                             )
                         )
                         if (helper.getLang(requireContext()).equals("en")) {
-                            audioUtils.playAudio(requireContext(), R.raw.secure_en)
+                            playSound(scan_type, "en", true)
                         } else {
-                            audioUtils.playAudio(requireContext(), R.raw.secure_ar)
+                            playSound(scan_type, "ar", true)
                         }
                     } else {
                         binding.imgSecurity.setImageResource(R.drawable.danger)
@@ -173,9 +207,9 @@ class WebScanFragment : Fragment(), ClickListener {
                             )
                         )
                         if (helper.getLang(requireContext()).equals("en")) {
-                            audioUtils.playAudio(requireContext(), R.raw.danger_en)
+                            playSound(scan_type, "en", false)
                         } else {
-                            audioUtils.playAudio(requireContext(), R.raw.danger_ar)
+                            playSound(scan_type, "ar", false)
                         }
                     }
                     isSafe = isSecure
@@ -193,17 +227,85 @@ class WebScanFragment : Fragment(), ClickListener {
 
 
             if (input.isNotEmpty()) {
-                scanning(input)
+                //scanning(input)
+                CoroutineScope(Dispatchers.Main).launch {
+                    //var mlist = mutableListOf<Port>()
+                    val progressJob = launch(Dispatchers.Main) {
+                        progress(object : OnProgressUpdatedListener {
+                            @SuppressLint("SetTextI18n")
+                            override fun onUpdateProgressLoad(progress: Int) {
+                                binding.txtProgress.text = "$progress %".mappingNumbers()
+                                if (progress == 100) {
+                                    binding.loadingLayout.visibility = View.GONE
+
+                                    if (this@WebScanFragment::value.isInitialized) {
+                                        if (value.scanHostDeviceName.isEmpty()) {
+                                            binding.txtDeviceName.text = value.scanIp
+                                            deviceName = value.scanIp
+                                        } else {
+                                            binding.txtDeviceName.text = value.scanHostDeviceName
+                                            deviceName = value.scanHostDeviceName
+                                        }
+
+                                        val isSecure = helper.isSecureSite(list)
+                                        if (isSecure) {
+                                            binding.imgSecurity.setImageResource(R.drawable.safe)
+                                            binding.txtNameTitle.setTextColor(
+                                                resources.getColor(
+                                                    R.color.safe_color,
+                                                    context?.theme
+                                                )
+                                            )
+                                            if (helper.getLang(requireContext()).equals("en")) {
+                                                playSound(scan_type, "en", true)
+                                            } else {
+                                                playSound(scan_type, "ar", true)
+                                            }
+                                        } else {
+                                            binding.imgSecurity.setImageResource(R.drawable.danger)
+                                            binding.txtNameTitle.setTextColor(
+                                                resources.getColor(
+                                                    R.color.danger_color,
+                                                    context?.theme
+                                                )
+                                            )
+                                            if (helper.getLang(requireContext()).equals("en")) {
+                                                playSound(scan_type, "en", false)
+                                            } else {
+                                                playSound(scan_type, "ar", false)
+                                            }
+                                        }
+                                        isSafe = isSecure
+
+                                        binding.txtDeviceName.visibility = View.VISIBLE
+                                        binding.txtNameTitle.visibility = View.VISIBLE
+                                        binding.imgSecurity.visibility = View.VISIBLE
+                                    }
+
+                                    adapter.updateAdapter(list)
+                                }
+                            }
+                        }) {
+                            fetchDevicesJob?.isActive == false
+                        }
+                    }
+                    fetchDevicesJob = launch(Dispatchers.IO) {
+                        list = fetchData(input)
+                        progressJob.join()
+                    }
+                }
             }
 
         }
 
         binding.btnBack.setOnClickListener {
-            onBackButtonPressed()
+            //onBackButtonPressed()
+            stopOperations()
         }
 
         helper.onBackPressed(this) {
-            onBackButtonPressed()
+            //onBackButtonPressed()
+            stopOperations()
         }
 
         if (helper.getLang(requireContext()).equals("ar")) {
@@ -251,9 +353,11 @@ class WebScanFragment : Fragment(), ClickListener {
                             )
                         )
                         if (helper.getLang(requireContext()).equals("en")) {
-                            audioUtils.playAudio(requireContext(), R.raw.secure_en)
+                            playSound(scan_type, "en", true)
+                            //audioUtils.playAudio(requireContext(), R.raw.secure_en)
                         } else {
-                            audioUtils.playAudio(requireContext(), R.raw.secure_ar)
+                            playSound(scan_type, "ar", true)
+                            //audioUtils.playAudio(requireContext(), R.raw.secure_ar)
                         }
                     } else {
                         binding.imgSecurity.setImageResource(R.drawable.danger)
@@ -264,9 +368,11 @@ class WebScanFragment : Fragment(), ClickListener {
                             )
                         )
                         if (helper.getLang(requireContext()).equals("en")) {
-                            audioUtils.playAudio(requireContext(), R.raw.danger_en)
+                            playSound(scan_type, "en", false)
+                            //audioUtils.playAudio(requireContext(), R.raw.danger_en)
                         } else {
-                            audioUtils.playAudio(requireContext(), R.raw.danger_ar)
+                            playSound(scan_type, "ar", false)
+                            //audioUtils.playAudio(requireContext(), R.raw.danger_ar)
                         }
                     }
                     isSafe = isSecure
@@ -336,6 +442,113 @@ class WebScanFragment : Fragment(), ClickListener {
 
         }
         println(source)
+    }
+
+    private fun stopOperations() {
+        // Cancel progress job
+        progressJob?.cancel()
+        // Cancel fetch devices job
+        fetchDevicesJob?.cancel()
+        //findNavController().navigate(SOURCE)
+        onBackButtonPressed()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private suspend fun fetchData(input: String): MutableList<Port> {
+        return suspendCancellableCoroutine { continuation ->
+            Handler(Looper.getMainLooper()).post {
+                getPorts(input, object : OnDataFetchedListener<Port> {
+                    override fun onAllDataFetched(data: MutableList<Port>) {
+                        continuation.resume(data, null)
+                    }
+                })
+            }
+        }
+    }
+
+    private fun getPorts(input: String, callback: OnDataFetchedListener<Port>) {
+        list = mutableListOf<Port>()
+        viewModel.scan(requireContext(), input, helper.getToken(requireContext()))
+        val observer = object : Observer<OpenPorts?> {
+            override fun onChanged(value: OpenPorts?) {
+                if (value != null) {
+                    this@WebScanFragment.value = value
+                    list.addAll(value.openPortsInfo)
+                    callback.onAllDataFetched(list)
+                    viewModel.scanResponse.removeObserver(this)
+                }
+            }
+        }
+        viewModel.scanResponse.observe(viewLifecycleOwner, observer)
+    }
+
+    private suspend fun progress(progress: OnProgressUpdatedListener, isCanceled: () -> Boolean) {
+        withContext(Dispatchers.Main) {
+            for (i in 0..100) {
+                if (isCanceled()) {
+                    break
+                }
+                progress.onUpdateProgressLoad(i)
+                delay(700)
+            }
+        }
+    }
+
+
+    private fun playSound(scanType: Int, lang: String, isSecure: Boolean) {
+        if (isSecure) {
+            when (scanType) {
+                1 -> {
+                    if (lang.equals("ar")) {
+                        audioUtils.playAudio(requireContext(), R.raw.url_secure_ar)
+                    } else {
+                        audioUtils.playAudio(requireContext(), R.raw.url_secure_en)
+                    }
+                }
+
+                2 -> {
+                    if (lang.equals("ar")) {
+                        audioUtils.playAudio(requireContext(), R.raw.ip_secure_ar)
+                    } else {
+                        audioUtils.playAudio(requireContext(), R.raw.ip_secure_en)
+                    }
+                }
+
+                3 -> {
+                    if (lang.equals("ar")) {
+                        audioUtils.playAudio(requireContext(), R.raw.router_secure_ar)
+                    } else {
+                        audioUtils.playAudio(requireContext(), R.raw.router_secure_en)
+                    }
+                }
+            }
+        } else {
+            when (scanType) {
+                1 -> {
+                    if (lang.equals("ar")) {
+                        audioUtils.playAudio(requireContext(), R.raw.url_insecure_ar)
+                    } else {
+                        audioUtils.playAudio(requireContext(), R.raw.url_insecure_en)
+                    }
+                }
+
+                2 -> {
+                    if (lang.equals("ar")) {
+                        audioUtils.playAudio(requireContext(), R.raw.ip_insecure_ar)
+                    } else {
+                        audioUtils.playAudio(requireContext(), R.raw.ip_insecure_en)
+                    }
+                }
+
+                3 -> {
+                    if (lang.equals("ar")) {
+                        audioUtils.playAudio(requireContext(), R.raw.router_insecure_ar)
+                    } else {
+                        audioUtils.playAudio(requireContext(), R.raw.router_insecure_en)
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

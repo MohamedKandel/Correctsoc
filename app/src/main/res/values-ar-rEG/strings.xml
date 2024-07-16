@@ -38,7 +38,7 @@
 
     <string name="applications">تطبيقات تهدد الهاتف</string>
     <string name="scan_device">فحص الأجهزة المتصلة …</string>
-    <string name="conntected_devices">الأجهزة المتصلة بالواي فاي</string>
+    <string name="conntected_devices">بيانات الأجهزة المتصلة بالواي فاي</string>
     <string name="web_scan">فحص أمان الروابط</string>
     <string name="about_txt">في CorrectSOC، مهمتنا هي حماية خصوصيتك وضمان أمان معلوماتك الشخصية.\nنحن نتفهم التهديدات المتزايدة في العالم الرقمي، وقد تم تصميم تطبيقنا ليوفر لك حماية من الدرجة الأولى ضد برامج التجسس والأنشطة الضارة.\nم تصميم تطبيقنا لاكتشاف برامج التجسس وإبطال مفعولها، مما يضمن بقاء معلوماتك الشخصية سرية.</string>
     <string name="enter_link">أكتب الرابط</string>
@@ -152,14 +152,28 @@
     <string name="select_payment">أختار واحدة من طرق الدفع التالية</string>
     <string name="activation_code">كود التفعيل</string>
     <string name="google_pay_msg">ادفع مباشرة من بطاقتك المصرفية</string>
-    <string name="activation_msg">الرمز الذي أرسله الموزعون</string>
+    <string name="activation_msg">أحصل على كود التفعيل من خلال واتساب</string>
+    <string name="activation_msg_2">الكود الذي حصلت عليه</string>
     <string name="phone_not_found">لا يوجد مستخدم مسجل على هذا الهاتف من قبل</string>
     <string name="phone_empty">لا يوجد مستخدم مسجل على هذا الهاتف من قبل\nمن فضلك سجل مستخدم أولًا او ادخل رقم هاتفك</string>
     <string name="empty_device_duration">من فضلك ادخل عدد الاجهزة والمدة المراد شرائها</string>
     <string name="choose_pay">من فضلك اختار طريقة الدفع</string>
 
+    <string name="delete_account">حذف الحساب</string>
+
     <string name="call">مكالمة</string>
     <string name="distributors">الموزعون</string>
 
     <string name="invalid_code">كود تفعيل غير صالح</string>
+    <string name="share_with">مشاركة بواسطة …</string>
+    <string name="not_supported">غير مدعمة حتى الأن</string>
+    <string name="click_here">أضغط هنا</string>
+    <string name="receipt_summary">ملخص الاستلام</string>
+    <string name="promo_code">كود الخصم</string>
+    <string name="apply">تفعيل</string>
+
+    <string name="six_months">٦ أشهر</string>
+    <string name="one_year">سنة واحدة</string>
+    <string name="more_devices">أجهزة</string>
+    <string name="one_device">جهاز</string>
 </resources>

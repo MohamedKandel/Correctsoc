@@ -75,8 +75,6 @@ class PaymentDetailsFragment : Fragment() {
         helper = HelperClass.getInstance()
         viewModel = ViewModelProvider(this)[PayViewModel::class.java]
 
-        binding.line.visibility = View.GONE
-        binding.totalceck.visibility = View.GONE
         fragmentListener.onFragmentChangedListener(R.id.paymentDetailsFragment)
         val durations = resources.getStringArray(R.array.durations)
         val arrayAdapter = ArrayAdapter(
@@ -86,14 +84,21 @@ class PaymentDetailsFragment : Fragment() {
         binding.spnDuration.setAdapter(arrayAdapter)
 
         binding.nextBtn.setOnClickListener {
-            if (binding.txtDeviceNumber.text.toString().isNotEmpty()) {
-                devices = binding.txtDeviceNumber.text.toString().toInt()
+            devices = if (binding.txtDeviceNumber.text.toString().isNotEmpty()) {
+                binding.txtDeviceNumber.text.toString().toInt()
             } else {
-                devices = 0
+                0
             }
             if (devices > 0 && months > 0) {
                 if (parentFragment is ParentPayFragment) {
-                    orderGooglePay()
+                    val bundle = Bundle()
+                    bundle.putInt(MONTHS, months)
+                    bundle.putInt(DEVICES, devices)
+                    bundle.putDouble(PRICE, price)
+                    (parentFragment as? ParentPayFragment)?.replaceFragment(
+                        ReceiptFragment(),
+                        bundle
+                    )
                 }
             } else {
                 Toast.makeText(
@@ -104,40 +109,27 @@ class PaymentDetailsFragment : Fragment() {
             }
         }
 
-        binding.txtDeviceNumber.setOnClickListener {
-            binding.line.visibility = View.GONE
-            binding.totalceck.visibility = View.GONE
-        }
-
-        binding.spnDuration.setOnClickListener {
-            binding.line.visibility = View.GONE
-            binding.totalceck.visibility = View.GONE
-        }
-
         binding.spnDuration.onItemClickListener =
             OnItemClickListener { parent, view, position, id ->
                 //Log.v("Selected mohamed", arrayAdapter.getItem(position).toString())
                 // Log.v("Selected mohamed", "$position")
-                binding.line.visibility = View.VISIBLE
-                binding.totalceck.visibility = View.VISIBLE
-                if (binding.txtDeviceNumber.text.toString().isNotEmpty()) {
-                    years = 0
-                    devices = binding.txtDeviceNumber.text.toString().toInt()
-                    when (position) {
-                        0 -> {
-                            months = 6
-                        }
+                if (devices > 0) {
+                    if (binding.txtDeviceNumber.text.toString().isNotEmpty()) {
+                        years = 0
+                        devices = binding.txtDeviceNumber.text.toString().toInt()
+                        when (position) {
+                            0 -> {
+                                months = 6
+                            }
 
-                        1 -> {
-                            months = 12
-                        }
+                            1 -> {
+                                months = 12
+                            }
 
-                        else -> {
-                            months = 0
+                            else -> {
+                                months = 0
+                            }
                         }
-                    }
-                    if (months > 0 && devices > 0) {
-                        getCost(devices, months, years)
                     }
                 }
             }
@@ -150,25 +142,15 @@ class PaymentDetailsFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
                     devices = s.toString().toInt()
-                    binding.totalceck.visibility = View.VISIBLE
-                    binding.line.visibility = View.VISIBLE
                 } else {
-                    binding.totalceck.visibility = View.GONE
-                    binding.line.visibility = View.GONE
+                    getCost(devices, months)
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty() && months > 0) {
                     devices = s.toString().toInt()
-                    binding.totalceck.visibility = View.VISIBLE
-                    binding.line.visibility = View.VISIBLE
-                    if (devices > 0 && months > 0) {
-                        getCost(devices, months, years)
-                    }
-                } else {
-                    binding.totalceck.visibility = View.GONE
-                    binding.line.visibility = View.GONE
+                    getCost(devices, months)
                 }
             }
         })
@@ -182,39 +164,11 @@ class PaymentDetailsFragment : Fragment() {
         viewModel.getCostResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
                 if (it.result != null) {
-                    binding.line.visibility = View.VISIBLE
-                    binding.totalceck.visibility = View.VISIBLE
-                    binding.txtTotal.text = it.result
                     price = it.result.toString().toDouble()
                 }
             } else {
                 Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
                     .show()
-            }
-        }
-    }
-
-    private fun orderGooglePay() {
-        viewModel.orderPayWithGooglePay()
-        viewModel.orderPayWithGooglePayResponse.observe(viewLifecycleOwner) {
-            if (it.isSuccess) {
-                if (it.result != null) {
-                    token = it.result
-
-                    val bundle = Bundle()
-
-                    bundle.putInt(DEVICES, devices)
-                    bundle.putInt(MONTHS, months)
-                    bundle.putDouble(PRICE, price)
-                    bundle.putString(TOKEN_KEY, token)
-                    (parentFragment as? ParentPayFragment)?.replaceFragment(
-                        PaymentMethodFragment(),
-                        bundle
-                    )
-                    listener.onNextStepListener(1)
-                }
-            } else {
-                Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT).show()
             }
         }
     }

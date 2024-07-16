@@ -3,9 +3,13 @@ package com.correct.correctsoc.ui.selfScan
 import com.correct.correctsoc.Retrofit.APIService
 import com.correct.correctsoc.data.UserIPResponse
 import com.correct.correctsoc.data.openPorts.OpenPorts
+import com.correct.correctsoc.data.openPorts.Port
 import com.correct.correctsoc.helper.RetrofitResponse
 import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import retrofit2.Call

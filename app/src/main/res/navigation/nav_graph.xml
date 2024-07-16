@@ -185,4 +185,9 @@
         android:name="com.correct.correctsoc.ui.pay.ActivationCodeFragment"
         android:label="fragment_activation_code"
         tools:layout="@layout/fragment_activation_code" />
+    <fragment
+        android:id="@+id/receiptFragment"
+        android:name="com.correct.correctsoc.ui.pay.ReceiptFragment"
+        android:label="fragment_receipt"
+        tools:layout="@layout/fragment_receipt" />
 </navigation>

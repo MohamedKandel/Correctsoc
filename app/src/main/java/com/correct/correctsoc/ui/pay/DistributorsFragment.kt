@@ -57,6 +57,7 @@ class DistributorsFragment : Fragment(), ClickListener {
     private lateinit var viewModel: PayViewModel
     private lateinit var usersDB: UsersDB
     private lateinit var listener: NextStepListener
+    //private var swippedPosition: Int ?= null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -84,7 +85,6 @@ class DistributorsFragment : Fragment(), ClickListener {
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)
     }
-    //private var swippedPosition: Int ?= null
 
     private val arl: ActivityResultLauncher<String> = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -118,9 +118,8 @@ class DistributorsFragment : Fragment(), ClickListener {
         viewModel = ViewModelProvider(this)[PayViewModel::class.java]
         usersDB = UsersDB.getDBInstance(requireContext())
 
-        /*if (helper.getLang(requireContext()).equals("ar")) {
-            binding.btnBack.rotation = 180f
-        }*/
+        binding.placeholder.visibility = View.GONE
+        binding.progress.visibility = View.GONE
 
         fillList()
 
@@ -196,6 +195,8 @@ class DistributorsFragment : Fragment(), ClickListener {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 Log.d("Code mohamed","${s.toString().length}")
                 if (s.toString().length == 36) {
+                    binding.placeholder.visibility = View.VISIBLE
+                    binding.progress.visibility = View.VISIBLE
                     Log.d("Code mohamed","Code complete")
                     val code = s.toString()
                     lifecycleScope.launch {
@@ -349,12 +350,13 @@ class DistributorsFragment : Fragment(), ClickListener {
         val observer = object : Observer<ForgotResponse> {
             override fun onChanged(value: ForgotResponse) {
                 if (value.isSuccess) {
-                    //Log.v("subscription", "Subscribed successfully")
-                    (parentFragment as? ParentPayFragment)?.replaceFragment(
-                        PaymentSuccessFragment()
-                    )
+                    binding.placeholder.visibility = View.GONE
+                    binding.progress.visibility = View.GONE
+                    (parentFragment as? ParentPayFragment)?.replaceFragment(PaymentSuccessFragment())
                     listener.onNextStepListener(2)
                 } else {
+                    binding.placeholder.visibility = View.GONE
+                    binding.progress.visibility = View.GONE
                         Toast.makeText(
                             requireContext(),
                             value.errorMessages,

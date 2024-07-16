@@ -52,14 +52,23 @@
             android:layout_alignParentStart="true"
             android:id="@+id/google_pay_choice"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/google_pay_btn"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_toEndOf="@id/google_pay_choice"
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="@dimen/_110sdp"
+            android:layout_height="@dimen/_30sdp"
             android:id="@+id/google_pay_txt"
-            android:contentDescription="@string/google_pay"/>
+            android:layout_toEndOf="@+id/google_pay_choice"
+            app:cardBackgroundColor="@color/transparent"
+            app:cardCornerRadius="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_6sdp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/g_pay_img"
+                android:adjustViewBounds="true"
+                android:id="@+id/g_pay"
+                android:layout_gravity="center"
+                android:contentDescription="@string/google_pay"/>
+        </com.google.android.material.card.MaterialCardView>
 
 
         <TextView
@@ -79,8 +88,60 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/activition_layout"
+        android:id="@+id/activition_layout_wa"
         app:layout_constraintTop_toBottomOf="@id/google_pay_layout"
+        android:layout_marginTop="@dimen/_38sdp"
+        android:layoutDirection="locale"
+        android:textDirection="locale"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginEnd="@dimen/_24sdp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/empty_circle_icon"
+            android:layout_alignParentStart="true"
+            android:id="@+id/activation_choice_wa"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="@dimen/_110sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:id="@+id/activation_txt_wa"
+            android:layout_toEndOf="@+id/activation_choice_wa"
+            app:cardBackgroundColor="@color/transparent"
+            app:cardCornerRadius="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_6sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activation_code"
+                android:textColor="@color/white"
+                android:fontFamily="@font/barlow_semi_condensed_semibold"
+                android:textSize="@dimen/_14ssp"
+                android:layout_gravity="center"
+                android:id="@+id/txt_activation_wa"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/activation_info_wa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_24sdp"
+            android:fontFamily="@font/barlow_medium"
+            android:text="@string/activation_msg"
+            android:textColor="@color/alphaWhite"
+            android:textSize="@dimen/_12ssp"
+            android:layout_below="@id/activation_txt_wa"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/activition_layout"
+        app:layout_constraintTop_toBottomOf="@id/activition_layout_wa"
         android:layout_marginTop="@dimen/_38sdp"
         android:layoutDirection="locale"
         android:textDirection="locale"
@@ -93,16 +154,27 @@
             android:layout_alignParentStart="true"
             android:id="@+id/activation_choice"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/activation_choice"
-            android:text="@string/activation_code"
-            android:textColor="@color/white"
-            android:fontFamily="@font/barlow_semi_condensed_semibold"
-            android:textSize="@dimen/_14ssp"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:id="@+id/activation_txt"/>
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="@dimen/_110sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:id="@+id/activation_txt"
+            android:layout_toEndOf="@+id/activation_choice"
+            app:cardBackgroundColor="@color/transparent"
+            app:cardCornerRadius="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_6sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activation_code"
+                android:textColor="@color/white"
+                android:fontFamily="@font/barlow_semi_condensed_semibold"
+                android:textSize="@dimen/_14ssp"
+
+                android:layout_gravity="center"
+                android:id="@+id/txt_activation"/>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/activation_info"
@@ -112,7 +184,7 @@
             android:layout_marginTop="@dimen/_6sdp"
             android:layout_marginEnd="@dimen/_24sdp"
             android:fontFamily="@font/barlow_medium"
-            android:text="@string/activation_msg"
+            android:text="@string/activation_msg_2"
             android:textColor="@color/alphaWhite"
             android:textSize="@dimen/_12ssp"
             android:layout_below="@id/activation_txt"/>

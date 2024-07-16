@@ -98,9 +98,9 @@ class AboutFragment : Fragment() {
             //onBackPressed(R.id.settingFragment, null)
         }*/
 
-        val url = ""
-        val facebook = ""
-        val insta = ""
+        val url = "https://www.google.com"
+        val facebook = "https://www.facebook.com"
+        val insta = "https://www.instagram.com"
 
         binding.btnFacebook.setOnClickListener {
             val urlIntent = Intent(

@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
@@ -16,6 +18,7 @@ import com.correct.correctsoc.databinding.FragmentSplashBinding
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.mappingNumbers
+import com.correct.correctsoc.ui.auth.AuthViewModel
 import kotlinx.coroutines.launch
 
 class SplashFragment : Fragment() {
@@ -31,6 +34,7 @@ class SplashFragment : Fragment() {
     private val TAG = "SplashFragment mohamed"
     private lateinit var usersDB: UsersDB
     private lateinit var fragmentListener: FragmentChangedListener
+    //private lateinit var viewModel: AuthViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,6 +53,7 @@ class SplashFragment : Fragment() {
         binding = FragmentSplashBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
         usersDB = UsersDB.getDBInstance(requireContext())
+        //viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
         val version = if (helper.getLang(requireContext()).equals("ar")) {
             helper.getAppVersion(requireContext()).mappingNumbers()
@@ -66,6 +71,21 @@ class SplashFragment : Fragment() {
 
         return binding.root
     }
+
+    /*private fun validateToken(token:String) {
+        viewModel.validateToken(token)
+        val observer = object : Observer<Boolean> {
+            override fun onChanged(value: Boolean) {
+                if (value) {
+
+                } else {
+
+                }
+                viewModel.validateTokenResponse.removeObserver(this)
+            }
+        }
+        viewModel.validateTokenResponse.observe(viewLifecycleOwner,observer)
+    }*/
 
     private fun startSplash() {
         countDownTimer = object : CountDownTimer(2000, 1000) {

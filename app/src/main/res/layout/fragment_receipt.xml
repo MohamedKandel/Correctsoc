@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/complete_radius_drawable"
+    tools:context=".ui.pay.ReceiptFragment"
+    android:layout_gravity="center">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/placeholder_view_2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_receipt_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginEnd="@dimen/_18sdp"
+        android:fontFamily="@font/barlow_semi_condensed_semibold"
+        android:text="@string/receipt_summary"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_15ssp"
+        android:layout_marginTop="@dimen/_24sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <RelativeLayout
+        android:id="@+id/paying_layout_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_54sdp"
+        android:layout_marginEnd="@dimen/_18sdp"
+        android:layoutDirection="locale"
+        android:textDirection="locale"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_receipt_title">
+
+        <TextView
+            android:id="@+id/txt_devices_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:text="@string/receipt_summary"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txt_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_devices_number"
+            android:layout_alignParentStart="true"
+            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:text="@string/receipt_summary"
+            android:textColor="#999999"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txt_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:text="@string/receipt_summary"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12ssp" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/promo_code_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_18sdp"
+        android:layout_marginEnd="@dimen/_18sdp"
+        app:cardBackgroundColor="@color/transparent"
+        app:cardCornerRadius="@dimen/_8sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/paying_layout_details"
+        app:strokeColor="@color/white"
+        app:strokeWidth="@dimen/_2sdp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/txt_promo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@id/txt_apply"
+                android:autofillHints="name"
+                android:background="@color/transparent"
+                android:fontFamily="@font/roboto_bold"
+                android:hint="@string/promo_code"
+                android:inputType="text"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingTop="@dimen/_10sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:paddingBottom="@dimen/_10sdp"
+                android:textColorHint="@color/alphaWhite"
+                android:textSize="@dimen/_12ssp" />
+
+            <TextView
+                android:id="@+id/txt_apply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/barlow_semi_condensed_semibold"
+                android:paddingStart="@dimen/_10sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:text="@string/apply"
+                android:textColor="@color/apply_color"
+                android:textSize="@dimen/_12ssp" />
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_3sdp"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_38sdp"
+        android:layout_marginEnd="@dimen/_18sdp"
+        android:background="@color/alphaWhite"
+        app:layout_constraintTop_toBottomOf="@+id/promo_code_layout" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:textDirection="locale"
+        android:id="@+id/total_amount_layout"
+        android:layout_marginTop="@dimen/_24sdp"
+        app:layout_constraintTop_toBottomOf="@+id/line"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginEnd="@dimen/_18sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/txtView_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:text="@string/total_price"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15ssp" />
+
+        <TextView
+            android:id="@+id/txt_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_toEndOf="@+id/txtView_total"
+            android:fontFamily="@font/barlow_black"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18ssp" />
+    </RelativeLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/next_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_25sdp"
+        android:backgroundTint="@color/white"
+        android:fontFamily="@font/roboto_bold"
+        android:paddingTop="@dimen/_9sdp"
+        android:paddingBottom="@dimen/_9sdp"
+        android:text="@string/checkout"
+        android:textAllCaps="false"
+        android:textColor="@color/dark_purple"
+        android:textSize="@dimen/_15ssp"
+        app:cornerRadius="@dimen/_15sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/total_amount_layout"
+        android:layout_marginTop="@dimen/_80sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

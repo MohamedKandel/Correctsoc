@@ -8,9 +8,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.data.DevicesData
@@ -18,9 +15,8 @@ import com.correct.correctsoc.databinding.FragmentDeviceScanningBinding
 import com.correct.correctsoc.helper.Constants.LIST
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
-import com.correct.correctsoc.helper.OnDevicesFetchedListener
+import com.correct.correctsoc.helper.OnDataFetchedListener
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
-import com.correct.correctsoc.ui.selfScan.ScanViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,7 +28,6 @@ import kotlinx.coroutines.withContext
 import tej.wifitoolslib.DevicesFinder
 import tej.wifitoolslib.interfaces.OnDeviceFindListener
 import tej.wifitoolslib.models.DeviceItem
-import kotlin.coroutines.resume
 
 class DeviceScanningFragment : Fragment() {
 
@@ -136,15 +131,15 @@ class DeviceScanningFragment : Fragment() {
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun fetchDevices(): MutableList<DevicesData> {
         return suspendCancellableCoroutine { continuation ->
-            getDevices(object : OnDevicesFetchedListener {
-                override fun onAllDevicesFetched(devices: MutableList<DevicesData>) {
-                    continuation.resume(devices, null)
+            getDevices(object : OnDataFetchedListener<DevicesData> {
+                override fun onAllDataFetched(data: MutableList<DevicesData>) {
+                    continuation.resume(data, null)
                 }
             })
         }
     }
 
-    private fun getDevices(callback: OnDevicesFetchedListener) {
+    private fun getDevices(callback: OnDataFetchedListener<DevicesData>) {
         val list = mutableListOf<DevicesData>()
         val deviceFinder = DevicesFinder(requireContext(), object : OnDeviceFindListener {
             override fun onStart() {
@@ -164,12 +159,12 @@ class DeviceScanningFragment : Fragment() {
                         )
                     }
                 }
-                callback.onAllDevicesFetched(list)
+                callback.onAllDataFetched(list)
             }
 
             override fun onFailed(errorCode: Int) {
                 Log.d("error mohamed", "onFailed: can't load")
-                callback.onAllDevicesFetched(list)
+                callback.onAllDataFetched(list)
             }
         })
         deviceFinder.start()

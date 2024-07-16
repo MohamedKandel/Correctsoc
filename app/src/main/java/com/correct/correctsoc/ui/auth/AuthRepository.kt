@@ -80,18 +80,23 @@ class AuthRepository(private val apiService: APIService) {
             apiService.validateToken(token)
         }
 
-    suspend fun validateOTP(body: ValidateOTPBody):Response<AuthResponse> =
+    suspend fun validateOTP(body: ValidateOTPBody): Response<AuthResponse> =
         withContext(Dispatchers.IO) {
             apiService.validateOTP(body)
         }
 
-    suspend fun setDeviceOn(token: String):Response<Void> =
+    suspend fun setDeviceOn(token: String): Response<Void> =
         withContext(Dispatchers.IO) {
             apiService.setDeviceOn(token)
         }
 
-    suspend fun setDeviceOff(token: String):Response<Void> =
+    suspend fun setDeviceOff(token: String): Response<Void> =
         withContext(Dispatchers.IO) {
             apiService.setDeviceOff(token)
+        }
+
+    suspend fun deleteAccount(userID: String, token: String): Response<ForgotResponse> =
+        withContext(Dispatchers.IO) {
+            apiService.deleteAccount(userID, token)
         }
 }

@@ -18,6 +18,54 @@
         android:contentDescription="@string/app_name"
         android:src="@drawable/correct" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/premium_drawable"
+        app:layout_constraintTop_toBottomOf="@id/img_logo"
+        android:textDirection="locale"
+        android:layoutDirection="locale"
+        android:layout_marginTop="@dimen/_25sdp"
+        android:id="@+id/account_type_layout"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_account_type"
+            android:text="@string/welcome_back"
+            android:fontFamily="@font/roboto_bold"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="@color/white"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_remind"
+            android:text="@string/welcome_back"
+            android:fontFamily="@font/roboto_medium"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="@color/alphaWhite"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/txt_account_type" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/account_type_icon"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/icon"/>
+
+
+
+    </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
@@ -25,8 +73,8 @@
         android:layout_below="@id/img_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_logo"
-        android:layout_marginTop="@dimen/_48sdp"
+        app:layout_constraintTop_toBottomOf="@id/account_type_layout"
+        android:layout_marginTop="@dimen/_40sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="6"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -114,6 +114,20 @@
             android:layout_height="match_parent"
             android:background="#66000000" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_progress"
+            app:layout_constraintBottom_toBottomOf="@id/placeholder"
+            app:layout_constraintEnd_toEndOf="@id/placeholder"
+            app:layout_constraintStart_toStartOf="@id/placeholder"
+            app:layout_constraintTop_toTopOf="@id/placeholder"
+            android:text="0 %"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14ssp"/>
+
+        <!--
         <ProgressBar
             android:id="@+id/progress"
             android:layout_width="wrap_content"
@@ -124,7 +138,7 @@
             app:layout_constraintBottom_toBottomOf="@id/placeholder"
             app:layout_constraintEnd_toEndOf="@id/placeholder"
             app:layout_constraintStart_toStartOf="@id/placeholder"
-            app:layout_constraintTop_toTopOf="@id/placeholder" />
+            app:layout_constraintTop_toTopOf="@id/placeholder" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

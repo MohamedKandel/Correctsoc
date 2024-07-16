@@ -1,5 +1,6 @@
 package com.correct.correctsoc.helper
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
@@ -17,6 +18,7 @@ import android.view.animation.RotateAnimation
 import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.correct.correctsoc.data.openPorts.Port
@@ -251,7 +253,11 @@ class HelperClass {
 
     fun isUnknownSourcesEnabled(context: Context): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return context.packageManager.canRequestPackageInstalls()
+            if (ContextCompat.checkSelfPermission(context,Manifest.permission.REQUEST_INSTALL_PACKAGES) == PackageManager.PERMISSION_GRANTED) {
+                return context.packageManager.canRequestPackageInstalls()
+            } else {
+                return false
+            }
         } else {
             val unknownSources = Settings.Secure.getInt(
                 context.contentResolver, Settings

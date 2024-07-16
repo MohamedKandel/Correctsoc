@@ -7,6 +7,10 @@
     android:background="@drawable/radius_card_drawable"
     tools:context=".ui.pay.PaymentDetailsFragment">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/placeholder_view" />
 
     <TextView
         android:id="@+id/txt_pay_details"
@@ -68,9 +72,9 @@
             android:autofillHints="phone"
             android:digits="0123456789"
             android:drawablePadding="@dimen/_7sdp"
+            android:fontFamily="@font/roboto_bold"
             android:hint="@string/enter_device_number"
             android:inputType="number"
-            android:fontFamily="@font/roboto_bold"
             android:textColor="@color/alphaWhite"
             android:textColorHint="@color/alphaWhite" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -115,72 +119,15 @@
             style="@style/CustomAutoCompleteTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/roboto_bold"
             android:hint="@string/select"
             android:inputType="none"
             android:textColor="@color/alphaWhite"
-            android:fontFamily="@font/roboto_bold"
             android:textColorHint="@color/alphaWhite" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <View
-        android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_2sdp"
-        android:layout_marginBottom="@dimen/_16sdp"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/totalceck" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/totalceck"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_18sdp"
-        android:layout_marginBottom="@dimen/_23sdp"
-        android:layout_marginEnd="@dimen/_18sdp"
-        android:backgroundTint="@android:color/transparent"
-        app:contentPadding="@dimen/_18sdp"
-        app:cornerRadius="@dimen/_8sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/next_btn"
-        app:strokeColor="@color/white"
-        app:strokeWidth="@dimen/_2sdp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layoutDirection="locale"
-            android:textDirection="locale">
-
-            <TextView
-                android:id="@+id/txtView_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:fontFamily="@font/barlow_semi_condensed_semibold"
-                android:text="@string/total_price"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_15ssp" />
-
-            <TextView
-                android:id="@+id/txt_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/_6sdp"
-                android:layout_toEndOf="@+id/txtView_total"
-                android:fontFamily="@font/barlow_black"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_18ssp" />
-
-        </RelativeLayout>
-
-    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/next_btn"
@@ -188,17 +135,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_25sdp"
         android:backgroundTint="@color/white"
         android:fontFamily="@font/roboto_bold"
         android:paddingTop="@dimen/_9sdp"
         android:paddingBottom="@dimen/_9sdp"
-        android:text="@string/next"
+        android:text="@string/checkout"
         android:textAllCaps="false"
         android:textColor="@color/dark_purple"
         android:textSize="@dimen/_15ssp"
         app:cornerRadius="@dimen/_15sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/_25sdp"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:autofillHints="name"
-            android:digits="ZXCVBNMASDFGHJKLQWERTYUIOP1234567890-"
+            android:digits="ZXCVBNMASDFGHJKLQWERTYUIOP1234567890-zxcvbnmasdfghjklqwertyuiop"
             android:fontFamily="@font/roboto_bold"
             android:hint="@string/activation_code"
             android:inputType="text"
@@ -97,5 +97,24 @@
         android:layout_marginTop="@dimen/_13sdp"
         app:layout_constraintTop_toBottomOf="@id/layout_activation_code"
         tools:listitem="@layout/contacts_list_item"/>
+
+
+    <View
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/alphaBlack" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/purple"
+        android:indeterminateTintMode="src_atop"
+        app:layout_constraintBottom_toBottomOf="@id/placeholder"
+        app:layout_constraintEnd_toEndOf="@id/placeholder"
+        app:layout_constraintStart_toStartOf="@id/placeholder"
+        app:layout_constraintTop_toTopOf="@id/placeholder" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

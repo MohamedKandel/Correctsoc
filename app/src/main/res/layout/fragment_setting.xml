@@ -256,7 +256,6 @@
                     android:layout_marginBottom="@dimen/_12sdp"
                     android:paddingTop="@dimen/_7sdp"
                     android:paddingBottom="@dimen/_7sdp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/share_layout">
@@ -277,6 +276,38 @@
                         android:fontFamily="@font/roboto_regular"
                         android:text="@string/feedback"
                         android:textColor="@color/alphaWhite"
+                        android:textSize="@dimen/_12ssp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/delete_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_18sdp"
+                    android:layout_marginBottom="@dimen/_12sdp"
+                    android:paddingTop="@dimen/_7sdp"
+                    android:paddingBottom="@dimen/_7sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/feedback_layout">
+
+                    <ImageView
+                        android:id="@+id/delete_icon"
+                        android:layout_width="@dimen/_18sdp"
+                        android:layout_height="@dimen/_18sdp"
+                        android:src="@drawable/delete_account_icon" />
+
+                    <TextView
+                        android:id="@+id/txt_delete_account"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_6sdp"
+                        android:layout_toEndOf="@id/delete_icon"
+                        android:fontFamily="@font/roboto_regular"
+                        android:text="@string/delete_account"
+                        android:textColor="@color/danger_color"
                         android:textSize="@dimen/_12ssp" />
                 </RelativeLayout>
 

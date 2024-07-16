@@ -50,9 +50,11 @@ class PortsAdapter(
         if (model.cvEs.size > 0) {
             holder.txt_cve.text = " [..]"
             holder.see_more.visibility = View.VISIBLE
+            holder.txt_click.visibility = View.VISIBLE
         } else {
             holder.txt_cve.text = " [0]"
             holder.see_more.visibility = View.GONE
+            holder.txt_click.visibility = View.GONE
         }
         /*if (helper.getLang(context).equals("ar")) {
             holder.cpe.text.toString().replace(":","")
@@ -74,6 +76,7 @@ class PortsAdapter(
         val txt_cve: TextView
         val see_more: ImageButton
         val cpe: TextView
+        val txt_click: TextView
 
         init {
 
@@ -85,22 +88,30 @@ class PortsAdapter(
             txt_cpe = itemView.findViewById(R.id.txt_cpe)
             txt_cve = itemView.findViewById(R.id.txt_cve)
             see_more = itemView.findViewById(R.id.btn_see_more)
+            txt_click = itemView.findViewById(R.id.txt_click_here)
+
+            txt_click.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putString(CLICKED, MORE)
+                bundle.putParcelableArrayList(LIST, ArrayList(list[bindingAdapterPosition].cvEs))
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
+            }
 
             see_more.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString(CLICKED, MORE)
-                bundle.putParcelableArrayList(LIST, ArrayList(list[adapterPosition].cvEs))
-                listener.onItemClickListener(adapterPosition, bundle)
+                bundle.putParcelableArrayList(LIST, ArrayList(list[bindingAdapterPosition].cvEs))
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
             }
 
             itemView.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString(CLICKED, ITEM)
-                bundle.putParcelableArrayList(LIST, ArrayList(list[adapterPosition].cvEs))
-                listener.onItemClickListener(adapterPosition, bundle)
+                bundle.putParcelableArrayList(LIST, ArrayList(list[bindingAdapterPosition].cvEs))
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
             }
             itemView.setOnLongClickListener {
-                listener.onLongItemClickListener(adapterPosition, null)
+                listener.onLongItemClickListener(bindingAdapterPosition, null)
                 true
             }
         }

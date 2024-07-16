@@ -20,6 +20,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -33,7 +34,7 @@ interface APIService {
     @POST("NmapAppScan")
     suspend fun Scan(@Query("input") input: String): Response<OpenPorts>*/
 
-    @POST("Authentication/Register")
+    @POST("Authentication/RegisterUser")
     suspend fun registerUser(@Body body: RegisterBody): Response<AuthResponse>
 
     @POST("Authentication/ConfirmPhone")
@@ -122,6 +123,10 @@ interface APIService {
 
     @POST("User/Subscribe")
     suspend fun subscribeWithCode(@Body body: SubscribeCodeBody): Response<ForgotResponse>
+
+    @DELETE("Authentication/DeleteAccount")
+    suspend fun deleteAccount(@Query("userId") userID: String,
+                              @Header("Authorization") token: String): Response<ForgotResponse>
 
     // get vendor name of device with mac address
     @GET("{macAddress}")
