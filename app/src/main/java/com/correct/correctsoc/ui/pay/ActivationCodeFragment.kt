@@ -26,6 +26,7 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
 import com.correct.correctsoc.helper.appendFilter
+import com.correct.correctsoc.helper.upperCaseOnly
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
 
@@ -82,7 +83,7 @@ class ActivationCodeFragment : Fragment() {
 
         fragmentListener.onFragmentChangedListener(R.id.activationCodeFragment)
         // make edit text accept uppercase letters only
-        binding.txtActivationCode.appendFilter(InputFilter.AllCaps())
+        binding.txtActivationCode.upperCaseOnly()
 
 
         val hyphenPositions = intArrayOf(8, 13, 18, 23)
@@ -93,36 +94,9 @@ class ActivationCodeFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                /*Log.d("Code mohamed","${s.toString().length}")
-                if (s.toString().length == 36) {
-                    Log.d("Code mohamed","Code complete")
-                    val code = s.toString()
-                    lifecycleScope.launch {
-                        val id = usersDB.dao().getUserID() ?: ""
-                        val phone = usersDB.dao().getUserPhone(id) ?: ""
-                        if (phone.isNotEmpty()) {
-                            val body = SubscribeCodeBody(
-                                code = code,
-                                deviceId = helper.getDeviceID(requireContext()),
-                                phone = phone
-                            )
-                            subscribe(body)
-                        }
-                    }
-                }*/
             }
 
             override fun afterTextChanged(s: Editable?) {
-                binding.txtActivationCode.removeTextChangedListener(this) // Remove listener to prevent infinite loop
-                s?.let {
-                    val upperCaseText = it.toString().uppercase()
-                    if (upperCaseText != it.toString()) {
-                        binding.txtActivationCode.setText(upperCaseText)
-                        binding.txtActivationCode.setSelection(upperCaseText.length) // Set cursor to end of text
-                    }
-                }
-                binding.txtActivationCode.addTextChangedListener(this) // Re-attach listener
-
                 if (s.toString().length in hyphenPositions) {
                     if (!deletePressed) {
                         // Append hyphen only if not deleting
