@@ -148,6 +148,7 @@ class ReceiptFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     private fun promoCodeSuccess(promo: String) {
         // display green layout and gif at first
         binding.promoCodeLayout.visibility = View.VISIBLE
