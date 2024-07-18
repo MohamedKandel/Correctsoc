@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.Nullable
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -24,6 +25,7 @@ import com.correct.correctsoc.databinding.FragmentSettingBinding
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.buildDialog
 import com.correct.correctsoc.room.UsersDB
 import com.correct.correctsoc.ui.auth.AuthViewModel
 import kotlinx.coroutines.launch
@@ -126,12 +128,22 @@ class SettingFragment : Fragment() {
         }
 
         binding.deleteLayout.setOnClickListener {
-            lifecycleScope.launch {
-                val id = usersDB.dao().getUserID() ?: ""
-                if (id.isNotEmpty()) {
-                    deleteAccount(id,helper.getToken(requireContext()))
-                }
-            }
+            AlertDialog.Builder(requireContext())
+                .buildDialog(title = resources.getString(R.string.confirmation),
+                    msg = resources.getString(R.string.confirmation_msg),
+                    positiveButton = resources.getString(R.string.delete),
+                    negativeButton = resources.getString(R.string.cancel),
+                    positiveButtonFunction = {
+                        lifecycleScope.launch {
+                            val id = usersDB.dao().getUserID() ?: ""
+                            if (id.isNotEmpty()) {
+                                deleteAccount(id, helper.getToken(requireContext()))
+                            }
+                        }
+                    },
+                    negativeButtonFunction = {
+
+                    })
         }
 
         if (helper.getLang(requireContext()).equals("ar")) {

@@ -55,6 +55,8 @@ class SplashFragment : Fragment() {
         usersDB = UsersDB.getDBInstance(requireContext())
         //viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
+        binding.root.keepScreenOn = true
+
         val version = if (helper.getLang(requireContext()).equals("ar")) {
             helper.getAppVersion(requireContext()).mappingNumbers()
         } else {

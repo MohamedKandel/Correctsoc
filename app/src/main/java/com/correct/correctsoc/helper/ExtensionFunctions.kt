@@ -2,11 +2,14 @@ package com.correct.correctsoc.helper
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.LinearGradient
 import android.graphics.Shader
+import android.text.Editable
 import android.text.InputFilter
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.TextWatcher
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.View
@@ -321,7 +324,6 @@ fun TextView.updateRequirements(
 }
 
 fun AlertDialog.Builder.buildDialog(
-
     title: String,
     msg: String,
     icon: Int? = null,
@@ -357,4 +359,28 @@ fun EditText.appendFilter(newFilter: InputFilter) {
     System.arraycopy(editFilters, 0, newFilters, 0, editFilters.size)
     newFilters[editFilters.size] = newFilter
     this.filters = newFilters
+}
+
+fun EditText.upperCaseOnly() {
+    this.addTextChangedListener(object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+            this@upperCaseOnly.removeTextChangedListener(this) // Remove listener to prevent infinite loop
+            s?.let {
+                val upperCaseText = it.toString().uppercase()
+                if (upperCaseText != it.toString()) {
+                    this@upperCaseOnly.setText(upperCaseText)
+                    this@upperCaseOnly.setSelection(upperCaseText.length) // Set cursor to end of text
+                }
+            }
+            this@upperCaseOnly.addTextChangedListener(this) // Re-attach listener
+        }
+    })
 }

@@ -118,27 +118,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_progress"
-            app:layout_constraintBottom_toBottomOf="@id/placeholder"
-            app:layout_constraintEnd_toEndOf="@id/placeholder"
-            app:layout_constraintStart_toStartOf="@id/placeholder"
-            app:layout_constraintTop_toTopOf="@id/placeholder"
-            android:text="0 %"
+            app:layout_constraintBottom_toBottomOf="@id/progress"
+            app:layout_constraintEnd_toEndOf="@id/progress"
+            app:layout_constraintStart_toStartOf="@id/progress"
+            app:layout_constraintTop_toTopOf="@id/progress"
+            android:text="100 %"
             android:fontFamily="@font/roboto_medium"
             android:textColor="@color/white"
             android:textSize="@dimen/_14ssp"/>
 
-        <!--
+
         <ProgressBar
             android:id="@+id/progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_75sdp"
+            android:layout_height="@dimen/_75sdp"
             android:indeterminate="true"
             android:indeterminateTint="@color/purple"
             android:indeterminateTintMode="src_atop"
             app:layout_constraintBottom_toBottomOf="@id/placeholder"
             app:layout_constraintEnd_toEndOf="@id/placeholder"
             app:layout_constraintStart_toStartOf="@id/placeholder"
-            app:layout_constraintTop_toTopOf="@id/placeholder" />-->
+
+            app:layout_constraintTop_toTopOf="@id/placeholder" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

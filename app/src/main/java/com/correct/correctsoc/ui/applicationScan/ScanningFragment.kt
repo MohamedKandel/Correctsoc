@@ -65,6 +65,8 @@ class ScanningFragment : Fragment() {
 
         binding.progressCircular.startAnimation(helper.circularAnimation(3000))
 
+        binding.root.keepScreenOn = true
+
         CoroutineScope(Dispatchers.Main).launch {
             var list = mutableListOf<AppInfo>()
             val progressJob = launch(Dispatchers.Main) {

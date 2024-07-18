@@ -3,6 +3,10 @@ package com.correct.correctsoc.ui.pay
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,6 +26,7 @@ import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
+import com.correct.correctsoc.helper.upperCaseOnly
 
 class ReceiptFragment : Fragment() {
 
@@ -79,23 +84,27 @@ class ReceiptFragment : Fragment() {
 
         fragmentListener.onFragmentChangedListener(R.id.receiptFragment)
 
+        binding.txtViewDiscount.visibility = View.GONE
+        binding.txtDiscount.visibility = View.GONE
+
         if (arguments != null) {
-            devices = requireArguments().getInt(DEVICES,0)
-            months = requireArguments().getInt(MONTHS,0)
-            price = requireArguments().getDouble(PRICE,0.0)
+            devices = requireArguments().getInt(DEVICES, 0)
+            months = requireArguments().getInt(MONTHS, 0)
+            price = requireArguments().getDouble(PRICE, 0.0)
 
             if (months > 0 && devices > 0) {
-                val device_unit = if (devices>1) {
+                val device_unit = if (devices > 1) {
                     resources.getString(R.string.more_devices)
                 } else {
                     resources.getString(R.string.one_device)
                 }
                 binding.txtDevicesNumber.text = "• $devices $device_unit"
                 when (months) {
-                    6-> {
+                    6 -> {
                         binding.txtDuration.text = resources.getString(R.string.six_months)
                     }
-                    12-> {
+
+                    12 -> {
                         binding.txtDuration.text = resources.getString(R.string.one_year)
                     }
                 }
@@ -103,7 +112,7 @@ class ReceiptFragment : Fragment() {
                     binding.txtAmount.text = "$price $"
                     binding.txtTotal.text = "$price $"
                 } else {
-                    getCost(devices,months)
+                    getCost(devices, months)
                 }
             }
         }
@@ -111,6 +120,7 @@ class ReceiptFragment : Fragment() {
         binding.nextBtn.setOnClickListener {
             if (devices > 0 && months > 0) {
                 if (parentFragment is ParentPayFragment) {
+                    price = binding.txtTotal.text.toString().replace("$","").trim().toDouble()
                     orderGooglePay()
                 }
             } else {
@@ -122,7 +132,85 @@ class ReceiptFragment : Fragment() {
             }
         }
 
+        binding.txtApply.setOnClickListener {
+            //apply promo-code
+            if (binding.txtPromo.text.toString().isNotEmpty()) {
+                promoCodeSuccess(binding.txtPromo.text.toString())
+            }
+        }
+
+        binding.imgClear.setOnClickListener {
+            clearPromoCode(binding.txtViewPromoName.text.toString())
+        }
+
+        binding.txtPromo.upperCaseOnly()
+
         return binding.root
+    }
+
+    private fun promoCodeSuccess(promo: String) {
+        // display green layout and gif at first
+        binding.promoCodeLayout.visibility = View.VISIBLE
+
+        binding.promoCodeLayout.radius = resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
+        binding.promoCodeLayout.strokeWidth =
+            resources.getDimension(com.intuit.sdp.R.dimen._2sdp).toInt()
+        binding.promoCodeLayout.strokeColor =
+            resources.getColor(R.color.discount_color, context?.theme)
+
+        binding.layoutGreen.visibility = View.VISIBLE
+        binding.paymentSuccessGif.visibility = View.VISIBLE
+
+        /*
+        hide all green layout views expect gif after 1 second
+        display another views
+        */
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.promoCodeLayout.radius = resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
+            binding.promoCodeLayout.strokeWidth =
+                resources.getDimension(com.intuit.sdp.R.dimen._2sdp).toInt()
+            binding.promoCodeLayout.strokeColor =
+                resources.getColor(R.color.discount_color, context?.theme)
+
+            binding.txtViewDiscount.visibility = View.VISIBLE
+            binding.txtDiscount.visibility = View.VISIBLE
+            binding.txtDiscount.text = "-550 $"
+
+            binding.txtTotal.text = "${
+                binding.txtTotal.text.toString().replace("$", "").trim().toDouble().minus(550)
+            } $"
+
+            binding.txtViewPromoName.text = promo
+
+            binding.promoCode.visibility = View.GONE
+            binding.promoCodeSuccessLayout.visibility = View.VISIBLE
+        }, 1000)
+
+        // hide gif after 1.5 seconds
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.paymentSuccessGif.visibility = View.GONE
+        }, 1500)
+    }
+
+    private fun clearPromoCode(promo: String) {
+        binding.promoCodeLayout.radius = resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
+        binding.promoCodeLayout.strokeWidth =
+            resources.getDimension(com.intuit.sdp.R.dimen._2sdp).toInt()
+        binding.promoCodeLayout.strokeColor =
+            resources.getColor(R.color.white, context?.theme)
+
+        binding.txtViewDiscount.visibility = View.GONE
+        binding.txtDiscount.visibility = View.GONE
+
+        binding.txtTotal.text =
+            "${binding.txtTotal.text.toString().replace("$", "").trim().toDouble().plus(550)} $"
+
+        binding.txtPromo.setText(promo)
+        binding.txtPromo.setSelection(binding.txtPromo.text.length)
+
+        binding.promoCode.visibility = View.VISIBLE
+        binding.layoutGreen.visibility = View.GONE
+        binding.promoCodeSuccessLayout.visibility = View.GONE
     }
 
     @SuppressLint("SetTextI18n")

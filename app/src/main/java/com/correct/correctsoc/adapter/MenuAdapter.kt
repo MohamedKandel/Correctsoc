@@ -2,6 +2,7 @@ package com.correct.correctsoc.adapter;
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.correct.correctsoc.R
 import com.correct.correctsoc.data.MenuData
 import com.correct.correctsoc.helper.ClickListener
+import com.correct.correctsoc.helper.Constants.CLICKED
 
 class MenuAdapter(
     private val context: Context,
@@ -54,10 +56,12 @@ class MenuAdapter(
             icon = itemView.findViewById(R.id.img)
 
             itemView.setOnClickListener {
-                listener.onItemClickListener(adapterPosition, null)
+                val bundle = Bundle()
+                bundle.putString(CLICKED,"menu")
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
             }
             itemView.setOnLongClickListener {
-                listener.onLongItemClickListener(adapterPosition, null)
+                listener.onLongItemClickListener(bindingAdapterPosition, null)
                 true
             }
         }

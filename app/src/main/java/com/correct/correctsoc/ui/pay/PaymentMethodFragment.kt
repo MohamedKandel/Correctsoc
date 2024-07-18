@@ -46,6 +46,7 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
     private var isSelected = false
     private var googlePay = false
     private var activation = false
+    private var activation_wa = false
     private lateinit var viewModel: PayViewModel
     private lateinit var braintreeClient: BraintreeClient
     private lateinit var googlePayClient: GooglePayClient
@@ -134,10 +135,12 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                     binding.placeholder.visibility = View.GONE
                     binding.progress.visibility = View.GONE
                     googlePayClient.requestPayment(requireActivity(), googlePayRequest)
-                } else {
+                } else if (activation) {
                     (parentFragment as? ParentPayFragment)?.replaceFragment(
-                        DistributorsFragment()
+                        ActivationCodeFragment()
                     , isHeaderVisible = false)
+                } else if (activation_wa) {
+                    // open whatsapp with the number
                 }
             }
 
@@ -149,25 +152,44 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                 isSelected = true
             } else {
                 binding.activationChoice.setImageResource(R.drawable.empty_circle_icon)
+                binding.activationChoiceWa.setImageResource(R.drawable.empty_circle_icon)
                 binding.googlePayChoice.setImageResource(R.drawable.fill_circle_icon)
                 isSelected = true
             }
             orderGooglePay()
             googlePay = true
             activation = false
+            activation_wa = false
         }
 
         binding.activitionLayout.setOnClickListener {
             googlePay = false
             activation = true
+            activation_wa = false
             if (!isSelected) {
                 binding.activationChoice.setImageResource(R.drawable.fill_circle_icon)
                 isSelected = true
             } else {
                 binding.googlePayChoice.setImageResource(R.drawable.empty_circle_icon)
+                binding.activationChoiceWa.setImageResource(R.drawable.empty_circle_icon)
                 binding.activationChoice.setImageResource(R.drawable.fill_circle_icon)
                 isSelected = true
             }
+        }
+
+        binding.activationLayoutWa.setOnClickListener {
+            if (!isSelected) {
+                binding.activationChoiceWa.setImageResource(R.drawable.fill_circle_icon)
+                isSelected = true
+            } else {
+                binding.googlePayChoice.setImageResource(R.drawable.empty_circle_icon)
+                binding.activationChoiceWa.setImageResource(R.drawable.fill_circle_icon)
+                binding.activationChoice.setImageResource(R.drawable.empty_circle_icon)
+                isSelected = true
+            }
+            googlePay = false
+            activation = false
+            activation_wa = true
         }
 
         return binding.root

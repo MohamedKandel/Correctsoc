@@ -51,4 +51,16 @@
         <item name="android:popupBackground">@drawable/spn_menu_drawable</item>
     </style>
 
+    <style name="ShapeImageView">
+        <item name="cornerSizeTopLeft">@dimen/_7sdp</item>
+        <item name="cornerSizeBottomLeft">@dimen/_7sdp</item>
+    </style>
+
+    <style name="RoundedImageView">
+        <item name="cornerSizeBottomLeft">@dimen/_7sdp</item>
+        <item name="cornerSizeBottomRight">@dimen/_7sdp</item>
+        <item name="cornerSizeTopLeft">@dimen/_7sdp</item>
+        <item name="cornerSizeTopRight">@dimen/_7sdp</item>
+    </style>
+
 </resources>

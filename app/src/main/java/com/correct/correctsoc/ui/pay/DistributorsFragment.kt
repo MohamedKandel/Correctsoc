@@ -357,11 +357,11 @@ class DistributorsFragment : Fragment(), ClickListener {
                 } else {
                     binding.placeholder.visibility = View.GONE
                     binding.progress.visibility = View.GONE
-                        Toast.makeText(
-                            requireContext(),
-                            value.errorMessages,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    Toast.makeText(
+                        requireContext(),
+                        value.errorMessages,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 viewModel.subscribeWithCodeResponse.removeObserver(this)
             }

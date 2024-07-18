@@ -190,4 +190,9 @@
         android:name="com.correct.correctsoc.ui.pay.ReceiptFragment"
         android:label="fragment_receipt"
         tools:layout="@layout/fragment_receipt" />
+    <fragment
+        android:id="@+id/adFragment"
+        android:name="com.correct.correctsoc.ui.home.AdFragment"
+        android:label="fragment_ad"
+        tools:layout="@layout/fragment_ad" />
 </navigation>

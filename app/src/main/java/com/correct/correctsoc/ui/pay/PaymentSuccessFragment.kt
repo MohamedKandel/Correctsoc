@@ -56,7 +56,7 @@ class PaymentSuccessFragment : Fragment() {
         fragmentListener.onFragmentChangedListener(R.id.paymentSuccessFragment)
 
         binding.doneBtn.setOnClickListener {
-            findNavController().navigate(R.id.homeFragment)
+            findNavController().navigate(R.id.loginFragment)
         }
 
         return binding.root

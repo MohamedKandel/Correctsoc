@@ -88,7 +88,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/activition_layout_wa"
+        android:id="@+id/activation_layout_wa"
         app:layout_constraintTop_toBottomOf="@id/google_pay_layout"
         android:layout_marginTop="@dimen/_38sdp"
         android:layoutDirection="locale"
@@ -141,7 +141,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/activition_layout"
-        app:layout_constraintTop_toBottomOf="@id/activition_layout_wa"
+        app:layout_constraintTop_toBottomOf="@id/activation_layout_wa"
         android:layout_marginTop="@dimen/_38sdp"
         android:layoutDirection="locale"
         android:textDirection="locale"

@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +24,7 @@ import com.correct.correctsoc.data.pay.SubscribeCodeBody
 import com.correct.correctsoc.databinding.FragmentActivationCodeBinding
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.NextStepListener
 import com.correct.correctsoc.helper.appendFilter
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
@@ -33,16 +35,35 @@ class ActivationCodeFragment : Fragment() {
     private lateinit var helper: HelperClass
     private var deletePressed = false
     private lateinit var fragmentListener: FragmentChangedListener
+    private lateinit var listener: NextStepListener
     private lateinit var viewModel: PayViewModel
     private lateinit var usersDB: UsersDB
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        if (parentFragment is NextStepListener) {
+            listener = parentFragment as NextStepListener
+        } else {
+            throw ClassCastException("Super class doesn't implement interface class")
+        }
         if (context is FragmentChangedListener) {
             fragmentListener = context
         } else {
             throw ClassCastException("Super class doesn't implement interface class")
         }
+        val backCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (childFragmentManager.backStackEntryCount > 1) {
+                    childFragmentManager.popBackStack()
+                    return
+                }
+                val parentPayFragment = this@ActivationCodeFragment.parentFragment as ParentPayFragment
+                parentPayFragment.changeSteps(2)
+                parentPayFragment.displayHeader(true)
+                parentFragmentManager.popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,9 +84,6 @@ class ActivationCodeFragment : Fragment() {
         // make edit text accept uppercase letters only
         binding.txtActivationCode.appendFilter(InputFilter.AllCaps())
 
-        if (helper.getLang(requireContext()).equals("ar")) {
-            binding.btnBack.rotation = 180f
-        }
 
         val hyphenPositions = intArrayOf(8, 13, 18, 23)
 
@@ -75,10 +93,36 @@ class ActivationCodeFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
+                /*Log.d("Code mohamed","${s.toString().length}")
+                if (s.toString().length == 36) {
+                    Log.d("Code mohamed","Code complete")
+                    val code = s.toString()
+                    lifecycleScope.launch {
+                        val id = usersDB.dao().getUserID() ?: ""
+                        val phone = usersDB.dao().getUserPhone(id) ?: ""
+                        if (phone.isNotEmpty()) {
+                            val body = SubscribeCodeBody(
+                                code = code,
+                                deviceId = helper.getDeviceID(requireContext()),
+                                phone = phone
+                            )
+                            subscribe(body)
+                        }
+                    }
+                }*/
             }
 
             override fun afterTextChanged(s: Editable?) {
+                binding.txtActivationCode.removeTextChangedListener(this) // Remove listener to prevent infinite loop
+                s?.let {
+                    val upperCaseText = it.toString().uppercase()
+                    if (upperCaseText != it.toString()) {
+                        binding.txtActivationCode.setText(upperCaseText)
+                        binding.txtActivationCode.setSelection(upperCaseText.length) // Set cursor to end of text
+                    }
+                }
+                binding.txtActivationCode.addTextChangedListener(this) // Re-attach listener
+
                 if (s.toString().length in hyphenPositions) {
                     if (!deletePressed) {
                         // Append hyphen only if not deleting
@@ -97,7 +141,7 @@ class ActivationCodeFragment : Fragment() {
 
         binding.btnDone.setOnClickListener {
             val code = binding.txtActivationCode.text.toString()
-            if (code.isNotEmpty() && code.length == 39) {
+            if (code.isNotEmpty() && code.length == 36) {
                 lifecycleScope.launch {
                     val id = usersDB.dao().getUserID() ?: ""
                     val phone = usersDB.dao().getUserPhone(id) ?: ""
@@ -127,7 +171,14 @@ class ActivationCodeFragment : Fragment() {
         val observer = object : Observer<ForgotResponse> {
             override fun onChanged(value: ForgotResponse) {
                 if (value.isSuccess) {
-                    Log.v("subscription", "Subscribed successfully")
+                    (parentFragment as? ParentPayFragment)?.replaceFragment(PaymentSuccessFragment())
+                    listener.onNextStepListener(2)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        value.errorMessages,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 viewModel.subscribeWithCodeResponse.removeObserver(this)
             }

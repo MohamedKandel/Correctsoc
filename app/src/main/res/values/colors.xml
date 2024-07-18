@@ -17,8 +17,10 @@
     <color name="border_color">#D9E1E7</color>
     <color name="light_gray">#DFDFDF</color>
     <color name="green">#4db6ac</color>
+    <color name="discount_color">#209439</color>
     <color name="dark_blue">#251B5B</color>
     <color name="blue_link">#2196F3</color>
     <color name="alphaGray">#B5999999</color>
     <color name="apply_color">#FFC444</color>
+    <color name="success_color">#D4EED7</color>
 </resources>

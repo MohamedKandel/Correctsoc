@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_title"
-            android:text="@string/distributors"
+            android:text="@string/activation_code"
             android:layout_centerInParent="true"
             android:fontFamily="@font/barlow_semi_condensed_semibold"
             android:textSize="@dimen/_16ssp"

@@ -62,19 +62,19 @@ class APKAdapter(
 
             icon_delte.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putString(PKG_NAME, list[adapterPosition].packageName)
+                bundle.putString(PKG_NAME, list[bindingAdapterPosition].packageName)
                 bundle.putString(CLICKED, DELETE)
-                listener.onItemClickListener(adapterPosition, bundle)
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
             }
 
             itemView.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putString(PKG_NAME, list[adapterPosition].packageName)
+                bundle.putString(PKG_NAME, list[bindingAdapterPosition].packageName)
                 bundle.putString(CLICKED, ITEM)
-                listener.onItemClickListener(adapterPosition, bundle)
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
             }
             itemView.setOnLongClickListener {
-                listener.onLongItemClickListener(adapterPosition, null)
+                listener.onLongItemClickListener(bindingAdapterPosition, null)
                 true
             }
         }

@@ -143,14 +143,18 @@ class PaymentDetailsFragment : Fragment() {
                 if (s.toString().isNotEmpty()) {
                     devices = s.toString().toInt()
                 } else {
-                    getCost(devices, months)
+                    if(months > 0 && devices > 0) {
+                        getCost(devices, months)
+                    }
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty() && months > 0) {
                     devices = s.toString().toInt()
-                    getCost(devices, months)
+                    if(devices > 0) {
+                        getCost(devices, months)
+                    }
                 }
             }
         })

@@ -10,7 +10,7 @@
     <string name="self_test">Check router status</string>
     <string name="device_scan">Connected wifi device Scan</string>
     <string name="apps_scan">Scan spy apps</string>
-    <string name="premium">Buy premium</string>
+    <string name="premium">Buy premium pro</string>
     <string name="support">Get support</string>
     <string name="setting">Setting</string>
     <string name="reward">Free reward</string>
@@ -182,4 +182,13 @@
     <string name="one_year">1 year</string>
     <string name="more_devices">devices</string>
     <string name="one_device">device</string>
+    <string name="discount">Discount</string>
+    <string name="payment_successful">Payment successfully\ndone</string>
+    <string name="scan_successful">Scan successfully done</string>
+    <string name="temp_ad_title" translatable="false">20% OFF</string>
+    <string name="temp_ad_description" translatable="false">Vouchers for all new users</string>
+    <string name="buy">Buy now</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="confirmation_msg">Are you sure you want to delete your account permanently</string>
+    <string name="delete">Delte</string>
 </resources>

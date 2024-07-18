@@ -59,6 +59,8 @@ class DeviceScanningFragment : Fragment() {
         binding = FragmentDeviceScanningBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
 
+        binding.root.keepScreenOn = true
+
         fragmentListener.onFragmentChangedListener(R.id.deviceScanningFragment)
 
         helper.onBackPressed(this) {

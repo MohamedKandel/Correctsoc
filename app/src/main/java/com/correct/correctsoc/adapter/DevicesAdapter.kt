@@ -57,11 +57,11 @@ class DevicesAdapter(
 
             itemView.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putParcelable(ITEM, list[adapterPosition])
-                listener.onItemClickListener(adapterPosition, bundle)
+                bundle.putParcelable(ITEM, list[bindingAdapterPosition])
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
             }
             itemView.setOnLongClickListener {
-                listener.onLongItemClickListener(adapterPosition, null)
+                listener.onLongItemClickListener(bindingAdapterPosition, null)
                 true
             }
         }

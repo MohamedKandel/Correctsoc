@@ -108,6 +108,7 @@ class WebScanFragment : Fragment(), ClickListener {
         binding.recyclerView.adapter = adapter
 
         if (arguments != null) {
+            binding.placeholder.keepScreenOn = true
             val input = requireArguments().getString(IP_ADDRESS, "")
             sourceFragment = requireArguments().getInt(SOURCE, 0)
             type = requireArguments().getString(TYPE, "")
@@ -234,7 +235,12 @@ class WebScanFragment : Fragment(), ClickListener {
                         progress(object : OnProgressUpdatedListener {
                             @SuppressLint("SetTextI18n")
                             override fun onUpdateProgressLoad(progress: Int) {
-                                binding.txtProgress.text = "$progress %".mappingNumbers()
+                                val mprogress = if (helper.getLang(requireContext()).equals("ar")) {
+                                    "$progress %".mappingNumbers()
+                                } else {
+                                    "$progress %"
+                                }
+                                binding.txtProgress.text = mprogress
                                 if (progress == 100) {
                                     binding.loadingLayout.visibility = View.GONE
 

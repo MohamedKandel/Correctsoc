@@ -30,6 +30,7 @@ import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.VerificationTextFilledListener
+import com.correct.correctsoc.helper.upperCaseOnly
 import com.correct.correctsoc.room.User
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
@@ -137,8 +138,6 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
             }
             startCountDownTimer()
         }
-
-        //startSmartUserConsent()
 
         return binding.root
     }
@@ -282,16 +281,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    editTexts[i].removeTextChangedListener(this) // Remove listener to prevent infinite loop
-                    s?.let {
-                        val upperCaseText = it.toString().uppercase()
-                        if (upperCaseText != it.toString()) {
-                            editTexts[i].setText(upperCaseText)
-                            editTexts[i].setSelection(upperCaseText.length) // Set cursor to end of text
-                        }
-                    }
-                    editTexts[i].addTextChangedListener(this) // Re-attach listener
-
+                    editTexts[i].upperCaseOnly()
                     if (s.toString().length == 1) {
                         if (i < editTexts.size - 1) {
                             editTexts[i + 1].requestFocus()

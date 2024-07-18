@@ -30,6 +30,7 @@ object Constants {
     const val STATUS = "device status"
     const val WA_NUMBER = "wa number"
     const val PHONE_NUMBER = "phone number"
+    const val AD_OBJECT = "ad object"
     // problem with EGP
     const val CURRENCY = "USD"
 }

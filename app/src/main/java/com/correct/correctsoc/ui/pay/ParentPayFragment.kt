@@ -73,7 +73,7 @@ class ParentPayFragment : Fragment(), NextStepListener {
                 changeSteps(1)
             }
 
-            is DistributorsFragment -> {
+            is ActivationCodeFragment -> {
                 changeSteps(2)
             }
 

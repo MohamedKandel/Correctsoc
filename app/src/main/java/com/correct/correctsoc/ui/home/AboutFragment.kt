@@ -98,7 +98,7 @@ class AboutFragment : Fragment() {
             //onBackPressed(R.id.settingFragment, null)
         }*/
 
-        val url = "https://www.google.com"
+        val url = "https://correct.ws"
         val facebook = "https://www.facebook.com"
         val insta = "https://www.instagram.com"
 

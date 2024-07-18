@@ -57,7 +57,7 @@ class CVEAdapter(
                 val bundle = Bundle()
                 bundle.putString(CLICKED, MORE)
                 bundle.putString(URL, url)
-                listener.onItemClickListener(adapterPosition, bundle)
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
             }
 
             itemView.setOnClickListener {
@@ -65,10 +65,10 @@ class CVEAdapter(
                 val bundle = Bundle()
                 bundle.putString(CLICKED, MORE)
                 bundle.putString(URL, url)
-                listener.onItemClickListener(adapterPosition, bundle)
+                listener.onItemClickListener(bindingAdapterPosition, bundle)
             }
             itemView.setOnLongClickListener {
-                listener.onLongItemClickListener(adapterPosition, null)
+                listener.onLongItemClickListener(bindingAdapterPosition, null)
                 true
             }
         }

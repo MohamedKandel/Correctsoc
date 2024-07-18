@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:background="@drawable/complete_radius_drawable"
-    tools:context=".ui.pay.ReceiptFragment"
-    android:layout_gravity="center">
+    tools:context=".ui.pay.ReceiptFragment">
 
     <View
         android:layout_width="0dp"
@@ -22,12 +22,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_24sdp"
         android:layout_marginEnd="@dimen/_18sdp"
         android:fontFamily="@font/barlow_semi_condensed_semibold"
         android:text="@string/receipt_summary"
         android:textColor="@color/white"
         android:textSize="@dimen/_15ssp"
-        android:layout_marginTop="@dimen/_24sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -96,6 +96,7 @@
         app:strokeWidth="@dimen/_2sdp">
 
         <RelativeLayout
+            android:id="@+id/promo_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -108,6 +109,8 @@
                 android:autofillHints="name"
                 android:background="@color/transparent"
                 android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/white"
+                android:digits="zxcvbnmasdfghjklqwertyuiop1234567890-ZXCVBNMASDFGHJKLQWERTYUIOP"
                 android:hint="@string/promo_code"
                 android:inputType="text"
                 android:paddingStart="@dimen/_8sdp"
@@ -131,7 +134,106 @@
                 android:textSize="@dimen/_12ssp" />
 
         </RelativeLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/layout_green"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/discount_color"
+            app:cardCornerRadius="@dimen/_8sdp"
+            app:strokeWidth="0dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/promo_code_success_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentPaddingLeft="@dimen/_12sdp"
+            app:contentPaddingRight="@dimen/_12sdp"
+            app:contentPaddingBottom="@dimen/_7sdp"
+            app:contentPaddingTop="@dimen/_7sdp"
+            app:cardBackgroundColor="@color/success_color"
+            app:cardCornerRadius="@dimen/_8sdp"
+            app:strokeWidth="0dp"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layoutDirection="locale"
+                android:textDirection="locale">
+
+                <ImageView
+                    android:id="@+id/img_success"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/_2sdp"
+                    android:contentDescription="@string/discount"
+                    android:src="@drawable/check_circle_icon"
+                    app:tint="@color/discount_color" />
+
+                <TextView
+                    android:id="@+id/txtView_promo_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/img_success"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/discount"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp" />
+
+                <TextView
+                    android:id="@+id/txtView_discount_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtView_promo_name"
+                    android:layout_toEndOf="@+id/img_success"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="@string/discount"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_8ssp" />
+
+                <ImageView
+                    android:id="@+id/img_clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/clear_icon"
+                    app:tint="#6F6464" />
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+
     </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/txtView_discount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:fontFamily="@font/barlow_semi_condensed_semibold"
+        android:text="@string/discount"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/promo_code_layout" />
+
+    <TextView
+        android:id="@+id/txt_discount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
+        android:fontFamily="@font/barlow_semi_condensed_semibold"
+        android:text="@string/discount"
+        android:textColor="@color/discount_color"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/promo_code_layout" />
 
     <View
         android:id="@+id/line"
@@ -144,17 +246,17 @@
         app:layout_constraintTop_toBottomOf="@+id/promo_code_layout" />
 
     <RelativeLayout
+        android:id="@+id/total_amount_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginEnd="@dimen/_18sdp"
         android:layoutDirection="locale"
         android:textDirection="locale"
-        android:id="@+id/total_amount_layout"
-        android:layout_marginTop="@dimen/_24sdp"
-        app:layout_constraintTop_toBottomOf="@+id/line"
-        android:layout_marginStart="@dimen/_18sdp"
-        android:layout_marginEnd="@dimen/_18sdp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/line">
 
         <TextView
             android:id="@+id/txtView_total"
@@ -184,6 +286,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_80sdp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:layout_marginBottom="@dimen/_25sdp"
         android:backgroundTint="@color/white"
@@ -196,9 +299,21 @@
         android:textSize="@dimen/_15ssp"
         app:cornerRadius="@dimen/_15sdp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/total_amount_layout"
-        android:layout_marginTop="@dimen/_80sdp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/total_amount_layout" />
+
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/payment_success_gif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/fire_works"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/promo_code_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:rotation="180"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

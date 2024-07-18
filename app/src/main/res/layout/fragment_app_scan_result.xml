@@ -16,16 +16,29 @@
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_15sdp">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/app_scanning_result"
+                android:layout_centerHorizontal="true"
                 android:id="@+id/img_successful"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/img_successful"
+                android:text="@string/scan_successful"
+                android:textColor="@color/white"
+                android:fontFamily="@font/righteous_regular"
+                android:textSize="@dimen/_19ssp"
+                android:id="@+id/txt_scan_success"/>
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/img_successful"
+                android:layout_below="@id/txt_scan_success"
                 android:layout_marginTop="@dimen/_27sdp"
                 android:backgroundTint="@color/white"
                 app:cornerRadius="@dimen/_15sdp"
