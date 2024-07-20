@@ -12,9 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -29,7 +26,6 @@ import com.correct.correctsoc.helper.AudioUtils
 import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.Constants.DEVICE_NAME
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
-import com.correct.correctsoc.helper.Constants.ITEM
 import com.correct.correctsoc.helper.Constants.LIST
 import com.correct.correctsoc.helper.Constants.PORTS_LIST
 import com.correct.correctsoc.helper.Constants.ROUTER
@@ -39,7 +35,9 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnDataFetchedListener
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
+import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.mappingNumbers
+import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.ui.selfScan.ScanViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -98,10 +96,10 @@ class WebScanFragment : Fragment(), ClickListener {
         audioUtils = AudioUtils.getInstance()
 
         fragmentListener.onFragmentChangedListener(R.id.webScanFragment)
-        binding.loadingLayout.visibility = View.VISIBLE
-        binding.txtDeviceName.visibility = View.GONE
-        binding.txtNameTitle.visibility = View.GONE
-        binding.imgSecurity.visibility = View.GONE
+        binding.loadingLayout.show()
+        binding.txtDeviceName.hide()
+        binding.txtNameTitle.hide()
+        binding.imgSecurity.hide()
 
         list = mutableListOf()
         adapter = PortsAdapter(list, this)
@@ -175,10 +173,10 @@ class WebScanFragment : Fragment(), ClickListener {
                         }
                         isSafe = false
                     }
-                    binding.txtDeviceName.visibility = View.VISIBLE
-                    binding.txtNameTitle.visibility = View.VISIBLE
-                    binding.imgSecurity.visibility = View.VISIBLE
-                    binding.loadingLayout.visibility = View.GONE
+                    binding.txtDeviceName.show()
+                    binding.txtNameTitle.show()
+                    binding.imgSecurity.show()
+                    binding.loadingLayout.hide()
                     adapter.updateAdapter(list)
                 }
             } else {
@@ -215,11 +213,11 @@ class WebScanFragment : Fragment(), ClickListener {
                     }
                     isSafe = isSecure
 
-                    binding.txtDeviceName.visibility = View.VISIBLE
-                    binding.txtNameTitle.visibility = View.VISIBLE
-                    binding.imgSecurity.visibility = View.VISIBLE
+                    binding.txtDeviceName.show()
+                    binding.txtNameTitle.show()
+                    binding.imgSecurity.show()
 
-                    binding.loadingLayout.visibility = View.GONE
+                    binding.loadingLayout.hide()
                     adapter.updateAdapter(list)
                 }
             }
@@ -242,7 +240,7 @@ class WebScanFragment : Fragment(), ClickListener {
                                 }
                                 binding.txtProgress.text = mprogress
                                 if (progress == 100) {
-                                    binding.loadingLayout.visibility = View.GONE
+                                    binding.loadingLayout.hide()
 
                                     if (this@WebScanFragment::value.isInitialized) {
                                         if (value.scanHostDeviceName.isEmpty()) {
@@ -283,9 +281,9 @@ class WebScanFragment : Fragment(), ClickListener {
                                         }
                                         isSafe = isSecure
 
-                                        binding.txtDeviceName.visibility = View.VISIBLE
-                                        binding.txtNameTitle.visibility = View.VISIBLE
-                                        binding.imgSecurity.visibility = View.VISIBLE
+                                        binding.txtDeviceName.show()
+                                        binding.txtNameTitle.show()
+                                        binding.imgSecurity.show()
                                     }
 
                                     adapter.updateAdapter(list)
@@ -383,9 +381,9 @@ class WebScanFragment : Fragment(), ClickListener {
                     }
                     isSafe = isSecure
 
-                    binding.txtDeviceName.visibility = View.VISIBLE
-                    binding.txtNameTitle.visibility = View.VISIBLE
-                    binding.imgSecurity.visibility = View.VISIBLE
+                    binding.txtDeviceName.show()
+                    binding.txtNameTitle.show()
+                    binding.imgSecurity.show()
                 } else {
                     Log.v("Error mohamed", "null")
                     Toast.makeText(
@@ -394,7 +392,7 @@ class WebScanFragment : Fragment(), ClickListener {
                     ).show()
                 }
             }
-            binding.loadingLayout.visibility = View.GONE
+            binding.loadingLayout.hide()
         }
     }
 

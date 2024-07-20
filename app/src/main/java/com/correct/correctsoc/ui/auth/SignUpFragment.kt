@@ -12,8 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,16 +23,13 @@ import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TAG
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.mappingNumbers
 import com.correct.correctsoc.helper.setSpannable
 import com.correct.correctsoc.helper.updateRequirements
+import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.User
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
-
-import okhttp3.RequestBody.Companion.toRequestBody
 
 class SignUpFragment : Fragment() {
 
@@ -82,8 +77,8 @@ class SignUpFragment : Fragment() {
 
         fragmentListener.onFragmentChangedListener(R.id.signUpFragment)
 
-        binding.placeholder.visibility = View.GONE
-        binding.progress.visibility = View.GONE
+        binding.placeholder.hide()
+        binding.progress.hide()
 
         val text = resources
             .getString(R.string.already_have_account)
@@ -110,7 +105,7 @@ class SignUpFragment : Fragment() {
         }
         binding.txtLogin.movementMethod = LinkMovementMethod.getInstance()
 
-        binding.layoutPassInstructions.root.visibility = View.GONE
+        binding.layoutPassInstructions.root.hide()
 
         if (helper.getLang(requireContext()).equals("en")) {
             binding.layoutPassInstructions.txtInstructionConfirm.text =
@@ -162,9 +157,9 @@ class SignUpFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty()) {
-                    binding.layoutPassInstructions.root.visibility = View.VISIBLE
+                    binding.layoutPassInstructions.root.show()
                 } else {
-                    binding.layoutPassInstructions.root.visibility = View.GONE
+                    binding.layoutPassInstructions.root.hide()
                 }
                 //updateRequirements(s.toString())
                 if (binding.layoutPassInstructions.txtInstructionConfirm
@@ -182,7 +177,7 @@ class SignUpFragment : Fragment() {
                         resources.getColor(R.color.safe_color, context?.theme),
                         resources.getColor(R.color.black, context?.theme)
                     )) {
-                    binding.layoutPassInstructions.root.visibility = View.GONE
+                    binding.layoutPassInstructions.root.hide()
                 }
             }
         })
@@ -224,8 +219,8 @@ class SignUpFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                binding.placeholder.visibility = View.VISIBLE
-                binding.progress.visibility = View.VISIBLE
+                binding.placeholder.show()
+                binding.progress.show()
                 // send data to server here
                 val name = binding.txtName.text.toString()
                 val phone = binding.txtPhone.text.toString()
@@ -267,8 +262,8 @@ class SignUpFragment : Fragment() {
         viewModel.registerUser(body)
         viewModel.registerResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
-                binding.placeholder.visibility = View.GONE
-                binding.progress.visibility = View.GONE
+                binding.placeholder.hide()
+                binding.progress.hide()
                 Log.v(TAG, "${it.statusCode}")
                 val user = User("1", body.name, body.password, body.phone, "0")
                 lifecycleScope.launch {
@@ -287,8 +282,8 @@ class SignUpFragment : Fragment() {
                     Log.v(TAG, "${it.result.token}")
                 }
             } else {
-                binding.placeholder.visibility = View.GONE
-                binding.progress.visibility = View.GONE
+                binding.placeholder.hide()
+                binding.progress.hide()
                 Log.v(TAG, "${it.errorMessages}")
                 Toast.makeText(requireContext(), "${it.errorMessages}", Toast.LENGTH_SHORT)
                     .show()

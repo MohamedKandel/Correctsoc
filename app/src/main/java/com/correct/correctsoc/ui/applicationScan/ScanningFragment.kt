@@ -22,6 +22,7 @@ import com.correct.correctsoc.helper.Constants.LIST
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
+import com.correct.correctsoc.helper.hide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -141,7 +142,7 @@ class ScanningFragment : Fragment() {
                     break
                 }
             }
-            binding.txtAppName.visibility = View.GONE
+            binding.txtAppName.hide()
         }
     }
 

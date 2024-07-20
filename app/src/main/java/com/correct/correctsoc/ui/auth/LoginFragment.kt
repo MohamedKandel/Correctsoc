@@ -11,8 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,7 +22,9 @@ import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.Constants.TOKEN_VALUE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.setSpannable
+import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.User
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
@@ -66,8 +66,8 @@ class LoginFragment : Fragment() {
 
         fragmentListener.onFragmentChangedListener(R.id.loginFragment)
 
-        binding.progress.visibility = View.GONE
-        binding.placeholder.visibility = View.GONE
+        binding.progress.hide()
+        binding.placeholder.hide()
 
         if (arguments != null) {
             source = requireArguments().getInt(SOURCE)
@@ -147,8 +147,8 @@ class LoginFragment : Fragment() {
                 ).show()
             } else {
                 // send credentials to server here
-                binding.placeholder.visibility = View.VISIBLE
-                binding.progress.visibility = View.VISIBLE
+                binding.placeholder.show()
+                binding.progress.show()
                 val phone = binding.txtPhone.text.toString()
                 val password = binding.txtPassword.text.toString()
                 val body = LoginBody(
@@ -182,8 +182,8 @@ class LoginFragment : Fragment() {
         }
 
         binding.txtForget.setOnClickListener {
-            binding.progress.visibility = View.VISIBLE
-            binding.placeholder.visibility = View.VISIBLE
+            binding.progress.show()
+            binding.placeholder.show()
             val userPhone = binding.txtPhone.text.toString()
             lifecycleScope.launch {
                 val id = usersDB.dao().getUserID() ?: ""
@@ -207,8 +207,8 @@ class LoginFragment : Fragment() {
         viewModel.login(body)
         viewModel.loginResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess && it.result != null) {
-                binding.progress.visibility = View.GONE
-                binding.placeholder.visibility = View.GONE
+                binding.progress.hide()
+                binding.placeholder.hide()
                 lifecycleScope.launch {
                     val id = usersDB.dao().getUserID() ?: ""
                     if (id.isEmpty()) {
@@ -228,8 +228,8 @@ class LoginFragment : Fragment() {
                     findNavController().navigate(R.id.homeFragment)
                 }
             } else {
-                binding.progress.visibility = View.GONE
-                binding.placeholder.visibility = View.GONE
+                binding.progress.hide()
+                binding.placeholder.hide()
                 Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
                     .show()
             }
@@ -240,8 +240,8 @@ class LoginFragment : Fragment() {
         viewModel.forgetPassword(phone)
         viewModel.forgetResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
-                binding.progress.visibility = View.GONE
-                binding.placeholder.visibility = View.GONE
+                binding.progress.hide()
+                binding.placeholder.hide()
                 val bundle = Bundle()
                 if (it.result != null) {
                     //bundle.putString(CODE, it.result.otp)
@@ -250,8 +250,8 @@ class LoginFragment : Fragment() {
                     findNavController().navigate(R.id.OTPFragment, bundle)
                 }
             } else {
-                binding.progress.visibility = View.GONE
-                binding.placeholder.visibility = View.GONE
+                binding.progress.hide()
+                binding.placeholder.hide()
                 Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
                     .show()
             }

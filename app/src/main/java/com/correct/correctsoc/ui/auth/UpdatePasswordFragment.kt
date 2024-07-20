@@ -3,17 +3,12 @@ package com.correct.correctsoc.ui.auth
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
-import android.text.Spannable
-import android.text.SpannableString
 import android.text.TextWatcher
-import android.text.style.ForegroundColorSpan
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -22,17 +17,10 @@ import com.correct.correctsoc.data.auth.UpdatePasswordBody
 import com.correct.correctsoc.databinding.FragmentUpdatePasswordBinding
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
-import com.correct.correctsoc.helper.add
-import com.correct.correctsoc.helper.clear
-import com.correct.correctsoc.helper.colorfulTextView
-import com.correct.correctsoc.helper.contains
-import com.correct.correctsoc.helper.isContainsLowerCase
-import com.correct.correctsoc.helper.isContainsNumbers
-import com.correct.correctsoc.helper.isContainsSpecialCharacter
-import com.correct.correctsoc.helper.isContainsUpperCase
+import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.mappingNumbers
-import com.correct.correctsoc.helper.remove
 import com.correct.correctsoc.helper.updateRequirements
+import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
 
@@ -79,7 +67,7 @@ class UpdatePasswordFragment : Fragment() {
 
         fragmentListener.onFragmentChangedListener(R.id.updatePasswordFragment)
 
-        binding.layoutPassInstructionsNew.root.visibility = View.GONE
+        binding.layoutPassInstructionsNew.root.hide()
 
         if (helper.getLang(requireContext()).equals("en")) {
             binding.layoutPassInstructionsNew.txtInstructionConfirm.text =
@@ -128,9 +116,9 @@ class UpdatePasswordFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty()) {
-                    binding.layoutPassInstructionsNew.root.visibility = View.VISIBLE
+                    binding.layoutPassInstructionsNew.root.show()
                 } else {
-                    binding.layoutPassInstructionsNew.root.visibility = View.GONE
+                    binding.layoutPassInstructionsNew.root.hide()
                 }
                 //updateRequirements(s.toString())
                 if (binding.layoutPassInstructionsNew.txtInstructionConfirm
@@ -148,7 +136,7 @@ class UpdatePasswordFragment : Fragment() {
                         resources.getColor(R.color.safe_color, context?.theme),
                         resources.getColor(R.color.black, context?.theme)
                     )) {
-                    binding.layoutPassInstructionsNew.root.visibility = View.GONE
+                    binding.layoutPassInstructionsNew.root.hide()
                 }
             }
         })
@@ -162,9 +150,9 @@ class UpdatePasswordFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty()) {
-                    binding.layoutPassInstructionsConfirm.root.visibility = View.VISIBLE
+                    binding.layoutPassInstructionsConfirm.root.show()
                 } else {
-                    binding.layoutPassInstructionsConfirm.root.visibility = View.GONE
+                    binding.layoutPassInstructionsConfirm.root.hide()
                 }
                 if (binding.layoutPassInstructionsConfirm.txtInstructionConfirm
                         .updateRequirements(
@@ -182,7 +170,7 @@ class UpdatePasswordFragment : Fragment() {
                             resources.getColor(R.color.black, context?.theme)
                         )
                 ) {
-                    binding.layoutPassInstructionsConfirm.root.visibility = View.GONE
+                    binding.layoutPassInstructionsConfirm.root.hide()
                 }
             }
         })

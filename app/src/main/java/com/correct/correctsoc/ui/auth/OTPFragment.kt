@@ -30,7 +30,9 @@ import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.VerificationTextFilledListener
+import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.upperCaseOnly
+import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.User
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
@@ -74,8 +76,8 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
 
         fragmentListener.onFragmentChangedListener(R.id.OTPFragment)
 
-        binding.placeholder.visibility = View.GONE
-        binding.progress.visibility = View.GONE
+        binding.placeholder.hide()
+        binding.progress.hide()
 
         if (arguments != null) {
             source = requireArguments().getInt(SOURCE)
@@ -130,8 +132,8 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         binding.btnResend.setOnClickListener {
             countDownTimer?.cancel()
             lifecycleScope.launch {
-                binding.placeholder.visibility = View.VISIBLE
-                binding.progress.visibility = View.VISIBLE
+                binding.placeholder.show()
+                binding.progress.show()
                 val id = usersDB.dao().getUserID() ?: ""
                 val phone = usersDB.dao().getUserPhone(id) ?: ""
                 resendOTP(phone)
@@ -158,8 +160,8 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         viewModel.confirmOTP(body)
         viewModel.otpResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
-                binding.placeholder.visibility = View.GONE
-                binding.progress.visibility = View.GONE
+                binding.placeholder.hide()
+                binding.progress.hide()
                 if (it.result != null) {
                     lifecycleScope.launch {
                         Log.v(TAG, it.result.userid)
@@ -179,8 +181,8 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                     }
                 }
             } else {
-                binding.placeholder.visibility = View.GONE
-                binding.progress.visibility = View.GONE
+                binding.placeholder.hide()
+                binding.progress.hide()
                 Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT).show()
             }
         }
@@ -190,8 +192,8 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         viewModel.resendOTP(phone)
         viewModel.otpResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
-                binding.placeholder.visibility = View.GONE
-                binding.progress.visibility = View.GONE
+                binding.placeholder.hide()
+                binding.progress.hide()
                 if (it.result != null) {
                     lifecycleScope.launch {
                         Log.v(TAG, it.result.userid)
@@ -210,15 +212,15 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                     }
                 }
             } else {
-                binding.placeholder.visibility = View.GONE
-                binding.progress.visibility = View.GONE
+                binding.placeholder.hide()
+                binding.progress.hide()
                 Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun startCountDownTimer() {
-        binding.txtTime.visibility = View.VISIBLE
+        binding.txtTime.show()
         binding.txtExpires.text = resources.getString(R.string.verification_expires)
         // 3 minute valid
         countDownTimer = object : CountDownTimer(180000, 1000) {
@@ -228,7 +230,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
 
             override fun onFinish() {
                 //binding.txtTime.text = " 00:00"
-                binding.txtTime.visibility = View.GONE
+                binding.txtTime.hide()
                 binding.txtExpires.text = resources.getString(R.string.code_expired)
                 Log.i("Timer finished mohamed", "onFinish:")
             }
@@ -367,8 +369,8 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         lifecycleScope.launch {
             val id = usersDB.dao().getUserID() ?: ""
             val phone = usersDB.dao().getUserPhone(id) ?: ""
-            binding.placeholder.visibility = View.VISIBLE
-            binding.progress.visibility = View.VISIBLE
+            binding.placeholder.show()
+            binding.progress.show()
             when (source) {
                 R.id.loginFragment -> {
                     // forgot password clicked
@@ -419,15 +421,15 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         val observer = object : Observer<AuthResponse> {
             override fun onChanged(value: AuthResponse) {
                 if (value.isSuccess) {
-                    binding.placeholder.visibility = View.GONE
-                    binding.progress.visibility = View.GONE
+                    binding.placeholder.hide()
+                    binding.progress.hide()
                     val token = requireArguments().getString(TOKEN_KEY, "") ?: ""
                     val bundle = Bundle()
                     bundle.putString(TOKEN_KEY, token)
                     findNavController().navigate(R.id.resetPasswordFragment, bundle)
                 } else {
-                    binding.placeholder.visibility = View.GONE
-                    binding.progress.visibility = View.GONE
+                    binding.placeholder.hide()
+                    binding.progress.hide()
                     Toast.makeText(requireContext(), value.errorMessages, Toast.LENGTH_SHORT)
                         .show()
                 }

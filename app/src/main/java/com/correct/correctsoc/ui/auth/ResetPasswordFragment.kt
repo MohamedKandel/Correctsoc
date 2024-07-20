@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -22,10 +21,10 @@ import com.correct.correctsoc.helper.Constants.TAG
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
-import com.correct.correctsoc.helper.isContainsSpecialCharacter
-import com.correct.correctsoc.helper.isContainsNumbers
+import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.mappingNumbers
 import com.correct.correctsoc.helper.updateRequirements
+import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
 
@@ -78,11 +77,11 @@ class ResetPasswordFragment : Fragment() {
 
         fragmentListener.onFragmentChangedListener(R.id.resetPasswordFragment)
 
-        binding.progress.visibility = View.GONE
-        binding.placeholder.visibility = View.GONE
+        binding.progress.hide()
+        binding.placeholder.hide()
 
-        binding.layoutPassInstructionsNew.root.visibility = View.GONE
-        binding.layoutPassInstructionsConfirm.root.visibility = View.GONE
+        binding.layoutPassInstructionsNew.root.hide()
+        binding.layoutPassInstructionsConfirm.root.hide()
 
         if (helper.getLang(requireContext()).equals("en")) {
             binding.layoutPassInstructionsNew.txtInstructionConfirm.text =
@@ -131,9 +130,9 @@ class ResetPasswordFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty()) {
-                    binding.layoutPassInstructionsNew.root.visibility = View.VISIBLE
+                    binding.layoutPassInstructionsNew.root.show()
                 } else {
-                    binding.layoutPassInstructionsNew.root.visibility = View.GONE
+                    binding.layoutPassInstructionsNew.root.hide()
                 }
                 if (binding.layoutPassInstructionsNew.txtInstructionConfirm
                         .updateRequirements(
@@ -151,7 +150,7 @@ class ResetPasswordFragment : Fragment() {
                             resources.getColor(R.color.black, context?.theme)
                         )
                 ) {
-                    binding.layoutPassInstructionsNew.root.visibility = View.GONE
+                    binding.layoutPassInstructionsNew.root.hide()
                 }
             }
         })
@@ -167,9 +166,9 @@ class ResetPasswordFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty()) {
-                    binding.layoutPassInstructionsConfirm.root.visibility = View.VISIBLE
+                    binding.layoutPassInstructionsConfirm.root.show()
                 } else {
-                    binding.layoutPassInstructionsConfirm.root.visibility = View.GONE
+                    binding.layoutPassInstructionsConfirm.root.hide()
                 }
                 if (binding.layoutPassInstructionsConfirm.txtInstructionConfirm
                         .updateRequirements(
@@ -187,7 +186,7 @@ class ResetPasswordFragment : Fragment() {
                             resources.getColor(R.color.black, context?.theme)
                         )
                 ) {
-                    binding.layoutPassInstructionsConfirm.root.visibility = View.GONE
+                    binding.layoutPassInstructionsConfirm.root.hide()
                 }
             }
         })
@@ -206,8 +205,8 @@ class ResetPasswordFragment : Fragment() {
         }
 
         binding.doneBtn.setOnClickListener {
-            binding.progress.visibility = View.VISIBLE
-            binding.placeholder.visibility = View.VISIBLE
+            binding.progress.show()
+            binding.placeholder.show()
 
             val newPassword = binding.txtPassword.text.toString()
             val confirm = binding.txtConfirmpassword.text.toString()
@@ -222,8 +221,8 @@ class ResetPasswordFragment : Fragment() {
                     }
                 }
             } else {
-                binding.progress.visibility = View.GONE
-                binding.placeholder.visibility = View.GONE
+                binding.progress.hide()
+                binding.placeholder.hide()
                 Toast.makeText(
                     requireContext(),
                     resources.getString(R.string.not_match),
@@ -241,8 +240,8 @@ class ResetPasswordFragment : Fragment() {
         viewModel.resetPassword(body, token)
         viewModel.resetPasswordResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
-                binding.progress.visibility = View.GONE
-                binding.placeholder.visibility = View.GONE
+                binding.progress.hide()
+                binding.placeholder.hide()
                 Log.v(TAG, "${it.statusCode}")
                 Log.v(TAG, "password reseted")
                 Log.v(TAG, body.newPassword)
@@ -252,8 +251,8 @@ class ResetPasswordFragment : Fragment() {
                     findNavController().navigate(R.id.loginFragment)
                 }
             } else {
-                binding.progress.visibility = View.GONE
-                binding.placeholder.visibility = View.GONE
+                binding.progress.hide()
+                binding.placeholder.hide()
                 Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
                     .show()
             }

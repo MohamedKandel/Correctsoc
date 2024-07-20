@@ -23,7 +23,6 @@ import com.correct.correctsoc.R
 import com.correct.correctsoc.data.auth.forget.ForgotResponse
 import com.correct.correctsoc.data.pay.SubscibeGooglePayBody
 import com.correct.correctsoc.databinding.FragmentPaymentMethodBinding
-import com.correct.correctsoc.helper.Constants
 import com.correct.correctsoc.helper.Constants.CURRENCY
 import com.correct.correctsoc.helper.Constants.DEVICES
 import com.correct.correctsoc.helper.Constants.DISCOUNT
@@ -35,6 +34,9 @@ import com.correct.correctsoc.helper.Constants.TOTAL_PRICE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
+import com.correct.correctsoc.helper.hide
+import com.correct.correctsoc.helper.openWhatsApp
+import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.UsersDB
 import com.google.android.gms.wallet.TransactionInfo
 import com.google.android.gms.wallet.WalletConstants
@@ -106,8 +108,8 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
         viewModel = ViewModelProvider(this)[PayViewModel::class.java]
         usersDB = UsersDB.getDBInstance(requireContext())
         fragmentListener.onFragmentChangedListener(R.id.paymentMethodFragment)
-        binding.placeholder.visibility = View.GONE
-        binding.progress.visibility = View.GONE
+        binding.placeholder.hide()
+        binding.progress.hide()
 
         if (arguments != null) {
             amount = requireArguments().getInt(DEVICES, 0)
@@ -133,8 +135,8 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                binding.placeholder.visibility = View.VISIBLE
-                binding.progress.visibility = View.VISIBLE
+                binding.placeholder.show()
+                binding.progress.show()
                 if (googlePay) {
                     val googlePayRequest = GooglePayRequest()
                     googlePayRequest.transactionInfo = TransactionInfo.newBuilder()
@@ -143,8 +145,8 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                         .setCurrencyCode(CURRENCY)
                         .build()
                     googlePayRequest.isBillingAddressRequired = true
-                    binding.placeholder.visibility = View.GONE
-                    binding.progress.visibility = View.GONE
+                    binding.placeholder.hide()
+                    binding.progress.hide()
                     googlePayClient.requestPayment(requireActivity(), googlePayRequest)
                 } else if (activation) {
                     val bundle = Bundle()
@@ -155,6 +157,9 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                     )
                 } else if (activation_wa) {
                     // open whatsapp with the number
+                    this.openWhatsApp("201011104445")
+                    binding.placeholder.hide()
+                    binding.progress.hide()
                 }
             }
 
@@ -229,8 +234,8 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
             override fun onChanged(value: ForgotResponse) {
                 if (value.isSuccess) {
                     if (parentFragment is ParentPayFragment) {
-                        binding.placeholder.visibility = View.GONE
-                        binding.progress.visibility = View.GONE
+                        binding.placeholder.hide()
+                        binding.progress.hide()
                         (parentFragment as? ParentPayFragment)?.replaceFragment(
                             PaymentSuccessFragment()
                         )
@@ -253,16 +258,16 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
         googlePayClient.setListener(this)
         googlePayClient.isReadyToPay(requireActivity()) { isReadyToPay, error ->
             if (isReadyToPay) {
-                binding.googlePayLayout.visibility = View.VISIBLE
+                binding.googlePayLayout.show()
             } else {
-                binding.googlePayLayout.visibility = View.GONE
+                binding.googlePayLayout.hide()
             }
         }
     }
 
     override fun onGooglePaySuccess(paymentMethodNonce: PaymentMethodNonce) {
-        binding.placeholder.visibility = View.VISIBLE
-        binding.progress.visibility = View.VISIBLE
+        binding.placeholder.show()
+        binding.progress.show()
         dataCollector.collectDeviceData(requireContext()) { deviceData, error ->
             if (deviceData != null) {
                 lifecycleScope.launch {

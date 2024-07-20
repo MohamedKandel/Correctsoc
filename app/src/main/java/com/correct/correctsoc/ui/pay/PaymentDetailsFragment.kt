@@ -25,6 +25,7 @@ import com.correct.correctsoc.helper.Constants.TOTAL_PRICE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
+import com.correct.correctsoc.helper.hideKeyboard
 
 class PaymentDetailsFragment : Fragment() {
 
@@ -112,6 +113,7 @@ class PaymentDetailsFragment : Fragment() {
 
         binding.spnDuration.setOnClickListener {
             Log.v("Item count","${arrayAdapter.count}")
+            it.hideKeyboard()
             if (arrayAdapter.count != durations.size) {
                 arrayAdapter = ArrayAdapter(
                     requireContext(), R.layout.duration_spn_item,

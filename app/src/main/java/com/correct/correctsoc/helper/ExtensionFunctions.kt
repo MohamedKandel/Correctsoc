@@ -1,11 +1,12 @@
 package com.correct.correctsoc.helper
 
-import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.LinearGradient
 import android.graphics.Shader
+import android.net.Uri
 import android.text.Editable
 import android.text.InputFilter
 import android.text.Spannable
@@ -15,12 +16,13 @@ import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Base64
 import android.view.View
-import android.widget.AutoCompleteTextView
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import com.correct.correctsoc.R
+
 
 fun String.isContainsNumbers(): Boolean {
     var flag = false
@@ -387,8 +389,28 @@ fun EditText.upperCaseOnly() {
     })
 }
 
-fun String.parseBase64():Bitmap {
+fun String.parseBase64(): Bitmap {
     val decodedString: ByteArray = Base64.decode(this, Base64.DEFAULT)
     val decodedByte: Bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
     return decodedByte
+}
+
+fun View.hideKeyboard() {
+    val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputManager.hideSoftInputFromWindow(windowToken, 0)
+}
+
+fun Fragment.openWhatsApp(tel: String) {
+    val url = "https://api.whatsapp.com/send?phone=$tel"
+    val intent = Intent(Intent.ACTION_VIEW)
+    intent.setData(Uri.parse(url))
+    this.startActivity(intent)
+}
+
+fun View.hide(){
+    this.visibility = View.GONE
+}
+
+fun View.show() {
+    this.visibility = View.VISIBLE
 }

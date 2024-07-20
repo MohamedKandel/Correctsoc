@@ -224,7 +224,7 @@ class DevicesFragment : Fragment(), ClickListener {
     }
 
     /*private fun openMenu() {
-        binding.placeholder.visibility = View.VISIBLE
+        binding.placeholder.view()
         binding.drawerMenu.root.visibility = View.VISIBLE
         binding.drawerMenu.root.startAnimation(slideIn)
         binding.drawerMenu.recyclerView.scrollToPosition(0)
@@ -232,9 +232,9 @@ class DevicesFragment : Fragment(), ClickListener {
     }
 
     private fun closeMenu() {
-        binding.placeholder.visibility = View.GONE
+        binding.placeholder.hide()
         binding.drawerMenu.root.startAnimation(slideOut)
-        binding.drawerMenu.root.visibility = View.GONE
+        binding.drawerMenu.root.hide()
         isVisible = false
     }*/
 

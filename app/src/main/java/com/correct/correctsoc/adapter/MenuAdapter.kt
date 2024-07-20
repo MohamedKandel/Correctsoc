@@ -13,6 +13,7 @@ import com.correct.correctsoc.R
 import com.correct.correctsoc.data.MenuData
 import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.Constants.CLICKED
+import com.correct.correctsoc.helper.hide
 
 class MenuAdapter(
     private val context: Context,
@@ -34,7 +35,7 @@ class MenuAdapter(
         val model = list[position]
         holder.txt.text = model.text
         if (model.icon == 0) {
-            holder.icon.visibility = View.GONE
+            holder.icon.hide()
             holder.txt.setTextColor(context.resources.getColor(R.color.alphaWhite,context.theme))
         } else {
             holder.icon.setImageResource(model.icon)

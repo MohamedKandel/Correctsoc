@@ -28,7 +28,9 @@ import com.correct.correctsoc.helper.Constants.TOTAL_PRICE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
+import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.upperCaseOnly
+import com.correct.correctsoc.helper.show
 import kotlin.math.round
 
 class ReceiptFragment : Fragment() {
@@ -90,8 +92,8 @@ class ReceiptFragment : Fragment() {
 
         fragmentListener.onFragmentChangedListener(R.id.receiptFragment)
 
-        binding.txtViewDiscount.visibility = View.GONE
-        binding.txtDiscount.visibility = View.GONE
+        binding.txtViewDiscount.hide()
+        binding.txtDiscount.hide()
 
         if (arguments != null) {
             devices = requireArguments().getInt(DEVICES, 0)
@@ -196,7 +198,7 @@ class ReceiptFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun promoCodeSuccess(promo: String, discount: Double) {
         // display green layout and gif at first
-        binding.promoCodeLayout.visibility = View.VISIBLE
+        binding.promoCodeLayout.show()
 
         binding.promoCodeLayout.radius = resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
         binding.promoCodeLayout.strokeWidth =
@@ -204,8 +206,8 @@ class ReceiptFragment : Fragment() {
         binding.promoCodeLayout.strokeColor =
             resources.getColor(R.color.discount_color, context?.theme)
 
-        binding.layoutGreen.visibility = View.VISIBLE
-        binding.paymentSuccessGif.visibility = View.VISIBLE
+        binding.layoutGreen.show()
+        binding.paymentSuccessGif.show()
 
         promoCode = promo
 
@@ -220,8 +222,8 @@ class ReceiptFragment : Fragment() {
             binding.promoCodeLayout.strokeColor =
                 resources.getColor(R.color.discount_color, context?.theme)
 
-            binding.txtViewDiscount.visibility = View.VISIBLE
-            binding.txtDiscount.visibility = View.VISIBLE
+            binding.txtViewDiscount.show()
+            binding.txtDiscount.show()
             //binding.txtDiscount.text = "-550 $"
             binding.txtDiscount.text =
                 "${(calculateDiscount(discount, totalPrice))} $"
@@ -236,14 +238,14 @@ class ReceiptFragment : Fragment() {
 
             binding.txtViewPromoName.text = promo
 
-            binding.promoCode.visibility = View.GONE
-            binding.promoCodeSuccessLayout.visibility = View.VISIBLE
+            binding.promoCode.hide()
+            binding.promoCodeSuccessLayout.show()
             binding.txtViewDiscountPercent.text = "${discount * 100}% OFF"
         }, 1000)
 
         // hide gif after 1.5 seconds
         Handler(Looper.getMainLooper()).postDelayed({
-            binding.paymentSuccessGif.visibility = View.GONE
+            binding.paymentSuccessGif.hide()
         }, 1500)
     }
 
@@ -255,8 +257,8 @@ class ReceiptFragment : Fragment() {
         binding.promoCodeLayout.strokeColor =
             resources.getColor(R.color.white, context?.theme)
 
-        binding.txtViewDiscount.visibility = View.GONE
-        binding.txtDiscount.visibility = View.GONE
+        binding.txtViewDiscount.hide()
+        binding.txtDiscount.hide()
 
         //val returnDiscount = totalPrice - (discount * 100)
 
@@ -271,9 +273,9 @@ class ReceiptFragment : Fragment() {
         binding.txtPromo.setText(promo)
         binding.txtPromo.setSelection(binding.txtPromo.text.length)
 
-        binding.promoCode.visibility = View.VISIBLE
-        binding.layoutGreen.visibility = View.GONE
-        binding.promoCodeSuccessLayout.visibility = View.GONE
+        binding.promoCode.show()
+        binding.layoutGreen.hide()
+        binding.promoCodeSuccessLayout.hide()
     }
 
     private fun Double.round(): Double = round(this * 10) / 10

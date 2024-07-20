@@ -41,7 +41,9 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnSwipeGestureListener
 import com.correct.correctsoc.helper.buildDialog
+import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.mappingNumbers
+import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.UsersDB
 import com.correct.correctsoc.ui.auth.AuthViewModel
 import kotlinx.coroutines.launch
@@ -132,8 +134,8 @@ class HomeFragment : Fragment(), ClickListener {
 
         binding.btnScan.setOnClickListener {
             validateToken(helper.getToken(requireContext())) {
-                binding.placeholder.visibility = View.VISIBLE
-                binding.dialog.root.visibility = View.VISIBLE
+                binding.placeholder.show()
+                binding.dialog.root.show()
                 isDialogVisible = true
                 binding.dialog.root.startAnimation(fadeIn)
 
@@ -144,9 +146,9 @@ class HomeFragment : Fragment(), ClickListener {
                 btn_pen_scan.setOnClickListener {
                     findNavController().navigate(R.id.selfPenFragment)
                     isDialogVisible = false
-                    binding.placeholder.visibility = View.GONE
+                    binding.placeholder.hide()
                     binding.dialog.root.startAnimation(fadeOut)
-                    binding.dialog.root.visibility = View.GONE
+                    binding.dialog.root.hide()
                 }
 
                 btn_ip_scan.setOnClickListener {
@@ -154,9 +156,9 @@ class HomeFragment : Fragment(), ClickListener {
                     bundle.putString(TYPE, IP_ADDRESS)
                     findNavController().navigate(R.id.insertLinkFragment, bundle)
                     isDialogVisible = false
-                    binding.placeholder.visibility = View.GONE
+                    binding.placeholder.hide()
                     binding.dialog.root.startAnimation(fadeOut)
-                    binding.dialog.root.visibility = View.GONE
+                    binding.dialog.root.hide()
                 }
             }
         }
@@ -191,9 +193,9 @@ class HomeFragment : Fragment(), ClickListener {
         helper.onBackPressed(this) {
             if (isDialogVisible) {
                 isDialogVisible = false
-                binding.placeholder.visibility = View.GONE
+                binding.placeholder.hide()
                 binding.dialog.root.startAnimation(fadeOut)
-                binding.dialog.root.visibility = View.GONE
+                binding.dialog.root.hide()
             } else if (isVisible) {
                 closeMenu()
             } else {
@@ -258,9 +260,9 @@ class HomeFragment : Fragment(), ClickListener {
             if (isVisible) {
                 closeMenu()
             } else if (isDialogVisible) {
-                binding.placeholder.visibility = View.GONE
+                binding.placeholder.hide()
                 binding.dialog.root.startAnimation(fadeOut)
-                binding.dialog.root.visibility = View.GONE
+                binding.dialog.root.hide()
                 isDialogVisible = false
             }
         }
@@ -311,9 +313,9 @@ class HomeFragment : Fragment(), ClickListener {
                             Log.v("description mohamed displayed",displayedText)
 
                             if (displayedText.length < ads_list[position].description.length) {
-                                it.txt_more.visibility = View.VISIBLE
+                                it.txt_more.show()
                             } else {
-                                it.txt_more.visibility = View.GONE
+                                it.txt_more.hide()
                             }
                         }
                     }
@@ -428,17 +430,17 @@ class HomeFragment : Fragment(), ClickListener {
     }
 
     private fun openMenu() {
-        binding.placeholder.visibility = View.VISIBLE
-        binding.drawerMenu.root.visibility = View.VISIBLE
+        binding.placeholder.show()
+        binding.drawerMenu.root.show()
         binding.drawerMenu.root.startAnimation(slideIn)
         binding.drawerMenu.recyclerView.scrollToPosition(0)
         isVisible = true
     }
 
     private fun closeMenu() {
-        binding.placeholder.visibility = View.GONE
+        binding.placeholder.hide()
         binding.drawerMenu.root.startAnimation(slideOut)
-        binding.drawerMenu.root.visibility = View.GONE
+        binding.drawerMenu.root.hide()
         isVisible = false
     }
 

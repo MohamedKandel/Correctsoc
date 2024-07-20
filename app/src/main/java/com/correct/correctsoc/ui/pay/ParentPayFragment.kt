@@ -7,14 +7,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout.LayoutParams
 import androidx.core.content.ContextCompat
-import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentParentPayBinding
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
+import com.correct.correctsoc.helper.hide
+import com.correct.correctsoc.helper.show
 
 class ParentPayFragment : Fragment(), NextStepListener {
 
@@ -91,11 +91,11 @@ class ParentPayFragment : Fragment(), NextStepListener {
         isHeaderVisible: Boolean = true
     ) {
         if (isHeaderVisible) {
-            binding.layoutStepper.visibility = View.VISIBLE
-            binding.txtTitle.visibility = View.GONE
+            binding.layoutStepper.show()
+            binding.txtTitle.hide()
         } else {
             binding.layoutStepper.visibility = View.INVISIBLE
-            binding.txtTitle.visibility = View.VISIBLE
+            binding.txtTitle.show()
         }
         currentFragment = fragment
         if (bundle != null) {
@@ -109,11 +109,11 @@ class ParentPayFragment : Fragment(), NextStepListener {
 
     fun displayHeader(isHeaderVisible: Boolean) {
         if (isHeaderVisible) {
-            binding.layoutStepper.visibility = View.VISIBLE
-            binding.txtTitle.visibility = View.GONE
+            binding.layoutStepper.show()
+            binding.txtTitle.hide()
         } else {
             binding.layoutStepper.visibility = View.INVISIBLE
-            binding.txtTitle.visibility = View.VISIBLE
+            binding.txtTitle.show()
         }
     }
 

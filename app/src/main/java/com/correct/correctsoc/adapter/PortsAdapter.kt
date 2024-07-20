@@ -1,7 +1,6 @@
 package com.correct.correctsoc.adapter;
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +9,14 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.correct.correctsoc.R
-import com.correct.correctsoc.data.openPorts.OpenPorts
 import com.correct.correctsoc.data.openPorts.Port
 import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.Constants.CLICKED
 import com.correct.correctsoc.helper.Constants.ITEM
 import com.correct.correctsoc.helper.Constants.LIST
 import com.correct.correctsoc.helper.Constants.MORE
-import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.hide
+import com.correct.correctsoc.helper.show
 
 class PortsAdapter(
     /*private val helper: HelperClass,
@@ -49,12 +48,12 @@ class PortsAdapter(
         }
         if (model.cvEs.size > 0) {
             holder.txt_cve.text = " [..]"
-            holder.see_more.visibility = View.VISIBLE
-            holder.txt_click.visibility = View.VISIBLE
+            holder.see_more.show()
+            holder.txt_click.show()
         } else {
             holder.txt_cve.text = " [0]"
-            holder.see_more.visibility = View.GONE
-            holder.txt_click.visibility = View.GONE
+            holder.see_more.hide()
+            holder.txt_click.hide()
         }
         /*if (helper.getLang(context).equals("ar")) {
             holder.cpe.text.toString().replace(":","")
