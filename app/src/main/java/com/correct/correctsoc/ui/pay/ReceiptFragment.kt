@@ -5,8 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,19 +12,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
+import com.correct.correctsoc.data.pay.PromoCodePercentResponse
 import com.correct.correctsoc.databinding.FragmentReceiptBinding
-import com.correct.correctsoc.helper.Constants
+import com.correct.correctsoc.helper.Constants.API_TAG
 import com.correct.correctsoc.helper.Constants.DEVICES
+import com.correct.correctsoc.helper.Constants.DISCOUNT
 import com.correct.correctsoc.helper.Constants.MONTHS
 import com.correct.correctsoc.helper.Constants.PRICE
+import com.correct.correctsoc.helper.Constants.PROMO
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
+import com.correct.correctsoc.helper.Constants.TOTAL_PRICE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
 import com.correct.correctsoc.helper.upperCaseOnly
+import kotlin.math.round
 
 class ReceiptFragment : Fragment() {
 
@@ -35,8 +38,11 @@ class ReceiptFragment : Fragment() {
     private lateinit var listener: NextStepListener
     private lateinit var fragmentListener: FragmentChangedListener
     private lateinit var viewModel: PayViewModel
+    private var totalPrice = 0.0
     private var price = 0.0
+    private var discount = 0.0
     private var token = ""
+    private var promoCode = ""
     private var devices = 0
     private var months = 0
 
@@ -90,7 +96,7 @@ class ReceiptFragment : Fragment() {
         if (arguments != null) {
             devices = requireArguments().getInt(DEVICES, 0)
             months = requireArguments().getInt(MONTHS, 0)
-            price = requireArguments().getDouble(PRICE, 0.0)
+            totalPrice = requireArguments().getDouble(TOTAL_PRICE, 0.0)
 
             if (months > 0 && devices > 0) {
                 val device_unit = if (devices > 1) {
@@ -108,20 +114,35 @@ class ReceiptFragment : Fragment() {
                         binding.txtDuration.text = resources.getString(R.string.one_year)
                     }
                 }
-                if (price > 0) {
-                    binding.txtAmount.text = "$price $"
-                    binding.txtTotal.text = "$price $"
-                } else {
-                    getCost(devices, months)
+                if (totalPrice > 0) {
+                    binding.txtAmount.text = "$totalPrice $"
+                    binding.txtTotal.text = "$totalPrice $"
+                    //  getCost(devices,months)
                 }
+                getCost(devices, months)
+
             }
         }
 
         binding.nextBtn.setOnClickListener {
             if (devices > 0 && months > 0) {
                 if (parentFragment is ParentPayFragment) {
-                    price = binding.txtTotal.text.toString().replace("$","").trim().toDouble()
+                    price = binding.txtTotal.text.toString().replace("$", "").trim().toDouble()
+                    totalPrice =
+                        binding.txtAmount.text.toString().replace("$", "").trim().toDouble()
+                    if (!binding.txtDiscount.text.toString()
+                            .equals(resources.getString(R.string.discount))
+                    ) {
+                        discount = binding.txtDiscount.text.toString().replace("$", "").trim()
+                            .toDouble()
+                    } else {
+                        discount = 0.0
+                    }
+
                     orderGooglePay()
+                    //Log.v(API_TAG, "$totalPrice")
+                    //Log.v(API_TAG, "$discount")
+                    //Log.v(API_TAG, "$price")
                 }
             } else {
                 Toast.makeText(
@@ -135,7 +156,8 @@ class ReceiptFragment : Fragment() {
         binding.txtApply.setOnClickListener {
             //apply promo-code
             if (binding.txtPromo.text.toString().isNotEmpty()) {
-                promoCodeSuccess(binding.txtPromo.text.toString())
+                getPromoCodePercent(binding.txtPromo.text.toString())
+                //promoCodeSuccess(binding.txtPromo.text.toString())
             }
         }
 
@@ -148,8 +170,31 @@ class ReceiptFragment : Fragment() {
         return binding.root
     }
 
+    private fun getPromoCodePercent(code: String) {
+        viewModel.getPromoCodePercent(code)
+        val observer = object : Observer<PromoCodePercentResponse> {
+            override fun onChanged(value: PromoCodePercentResponse) {
+                if (value.promotionPercentage > 0) {
+                    discount = value.promotionPercentage
+                    promoCodeSuccess(code, value.promotionPercentage)
+                    Log.i(API_TAG, "$discount")
+                    Log.i(API_TAG, "$totalPrice")
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        resources.getString(R.string.no_promo),
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+                viewModel.promoCodePercentResponse.removeObserver(this)
+            }
+        }
+        viewModel.promoCodePercentResponse.observe(viewLifecycleOwner, observer)
+    }
+
     @SuppressLint("SetTextI18n")
-    private fun promoCodeSuccess(promo: String) {
+    private fun promoCodeSuccess(promo: String, discount: Double) {
         // display green layout and gif at first
         binding.promoCodeLayout.visibility = View.VISIBLE
 
@@ -161,6 +206,8 @@ class ReceiptFragment : Fragment() {
 
         binding.layoutGreen.visibility = View.VISIBLE
         binding.paymentSuccessGif.visibility = View.VISIBLE
+
+        promoCode = promo
 
         /*
         hide all green layout views expect gif after 1 second
@@ -175,16 +222,23 @@ class ReceiptFragment : Fragment() {
 
             binding.txtViewDiscount.visibility = View.VISIBLE
             binding.txtDiscount.visibility = View.VISIBLE
-            binding.txtDiscount.text = "-550 $"
+            //binding.txtDiscount.text = "-550 $"
+            binding.txtDiscount.text =
+                "${(calculateDiscount(discount, totalPrice))} $"
 
-            binding.txtTotal.text = "${
-                binding.txtTotal.text.toString().replace("$", "").trim().toDouble().minus(550)
-            } $"
+
+            binding.txtTotal.text = "${totalPrice.minus(calculateDiscount(discount, totalPrice))} $"
+            //binding.txtTotal.text.toString().replace("$", "").trim().toDouble().minus(discount)
+
+            totalPrice = binding.txtAmount.text.toString().replace("$", "").trim().toDouble()
+            this.discount = binding.txtDiscount.text.toString().replace("$", "").trim().toDouble()
+            price = binding.txtTotal.text.toString().replace("$", "").trim().toDouble()
 
             binding.txtViewPromoName.text = promo
 
             binding.promoCode.visibility = View.GONE
             binding.promoCodeSuccessLayout.visibility = View.VISIBLE
+            binding.txtViewDiscountPercent.text = "${discount * 100}% OFF"
         }, 1000)
 
         // hide gif after 1.5 seconds
@@ -193,6 +247,7 @@ class ReceiptFragment : Fragment() {
         }, 1500)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun clearPromoCode(promo: String) {
         binding.promoCodeLayout.radius = resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
         binding.promoCodeLayout.strokeWidth =
@@ -203,8 +258,15 @@ class ReceiptFragment : Fragment() {
         binding.txtViewDiscount.visibility = View.GONE
         binding.txtDiscount.visibility = View.GONE
 
+        //val returnDiscount = totalPrice - (discount * 100)
+
         binding.txtTotal.text =
-            "${binding.txtTotal.text.toString().replace("$", "").trim().toDouble().plus(550)} $"
+            "${binding.txtAmount.text}"
+
+        promoCode = ""
+        discount = 0.0
+        totalPrice = binding.txtAmount.text.toString().replace("$", "").trim().toDouble()
+        price = binding.txtTotal.text.toString().replace("$", "").trim().toDouble()
 
         binding.txtPromo.setText(promo)
         binding.txtPromo.setSelection(binding.txtPromo.text.length)
@@ -214,6 +276,10 @@ class ReceiptFragment : Fragment() {
         binding.promoCodeSuccessLayout.visibility = View.GONE
     }
 
+    private fun Double.round(): Double = round(this * 10) / 10
+    private fun calculateDiscount(discount: Double, totalPrice: Double) =
+        (totalPrice * discount).round()
+
     @SuppressLint("SetTextI18n")
     private fun getCost(device: Int, months: Int, year: Int = 0) {
         Log.v("data pay", "$months\t $device")
@@ -221,8 +287,14 @@ class ReceiptFragment : Fragment() {
         viewModel.getCostResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
                 if (it.result != null) {
-                    binding.txtAmount.text = "${it.result} $"
-                    binding.txtTotal.text = "${it.result} $"
+                    totalPrice = it.result.toDouble()
+                    price = it.result.toDouble()
+                    if (totalPrice != binding.txtAmount.text.toString().replace("$", "").trim()
+                            .toDouble()
+                    ) {
+                        binding.txtAmount.text = "${it.result} $"
+                        binding.txtTotal.text = "${it.result} $"
+                    }
                 }
             } else {
                 Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
@@ -241,7 +313,11 @@ class ReceiptFragment : Fragment() {
                     val bundle = Bundle()
                     bundle.putInt(DEVICES, devices)
                     bundle.putInt(MONTHS, months)
+                    bundle.putDouble(TOTAL_PRICE, totalPrice)
+                    //val priceDiscount = totalPrice - discount
+                    bundle.putDouble(DISCOUNT, discount)
                     bundle.putDouble(PRICE, price)
+                    bundle.putString(PROMO, promoCode)
                     bundle.putString(TOKEN_KEY, token)
                     (parentFragment as? ParentPayFragment)?.replaceFragment(
                         PaymentMethodFragment(),

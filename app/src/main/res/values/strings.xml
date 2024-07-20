@@ -191,4 +191,9 @@
     <string name="confirmation">Confirmation</string>
     <string name="confirmation_msg">Are you sure you want to delete your account permanently</string>
     <string name="delete">Delte</string>
+
+    <string name="months">months</string>
+    <string name="no_promo">We are sorry… this is not available promo-code</string>
+    <string name="zero" translatable="false">0.0 $</string>
+    <string name="more_txt" translatable="false">…</string>
 </resources>

@@ -8,5 +8,6 @@ data class SubscibeGooglePayBody(
     val months: Int,
     val nonce: String,
     val phoneNumber: String,
-    val discount: Int = 0
+    val discount: Int = 0,
+    val promoCode: String = ""
 )

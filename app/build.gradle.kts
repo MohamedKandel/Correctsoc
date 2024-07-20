@@ -100,13 +100,6 @@ dependencies {
     // recyclerview swipe decorator
     implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
 
-    // work manager
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
-
     // gif
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.29")
-
-    // glide
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 }

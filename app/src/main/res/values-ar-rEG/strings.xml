@@ -183,4 +183,6 @@
     <string name="confirmation">تأكيد</string>
     <string name="confirmation_msg">هل انت متأكد من انك تريد حذف حسابك نهائيًا</string>
     <string name="delete">حذف</string>
+    <string name="months">أشهر</string>
+    <string name="no_promo">عذرًا… كود الخصم هذا غير متاح</string>
 </resources>

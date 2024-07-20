@@ -22,6 +22,7 @@ import com.correct.correctsoc.R
 import com.correct.correctsoc.data.auth.forget.ForgotResponse
 import com.correct.correctsoc.data.pay.SubscribeCodeBody
 import com.correct.correctsoc.databinding.FragmentActivationCodeBinding
+import com.correct.correctsoc.helper.Constants.PROMO
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
@@ -39,6 +40,7 @@ class ActivationCodeFragment : Fragment() {
     private lateinit var listener: NextStepListener
     private lateinit var viewModel: PayViewModel
     private lateinit var usersDB: UsersDB
+    private var promoCode = ""
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -85,6 +87,9 @@ class ActivationCodeFragment : Fragment() {
         // make edit text accept uppercase letters only
         binding.txtActivationCode.upperCaseOnly()
 
+        if (arguments != null) {
+            promoCode = requireArguments().getString(PROMO,"")
+        }
 
         val hyphenPositions = intArrayOf(8, 13, 18, 23)
 
@@ -123,8 +128,10 @@ class ActivationCodeFragment : Fragment() {
                         val body = SubscribeCodeBody(
                             code = code,
                             deviceId = helper.getDeviceID(requireContext()),
-                            phone = phone
+                            phone = phone,
+                            promoCode = promoCode
                         )
+                        Log.d("payment mohamed", promoCode)
                         subscribe(body)
                     }
                 }

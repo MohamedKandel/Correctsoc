@@ -2,8 +2,8 @@ package com.correct.correctsoc.adapter;
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.Layout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,23 +13,18 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.DecodeFormat
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import com.correct.correctsoc.R
-import com.correct.correctsoc.data.AdsModel
+import com.correct.correctsoc.data.user.AdsResponse
+import com.correct.correctsoc.data.user.AdsResult
 import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.Constants.AD_OBJECT
+import com.correct.correctsoc.helper.Constants.API_TAG
 import com.correct.correctsoc.helper.Constants.CLICKED
+import com.correct.correctsoc.helper.parseBase64
 
 class AdsAdapter(
     private val context: Context,
-    private var list: List<AdsModel>,
+    private var list: List<AdsResult>,
     private val listener: ClickListener
 ) : RecyclerView.Adapter<AdsAdapter.ViewHolder>() {
 
@@ -47,14 +42,29 @@ class AdsAdapter(
         val model = list[position]
         holder.title.text = model.title
         holder.description.text = model.description
-        Glide.with(context)
-            .load(model.img)
-            .placeholder(R.drawable.correct)
-            .into(holder.img)
+        /*holder.description.viewTreeObserver.addOnGlobalLayoutListener {
+
+            Log.v("description mohamed displayed", getDisplayedText(holder.description))
+            //Log.v(API_TAG, getDisplayedText(holder.description))
+        }*/
+        holder.img.setImageBitmap(model.image.parseBase64())
+    }
+
+    fun getDisplayedText(textView: TextView): String {
+        val layout = textView.layout
+        val lines = textView.lineCount.coerceAtMost(textView.maxLines)
+        val displayedText = StringBuilder()
+        for (i in 0 until lines) {
+            val start = layout.getLineStart(i)
+            val end = layout.getLineEnd(i)
+            val lineText = textView.text.substring(start, end)
+            displayedText.append(lineText)
+        }
+        return displayedText.toString()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateAdapter(newList: List<AdsModel>) {
+    fun updateAdapter(newList: List<AdsResult>) {
         this.list = newList
         this.notifyDataSetChanged();
     }
@@ -63,39 +73,22 @@ class AdsAdapter(
         val img: ImageView = itemView.findViewById(R.id.img_ad)
         val title: TextView = itemView.findViewById(R.id.txt_ad_title)
         val description: TextView = itemView.findViewById(R.id.txt_ad_description)
-        val btn_buy: Button = itemView.findViewById(R.id.btn_buy)
+        val txt_more: TextView = itemView.findViewById(R.id.txt_see_more)
+        //val btn_buy: Button = itemView.findViewById(R.id.btn_buy)
 
         init {
-            description.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    val layout = description.layout
-                    if (layout != null) {
-                        val lineCount = layout.lineCount
-                        if (lineCount > 0 && layout.getEllipsisCount(lineCount - 1) > 0) {
-                            // Text is ellipsized, show the "See More" button
-                            description.append("...")
-                        } else {
-                            // Text is fully displayed, hide the "See More" button
-
-                        }
-                    }
-
-                    // Remove the listener to avoid multiple callbacks
-                    description.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
-
-            btn_buy.setOnClickListener {
+            //txt_more.visibility = View.GONE
+            txt_more.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putParcelable(AD_OBJECT, list[bindingAdapterPosition])
-                bundle.putString(CLICKED,"ads")
+                bundle.putString(CLICKED, "ads")
                 listener.onItemClickListener(bindingAdapterPosition, bundle)
             }
 
             itemView.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putParcelable(AD_OBJECT, list[bindingAdapterPosition])
-                bundle.putString(CLICKED,"ads")
+                bundle.putString(CLICKED, "ads")
                 listener.onItemClickListener(bindingAdapterPosition, bundle)
             }
 

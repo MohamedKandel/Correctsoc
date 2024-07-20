@@ -74,7 +74,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:fontFamily="@font/barlow_semi_condensed_semibold"
-            android:text="@string/receipt_summary"
+            android:text="@string/zero"
             android:textColor="@color/white"
             android:textSize="@dimen/_12ssp" />
 
@@ -229,7 +229,7 @@
         android:layout_marginTop="@dimen/_14sdp"
         android:layout_marginEnd="@dimen/_24sdp"
         android:fontFamily="@font/barlow_semi_condensed_semibold"
-        android:text="@string/discount"
+        android:text="@string/zero"
         android:textColor="@color/discount_color"
         android:textSize="@dimen/_12ssp"
         app:layout_constraintEnd_toEndOf="parent"

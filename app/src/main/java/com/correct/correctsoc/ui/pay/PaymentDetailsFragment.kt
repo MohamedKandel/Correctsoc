@@ -21,6 +21,7 @@ import com.correct.correctsoc.helper.Constants.DEVICES
 import com.correct.correctsoc.helper.Constants.MONTHS
 import com.correct.correctsoc.helper.Constants.PRICE
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
+import com.correct.correctsoc.helper.Constants.TOTAL_PRICE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
@@ -77,7 +78,7 @@ class PaymentDetailsFragment : Fragment() {
 
         fragmentListener.onFragmentChangedListener(R.id.paymentDetailsFragment)
         val durations = resources.getStringArray(R.array.durations)
-        val arrayAdapter = ArrayAdapter(
+        var arrayAdapter = ArrayAdapter(
             requireContext(), R.layout.duration_spn_item,
             durations
         )
@@ -94,7 +95,7 @@ class PaymentDetailsFragment : Fragment() {
                     val bundle = Bundle()
                     bundle.putInt(MONTHS, months)
                     bundle.putInt(DEVICES, devices)
-                    bundle.putDouble(PRICE, price)
+                    bundle.putDouble(TOTAL_PRICE, price)
                     (parentFragment as? ParentPayFragment)?.replaceFragment(
                         ReceiptFragment(),
                         bundle
@@ -106,6 +107,18 @@ class PaymentDetailsFragment : Fragment() {
                     resources.getString(R.string.empty_device_duration),
                     Toast.LENGTH_SHORT
                 ).show()
+            }
+        }
+
+        binding.spnDuration.setOnClickListener {
+            Log.v("Item count","${arrayAdapter.count}")
+            if (arrayAdapter.count != durations.size) {
+                arrayAdapter = ArrayAdapter(
+                    requireContext(), R.layout.duration_spn_item,
+                    durations
+                )
+                binding.spnDuration.setAdapter(arrayAdapter)
+                arrayAdapter.notifyDataSetChanged()
             }
         }
 

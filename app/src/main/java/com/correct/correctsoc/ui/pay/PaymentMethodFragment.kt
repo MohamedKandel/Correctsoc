@@ -26,9 +26,12 @@ import com.correct.correctsoc.databinding.FragmentPaymentMethodBinding
 import com.correct.correctsoc.helper.Constants
 import com.correct.correctsoc.helper.Constants.CURRENCY
 import com.correct.correctsoc.helper.Constants.DEVICES
+import com.correct.correctsoc.helper.Constants.DISCOUNT
 import com.correct.correctsoc.helper.Constants.MONTHS
 import com.correct.correctsoc.helper.Constants.PRICE
+import com.correct.correctsoc.helper.Constants.PROMO
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
+import com.correct.correctsoc.helper.Constants.TOTAL_PRICE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
@@ -53,10 +56,13 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
     private lateinit var dataCollector: DataCollector
     private var amount = 0
     private var price = 0.0
+    private var totalPrice = 0.0
+    private var discount = 0.0
     private var months = 0
     private lateinit var usersDB: UsersDB
     private var token = ""
     private lateinit var fragmentListener: FragmentChangedListener
+    private var promoCode = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,11 +113,16 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
             amount = requireArguments().getInt(DEVICES, 0)
             months = requireArguments().getInt(MONTHS, 0)
             price = requireArguments().getDouble(PRICE, 0.0)
+            totalPrice = requireArguments().getDouble(TOTAL_PRICE, 0.0)
+            discount = requireArguments().getDouble(DISCOUNT, 0.0)
             token = requireArguments().getString(TOKEN_KEY, "")
+            promoCode = requireArguments().getString(PROMO, "")
             setupGooglePay(token)
-            Log.v("pay data", "$amount")
-            Log.v("pay data", "$months")
-            Log.v("pay data", "$price")
+//            Log.v("pay data", "$amount")
+//            Log.v("pay data", "$months")
+            Log.v("pay data price", "$price")
+            Log.v("pay data total", "$totalPrice")
+            Log.v("pay data discount", "$discount")
         }
 
         binding.nextBtn.setOnClickListener {
@@ -136,9 +147,12 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                     binding.progress.visibility = View.GONE
                     googlePayClient.requestPayment(requireActivity(), googlePayRequest)
                 } else if (activation) {
+                    val bundle = Bundle()
+                    bundle.putString(PROMO,promoCode)
                     (parentFragment as? ParentPayFragment)?.replaceFragment(
-                        ActivationCodeFragment()
-                    , isHeaderVisible = false)
+                        ActivationCodeFragment(), isHeaderVisible = false,
+                        bundle = bundle
+                    )
                 } else if (activation_wa) {
                     // open whatsapp with the number
                 }
@@ -255,21 +269,25 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                     val id = usersDB.dao().getUserID() ?: ""
                     val phone = usersDB.dao().getUserPhone(id) ?: ""
                     val body = SubscibeGooglePayBody(
-                        amount = price.toInt(),
+                        amount = totalPrice.toInt(),
+                        discount = discount.toInt(),
                         devicesNumber = amount,
                         currencyIsoCode = CURRENCY,
                         deviceData = deviceData,
                         months = months,
                         nonce = paymentMethodNonce.string,
-                        phoneNumber = phone
+                        phoneNumber = phone,
+                        promoCode = promoCode
                     )
                     // amount is price
-                    Log.d("payment mohamed", "$price")
+                    Log.d("payment mohamed", "$totalPrice")
                     Log.d("payment mohamed", CURRENCY)
                     Log.d("payment mohamed", deviceData)
                     Log.d("payment mohamed", "$months")
                     Log.d("payment mohamed", paymentMethodNonce.string)
                     Log.d("payment mohamed", phone)
+                    Log.d("payment mohamed", "$discount")
+                    Log.d("payment mohamed", promoCode)
                     subscribePayWithGooglePay(body)
                 }
             } else {

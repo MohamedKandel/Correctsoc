@@ -2,15 +2,12 @@ package com.correct.correctsoc.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -29,9 +26,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.correct.correctsoc.R
 import com.correct.correctsoc.adapter.AdsAdapter
 import com.correct.correctsoc.adapter.MenuAdapter
-import com.correct.correctsoc.data.AdsModel
 import com.correct.correctsoc.data.MenuData
 import com.correct.correctsoc.data.auth.SignOutBody
+import com.correct.correctsoc.data.user.AdsResponse
+import com.correct.correctsoc.data.user.AdsResult
+import com.correct.correctsoc.data.user.UserPlanResponse
 import com.correct.correctsoc.databinding.FragmentHomeBinding
 import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.Constants.CLICKED
@@ -69,12 +68,13 @@ class HomeFragment : Fragment(), ClickListener {
     private lateinit var usersDB: UsersDB
     private lateinit var viewModel: AuthViewModel
     private lateinit var fragmentListener: FragmentChangedListener
-    private lateinit var ads_list: MutableList<AdsModel>
+    private lateinit var ads_list: MutableList<AdsResult>
     private lateinit var ads_adapter: AdsAdapter
     private val handler = Handler(Looper.getMainLooper())
     private var position = 0
     private lateinit var snapHelper: LinearSnapHelper
     private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -95,6 +95,7 @@ class HomeFragment : Fragment(), ClickListener {
         helper = HelperClass.getInstance()
         usersDB = UsersDB.getDBInstance(requireContext())
         viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class]
 
         fragmentListener.onFragmentChangedListener(R.id.homeFragment)
 
@@ -109,7 +110,7 @@ class HomeFragment : Fragment(), ClickListener {
 
         binding.drawerMenu.recyclerView.adapter = adapter
 
-        fillList()
+
 
         lifecycleScope.launch {
             val id = usersDB.dao().getUserID() ?: ""
@@ -120,8 +121,11 @@ class HomeFragment : Fragment(), ClickListener {
                 Log.v(TAG, user.token)
                 Log.v(TAG, user.password)
                 Log.v(TAG, user.username)
+                getUserPlan(user.id)
             }
         }
+
+        fillList()
 
         fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
         fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
@@ -133,7 +137,8 @@ class HomeFragment : Fragment(), ClickListener {
                 isDialogVisible = true
                 binding.dialog.root.startAnimation(fadeIn)
 
-                val btn_pen_scan = binding.dialog.root.findViewById<RelativeLayout>(R.id.btn_self_scan)
+                val btn_pen_scan =
+                    binding.dialog.root.findViewById<RelativeLayout>(R.id.btn_self_scan)
                 val btn_ip_scan = binding.dialog.root.findViewById<RelativeLayout>(R.id.btn_ip_scan)
 
                 btn_pen_scan.setOnClickListener {
@@ -279,7 +284,7 @@ class HomeFragment : Fragment(), ClickListener {
             dialog.show()
         }*/
 
-        dummyAds()
+        getAds()
         startAutoScrolling()
 
         snapHelper = LinearSnapHelper()
@@ -294,6 +299,25 @@ class HomeFragment : Fragment(), ClickListener {
                     val view = snapHelper.findSnapView(layoutManager)
                     val position = recyclerView.getChildAdapterPosition(view!!)
                     this@HomeFragment.position = position
+
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                    val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                    for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
+                        val viewHolder = recyclerView.findViewHolderForAdapterPosition(i) as AdsAdapter.ViewHolder?
+                        viewHolder?.let {
+                            val displayedText = ads_adapter.getDisplayedText(it.description)
+                            Log.v("description mohamed",ads_list[position].description)
+                            Log.v("description mohamed displayed",displayedText)
+
+                            if (displayedText.length < ads_list[position].description.length) {
+                                it.txt_more.visibility = View.VISIBLE
+                            } else {
+                                it.txt_more.visibility = View.GONE
+                            }
+                        }
+                    }
+
                 }
             }
         })
@@ -306,49 +330,54 @@ class HomeFragment : Fragment(), ClickListener {
         handler.removeCallbacksAndMessages(null)
     }
 
-    private fun dummyAds() {
-        ads_list.add(
-            AdsModel(
-                "https://t4.ftcdn.net/jpg/02/70/04/77/360_F_270047776_8pphUa75mOhIvTRRy4thaJEY2Mig1Gnz.jpg",
-                "First title 1",
-                "if you see this description you have correct implementation for 1",
-                1
-            )
-        )
-        ads_list.add(
-            AdsModel(
-                "https://media.gettyimages.com/id/1079012962/photo/data-security.jpg?s=612x612&w=0&k=20&c=CHa78O2NRExMw2lgWXcdV6JUK6bDIf51ba0FwfVgCuk=",
-                "First title 2",
-                "if you see this description you have correct implementation for 2",
-                2
-            )
-        )
-        ads_list.add(
-            AdsModel(
-                "https://t4.ftcdn.net/jpg/07/52/92/65/360_F_752926569_OxidAd4c72Q97F091t5ALTkzOC1DjKll.jpg",
-                "First title 3",
-                "if you see this description you have correct implementation for 3",
-                3
-            )
-        )
-        ads_list.add(
-            AdsModel(
-                "https://t3.ftcdn.net/jpg/03/70/92/84/360_F_370928450_R6g8c0j5cey86PUXE32W7KMiqIUe1fOI.jpg",
-                "First title 4",
-                "if you see this description you have correct implementation for 4",
-                4
-            )
-        )
-        ads_list.add(
-            AdsModel(
-                "https://media.gettyimages.com/id/1442484864/photo/people-network-security.jpg?s=612x612&w=0&k=20&c=mLhKntYxbr_JaV2mGcLrYEfcTTmzslpQ3GLoQYf2T1c=",
-                "First title 5",
-                "if you see this description you have correct implementation for 5",
-                5
-            )
-        )
+    /*private fun String.getEndDat(): String {
+        val arr = this.split("T")
+        return arr[0]
+    }*/
 
-        ads_adapter.updateAdapter(ads_list)
+    private fun getUserPlan(userID: String) {
+        homeViewModel.getUserPlan(userID)
+        val observer = object : Observer<UserPlanResponse?> {
+            @SuppressLint("SetTextI18n")
+            override fun onChanged(value: UserPlanResponse?) {
+                if (value != null) {
+                    if (value.isSuccess) {
+                        val model = value.result
+                        if (model != null) {
+                            binding.drawerMenu.txtAccountType.text = model.planName
+                            binding.drawerMenu.txtRemind.text =
+                                "${model.months} ${resources.getString(R.string.months)}"
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), value.errorMessages, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    homeViewModel.userPlanResponse.removeObserver(this)
+                }
+            }
+        }
+        homeViewModel.userPlanResponse.observe(viewLifecycleOwner, observer)
+    }
+
+    private fun getAds() {
+        homeViewModel.getAdvertisement()
+        val observer = object : Observer<AdsResponse> {
+            override fun onChanged(value: AdsResponse) {
+                if (value.isSuccess) {
+                    ads_list.clear()
+                    if (value.result != null) {
+                        for (ad in value.result) {
+                            ads_list.add(ad)
+                        }
+                        ads_adapter.updateAdapter(ads_list)
+                    }
+                } else {
+                    Toast.makeText(requireContext(), value.errorMessages, Toast.LENGTH_SHORT).show()
+                }
+                homeViewModel.advertisements.removeObserver(this)
+            }
+        }
+        homeViewModel.advertisements.observe(viewLifecycleOwner, observer)
     }
 
     private fun startAutoScrolling() {
@@ -450,11 +479,28 @@ class HomeFragment : Fragment(), ClickListener {
         viewModel.changeDeviceStatus.observe(viewLifecycleOwner, observer)
     }
 
+    private fun setDeviceOff(token: String) {
+        viewModel.setDeviceOff(token)
+        val observer = object : Observer<Boolean> {
+            override fun onChanged(value: Boolean) {
+                if (value) {
+                    helper.setDeviceOnline(false, requireContext())
+                    Log.v("device status", "account online")
+                } else {
+                    Log.v("device status", "account failed to be online")
+                }
+                viewModel.changeDeviceStatus.removeObserver(this)
+            }
+        }
+        viewModel.changeDeviceStatus.observe(viewLifecycleOwner, observer)
+    }
+
     private fun signOut(body: SignOutBody, token: String) {
         viewModel.signOut(body, token)
         viewModel.signOutResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
                 helper.setRemember(requireContext(), false)
+                setDeviceOff(token)
                 findNavController().navigate(R.id.registerFragment)
             } else {
                 Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)

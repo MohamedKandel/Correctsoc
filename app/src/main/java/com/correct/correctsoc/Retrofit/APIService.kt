@@ -14,8 +14,11 @@ import com.correct.correctsoc.data.auth.UpdatePhoneBody
 import com.correct.correctsoc.data.auth.UpdateUsernameBody
 import com.correct.correctsoc.data.auth.ValidateOTPBody
 import com.correct.correctsoc.data.openPorts.OpenPorts
+import com.correct.correctsoc.data.pay.PromoCodePercentResponse
 import com.correct.correctsoc.data.pay.SubscibeGooglePayBody
 import com.correct.correctsoc.data.pay.SubscribeCodeBody
+import com.correct.correctsoc.data.user.AdsResponse
+import com.correct.correctsoc.data.user.UserPlanResponse
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -123,6 +126,15 @@ interface APIService {
 
     @POST("User/Subscribe")
     suspend fun subscribeWithCode(@Body body: SubscribeCodeBody): Response<ForgotResponse>
+
+    @GET("User/GetUser")
+    suspend fun getUserPlan(@Query("id") id: String): Response<UserPlanResponse>
+
+    @POST("Payment/GetPromotionPercentag")
+    suspend fun getPromoCodePercent(@Query("code") code: String): Response<PromoCodePercentResponse>
+
+    @GET("User/GetAdvertisements")
+    suspend fun getAdvertisements():Response<AdsResponse>
 
     @DELETE("Authentication/DeleteAccount")
     suspend fun deleteAccount(@Query("userId") userID: String,

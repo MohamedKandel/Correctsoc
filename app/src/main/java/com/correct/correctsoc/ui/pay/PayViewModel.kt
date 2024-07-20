@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.correct.correctsoc.Retrofit.APIService
 import com.correct.correctsoc.Retrofit.RetrofitClient
 import com.correct.correctsoc.data.auth.forget.ForgotResponse
+import com.correct.correctsoc.data.pay.PromoCodePercentResponse
 import com.correct.correctsoc.data.pay.SubscibeGooglePayBody
 import com.correct.correctsoc.data.pay.SubscribeCodeBody
 import kotlinx.coroutines.launch
@@ -23,7 +24,9 @@ class PayViewModel(application: Application) : AndroidViewModel(application) {
     private val _orderPayWithGooglePayResponse = MutableLiveData<ForgotResponse>()
     private val _subscribeWithGooglePayResponse = MutableLiveData<ForgotResponse>()
     private val _subscribeWithCodeResponse = MutableLiveData<ForgotResponse>()
+    private val _promoCodePercentResponse = MutableLiveData<PromoCodePercentResponse>()
 
+    val promoCodePercentResponse: LiveData<PromoCodePercentResponse> get() = _promoCodePercentResponse
     val subscribeWithCodeResponse: LiveData<ForgotResponse> get() = _subscribeWithCodeResponse
     val subscribeWithGooglePay: LiveData<ForgotResponse> get() = _subscribeWithGooglePayResponse
     val orderPayWithGooglePayResponse: LiveData<ForgotResponse> get() = _orderPayWithGooglePayResponse
@@ -60,6 +63,13 @@ class PayViewModel(application: Application) : AndroidViewModel(application) {
         val result = payRepository.subscribeWithCode(body)
         if (result.isSuccessful) {
             _subscribeWithCodeResponse.postValue(result.body())
+        }
+    }
+
+    fun getPromoCodePercent(code: String) = viewModelScope.launch {
+        val result = payRepository.getPromoCodePercent(code)
+        if (result.isSuccessful) {
+            _promoCodePercentResponse.postValue(result.body())
         }
     }
 }

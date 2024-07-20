@@ -3,6 +3,7 @@ package com.correct.correctsoc.helper
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.text.Editable
@@ -12,6 +13,7 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Base64
 import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
@@ -383,4 +385,10 @@ fun EditText.upperCaseOnly() {
             this@upperCaseOnly.addTextChangedListener(this) // Re-attach listener
         }
     })
+}
+
+fun String.parseBase64():Bitmap {
+    val decodedString: ByteArray = Base64.decode(this, Base64.DEFAULT)
+    val decodedByte: Bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+    return decodedByte
 }

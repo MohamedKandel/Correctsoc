@@ -81,15 +81,6 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
             source = requireArguments().getInt(SOURCE)
         }
 
-        /*binding.apply {
-            txtFirstDigit.appendFilter(InputFilter.AllCaps())
-            txtSecondDigit.appendFilter(InputFilter.AllCaps())
-            txtThirdDigit.appendFilter(InputFilter.AllCaps())
-            txtFourthDigit.appendFilter(InputFilter.AllCaps())
-            txtFifthDigit.appendFilter(InputFilter.AllCaps())
-            txtSixthDigit.appendFilter(InputFilter.AllCaps())
-        }*/
-
         binding.txtFirstDigit.requestFocus()
         val array = arrayOf(
             binding.txtFirstDigit,
@@ -100,6 +91,15 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
             binding.txtSixthDigit
         )
         changeFocus(array, this)
+
+        binding.apply {
+            txtFirstDigit.upperCaseOnly()
+            txtSecondDigit.upperCaseOnly()
+            txtThirdDigit.upperCaseOnly()
+            txtFourthDigit.upperCaseOnly()
+            txtFifthDigit.upperCaseOnly()
+            txtSixthDigit.upperCaseOnly()
+        }
 
         getUserPhone()
 
@@ -281,7 +281,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    editTexts[i].upperCaseOnly()
+                    //editTexts[i].upperCaseOnly()
                     if (s.toString().length == 1) {
                         if (i < editTexts.size - 1) {
                             editTexts[i + 1].requestFocus()

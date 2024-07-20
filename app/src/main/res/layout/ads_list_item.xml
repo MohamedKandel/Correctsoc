@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ad_container"
     android:layout_width="match_parent"
@@ -24,7 +23,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/temp_ad"
             app:shapeAppearanceOverlay="@style/ShapeImageView"
-            app:strokeWidth="0dp"/>
+            app:strokeWidth="0dp" />
 
 
         <RelativeLayout
@@ -34,7 +33,9 @@
             android:layout_weight="1"
             android:background="@drawable/ads_drawable"
             android:layoutDirection="locale"
+            android:paddingStart="@dimen/_6sdp"
             android:paddingTop="@dimen/_12sdp"
+            android:paddingEnd="@dimen/_6sdp"
             android:textDirection="locale">
 
             <TextView
@@ -42,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
-                android:gravity="center"
+
                 android:maxLines="1"
                 android:text="@string/temp_ad_title"
                 android:textColor="@color/white"
@@ -54,29 +55,37 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txt_ad_title"
                 android:fontFamily="@font/roboto_bold"
-                android:gravity="center"
                 android:maxLines="2"
                 android:text="@string/temp_ad_description"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14ssp" />
 
-
-            <androidx.appcompat.widget.AppCompatButton
+            <TextView
+                android:id="@+id/txt_see_more"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/_16sdp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/txt_ad_description"
-                android:layout_centerHorizontal="true"
-
-                android:text="@string/buy"
-                android:background="@drawable/see_more_btn"
-                android:textColor="@color/white"
-                android:paddingStart="@dimen/_14ssp"
-                android:paddingEnd="@dimen/_14ssp"
                 android:fontFamily="@font/roboto_bold"
-                android:textSize="@dimen/_7sdp"
-                android:id="@+id/btn_buy"
-                android:layout_marginTop="@dimen/_15sdp"/>
-
+                android:text="@string/more_txt"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp"
+                android:visibility="gone"/>
+            <!--
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_16sdp"
+                            android:layout_below="@id/txt_ad_description"
+                            android:layout_centerHorizontal="true"
+                            android:text="@string/buy"
+                            android:background="@drawable/see_more_btn"
+                            android:textColor="@color/white"
+                            android:paddingStart="@dimen/_14ssp"
+                            android:paddingEnd="@dimen/_14ssp"
+                            android:fontFamily="@font/roboto_bold"
+                            android:textSize="@dimen/_7sdp"
+                            android:id="@+id/btn_buy"
+                            android:layout_marginTop="@dimen/_15sdp"/>
+            -->
         </RelativeLayout>
 
     </LinearLayout>

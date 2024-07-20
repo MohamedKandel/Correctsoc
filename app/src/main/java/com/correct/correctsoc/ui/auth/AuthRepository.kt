@@ -13,6 +13,7 @@ import com.correct.correctsoc.data.auth.UpdatePasswordBody
 import com.correct.correctsoc.data.auth.UpdatePhoneBody
 import com.correct.correctsoc.data.auth.UpdateUsernameBody
 import com.correct.correctsoc.data.auth.ValidateOTPBody
+import com.correct.correctsoc.data.user.UserPlanResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response

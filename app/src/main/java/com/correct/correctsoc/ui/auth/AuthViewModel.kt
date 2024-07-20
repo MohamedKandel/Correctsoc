@@ -5,14 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.work.Constraints
-import androidx.work.Data
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import com.correct.correctsoc.Retrofit.APIService
-import com.correct.correctsoc.Retrofit.APIWorker
 import com.correct.correctsoc.Retrofit.RetrofitClient
 import com.correct.correctsoc.data.auth.AuthResponse
 import com.correct.correctsoc.data.auth.ConfirmPhoneBody
@@ -26,8 +19,6 @@ import com.correct.correctsoc.data.auth.UpdatePasswordBody
 import com.correct.correctsoc.data.auth.UpdatePhoneBody
 import com.correct.correctsoc.data.auth.UpdateUsernameBody
 import com.correct.correctsoc.data.auth.ValidateOTPBody
-import com.correct.correctsoc.helper.Constants.STATUS
-import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import kotlinx.coroutines.launch
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
@@ -35,7 +26,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val authRepository = AuthRepository(
         RetrofitClient.getClient().create(APIService::class.java)
     )
-    private val workManager = WorkManager.getInstance(application)
 
     private val _registerResponse = MutableLiveData<AuthResponse>()
     private val _OTPResponse = MutableLiveData<AuthResponse>()
