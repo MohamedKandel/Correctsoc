@@ -42,11 +42,6 @@ class AdsAdapter(
         val model = list[position]
         holder.title.text = model.title
         holder.description.text = model.description
-        /*holder.description.viewTreeObserver.addOnGlobalLayoutListener {
-
-            Log.v("description mohamed displayed", getDisplayedText(holder.description))
-            //Log.v(API_TAG, getDisplayedText(holder.description))
-        }*/
         holder.img.setImageBitmap(model.image.parseBase64())
     }
 
