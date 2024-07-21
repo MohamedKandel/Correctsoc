@@ -41,6 +41,7 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnSwipeGestureListener
 import com.correct.correctsoc.helper.buildDialog
+import com.correct.correctsoc.helper.getDisplayedText
 import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.mappingNumbers
 import com.correct.correctsoc.helper.show
@@ -308,10 +309,7 @@ class HomeFragment : Fragment(), ClickListener {
                     for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
                         val viewHolder = recyclerView.findViewHolderForAdapterPosition(i) as AdsAdapter.ViewHolder?
                         viewHolder?.let {
-                            val displayedText = ads_adapter.getDisplayedText(it.description)
-                            Log.v("description mohamed",ads_list[position].description)
-                            Log.v("description mohamed displayed",displayedText)
-
+                            val displayedText = it.description.getDisplayedText()
                             if (displayedText.length < ads_list[position].description.length) {
                                 it.txt_more.show()
                             } else {
@@ -363,23 +361,30 @@ class HomeFragment : Fragment(), ClickListener {
 
     private fun getAds() {
         homeViewModel.getAdvertisement()
-        val observer = object : Observer<AdsResponse> {
-            override fun onChanged(value: AdsResponse) {
-                if (value.isSuccess) {
-                    ads_list.clear()
-                    if (value.result != null) {
-                        for (ad in value.result) {
-                            ads_list.add(ad)
+        val observer = object : Observer<AdsResponse?> {
+            override fun onChanged(value: AdsResponse?) {
+                if(value!= null) {
+                    if (value.isSuccess) {
+                        ads_list.clear()
+                        if (value.result != null) {
+                            for (ad in value.result) {
+                                ads_list.add(ad)
+                            }
+                            ads_adapter.updateAdapter(ads_list)
                         }
-                        ads_adapter.updateAdapter(ads_list)
+                    } else {
+                        Toast.makeText(requireContext(), value.errorMessages, Toast.LENGTH_SHORT)
+                            .show()
                     }
+                    homeViewModel.advertisements.removeObserver(this)
                 } else {
-                    Toast.makeText(requireContext(), value.errorMessages, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),resources.getString(R.string.error),Toast.LENGTH_SHORT)
+                        .show()
                 }
-                homeViewModel.advertisements.removeObserver(this)
             }
         }
         homeViewModel.advertisements.observe(viewLifecycleOwner, observer)
+
     }
 
     private fun startAutoScrolling() {

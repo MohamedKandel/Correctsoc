@@ -103,6 +103,8 @@ class PaymentDetailsFragment : Fragment() {
                     )
                 }
             } else {
+                Log.v("devices mohamed", "$devices")
+                Log.v("months mohamed","$months")
                 Toast.makeText(
                     requireContext(),
                     resources.getString(R.string.empty_device_duration),
@@ -144,6 +146,20 @@ class PaymentDetailsFragment : Fragment() {
                             else -> {
                                 months = 0
                             }
+                        }
+                    }
+                } else {
+                    when (position) {
+                        0 -> {
+                            months = 6
+                        }
+
+                        1 -> {
+                            months = 12
+                        }
+
+                        else -> {
+                            months = 0
                         }
                     }
                 }

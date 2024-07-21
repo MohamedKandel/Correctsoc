@@ -20,7 +20,10 @@ import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.Constants.AD_OBJECT
 import com.correct.correctsoc.helper.Constants.API_TAG
 import com.correct.correctsoc.helper.Constants.CLICKED
+import com.correct.correctsoc.helper.getDisplayedText
+import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.parseBase64
+import com.correct.correctsoc.helper.show
 
 class AdsAdapter(
     private val context: Context,
@@ -42,20 +45,12 @@ class AdsAdapter(
         val model = list[position]
         holder.title.text = model.title
         holder.description.text = model.description
-        holder.img.setImageBitmap(model.image.parseBase64())
-    }
-
-    fun getDisplayedText(textView: TextView): String {
-        val layout = textView.layout
-        val lines = textView.lineCount.coerceAtMost(textView.maxLines)
-        val displayedText = StringBuilder()
-        for (i in 0 until lines) {
-            val start = layout.getLineStart(i)
-            val end = layout.getLineEnd(i)
-            val lineText = textView.text.substring(start, end)
-            displayedText.append(lineText)
+        if (holder.description.getDisplayedText().length < model.description.length) {
+            holder.txt_more.show()
+        } else {
+            holder.txt_more.hide()
         }
-        return displayedText.toString()
+        holder.img.setImageBitmap(model.image.parseBase64())
     }
 
     @SuppressLint("NotifyDataSetChanged")

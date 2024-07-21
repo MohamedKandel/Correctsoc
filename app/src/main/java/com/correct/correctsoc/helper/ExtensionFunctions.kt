@@ -122,6 +122,30 @@ fun MutableLiveData<MutableList<Int>>.contains(item: Int): Boolean {
     return this.value?.contains(item) ?: false
 }
 
+fun String.reMappingNumbers():String {
+    var str = ""
+    val map = mapOf(
+        '١' to "1",
+        '٢' to "2",
+        '٣' to "3",
+        '٤' to "4",
+        '٥' to "5",
+        '٦' to "6",
+        '٧' to "7",
+        '٨' to "8",
+        '٩' to "9",
+        '٠' to "0"
+    )
+    for (c in this) {
+        if (c in map.keys) {
+            str += map[c]
+        } else {
+            str += c
+        }
+    }
+    return str
+}
+
 fun String.mappingNumbers(): String {
     var str = ""
     val map = mapOf(
@@ -413,4 +437,17 @@ fun View.hide(){
 
 fun View.show() {
     this.visibility = View.VISIBLE
+}
+
+fun TextView.getDisplayedText(): String {
+    val layout = this.layout
+    val lines = this.lineCount.coerceAtMost(this.maxLines)
+    val displayedText = StringBuilder()
+    for (i in 0 until lines) {
+        val start = layout.getLineStart(i)
+        val end = layout.getLineEnd(i)
+        val lineText = this.text.substring(start, end)
+        displayedText.append(lineText)
+    }
+    return displayedText.toString()
 }

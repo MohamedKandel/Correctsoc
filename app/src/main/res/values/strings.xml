@@ -196,4 +196,6 @@
     <string name="no_promo">We are sorry… this is not available promo-code</string>
     <string name="zero" translatable="false">0.0 $</string>
     <string name="more_txt" translatable="false">…</string>
+    <string name="discount_off">OFF</string>
+    <string name="error">Sorry… an error occurred please try again later</string>
 </resources>

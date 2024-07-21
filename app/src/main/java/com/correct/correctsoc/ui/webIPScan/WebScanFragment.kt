@@ -296,6 +296,56 @@ class WebScanFragment : Fragment(), ClickListener {
                     fetchDevicesJob = launch(Dispatchers.IO) {
                         list = fetchData(input)
                         progressJob.join()
+                        if (progressJob.isCompleted) {
+                            launch(Dispatchers.Main) {
+                                if (!audioUtils.isAudioPlaying()) {
+                                    if (this@WebScanFragment::value.isInitialized) {
+                                        if (value.scanHostDeviceName.isEmpty()) {
+                                            binding.txtDeviceName.text = value.scanIp
+                                            deviceName = value.scanIp
+                                        } else {
+                                            binding.txtDeviceName.text = value.scanHostDeviceName
+                                            deviceName = value.scanHostDeviceName
+                                        }
+
+                                        val isSecure = helper.isSecureSite(list)
+                                        if (isSecure) {
+                                            binding.imgSecurity.setImageResource(R.drawable.safe)
+                                            binding.txtNameTitle.setTextColor(
+                                                resources.getColor(
+                                                    R.color.safe_color,
+                                                    context?.theme
+                                                )
+                                            )
+                                            if (helper.getLang(requireContext()).equals("en")) {
+                                                playSound(scan_type, "en", true)
+                                            } else {
+                                                playSound(scan_type, "ar", true)
+                                            }
+                                        } else {
+                                            binding.imgSecurity.setImageResource(R.drawable.danger)
+                                            binding.txtNameTitle.setTextColor(
+                                                resources.getColor(
+                                                    R.color.danger_color,
+                                                    context?.theme
+                                                )
+                                            )
+                                            if (helper.getLang(requireContext()).equals("en")) {
+                                                playSound(scan_type, "en", false)
+                                            } else {
+                                                playSound(scan_type, "ar", false)
+                                            }
+                                        }
+                                        isSafe = isSecure
+
+                                        binding.txtDeviceName.show()
+                                        binding.txtNameTitle.show()
+                                        binding.imgSecurity.show()
+                                    }
+                                    adapter.updateAdapter(list)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -319,7 +369,7 @@ class WebScanFragment : Fragment(), ClickListener {
         return binding.root
     }
 
-    private fun scanning(input: String) {
+    /*private fun scanning(input: String) {
         viewModel.scan(requireContext(), input, helper.getToken(requireContext()))
         val mediatorLiveData = MediatorLiveData<Pair<OpenPorts, Boolean>>()
         mediatorLiveData.addSource(viewModel.scanResponse) {
@@ -394,7 +444,7 @@ class WebScanFragment : Fragment(), ClickListener {
             }
             binding.loadingLayout.hide()
         }
-    }
+    }*/
 
     override fun onItemClickListener(position: Int, extras: Bundle?) {
 //        TODO("Not yet implemented")

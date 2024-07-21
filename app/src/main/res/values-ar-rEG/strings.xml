@@ -185,4 +185,6 @@
     <string name="delete">حذف</string>
     <string name="months">أشهر</string>
     <string name="no_promo">عذرًا… كود الخصم هذا غير متاح</string>
+    <string name="discount_off">خصم</string>
+    <string name="error">عذرًا… حدث خطأ ما من فضلك حاول في وقت لاحق</string>
 </resources>
