@@ -188,7 +188,7 @@ class ReceiptFragment : Fragment() {
         viewModel.getPromoCodePercent(code)
         val observer = object : Observer<PromoCodePercentResponse?> {
             override fun onChanged(value: PromoCodePercentResponse?) {
-                if (value!= null) {
+                if (value != null) {
                     if (value.promotionPercentage > 0) {
                         discount = value.promotionPercentage
                         promoCodeSuccess(code, discount)
@@ -231,11 +231,12 @@ class ReceiptFragment : Fragment() {
 
         promoCode = promo
         /*
-        hide all green layout views expect gif after 1 second
-        display another views
-        */
+    hide all green layout views expect gif after 1 second
+    display another views
+    */
         Handler(Looper.getMainLooper()).postDelayed({
-            binding.promoCodeLayout.radius = resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
+            binding.promoCodeLayout.radius =
+                resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
             binding.promoCodeLayout.strokeWidth =
                 resources.getDimension(com.intuit.sdp.R.dimen._2sdp).toInt()
             binding.promoCodeLayout.strokeColor =
