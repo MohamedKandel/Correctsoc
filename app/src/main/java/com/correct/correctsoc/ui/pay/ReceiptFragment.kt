@@ -396,6 +396,9 @@ class ReceiptFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        if (binding.txtPromo.text.toString().isNotEmpty()) {
+            getPromoCodePercent(binding.txtPromo.text.toString())
+        }
         fragmentListener.onFragmentChangedListener(R.id.receiptFragment)
     }
 }
