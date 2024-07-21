@@ -24,9 +24,9 @@ class PayViewModel(application: Application) : AndroidViewModel(application) {
     private val _orderPayWithGooglePayResponse = MutableLiveData<ForgotResponse>()
     private val _subscribeWithGooglePayResponse = MutableLiveData<ForgotResponse>()
     private val _subscribeWithCodeResponse = MutableLiveData<ForgotResponse>()
-    private val _promoCodePercentResponse = MutableLiveData<PromoCodePercentResponse>()
+    private val _promoCodePercentResponse = MutableLiveData<PromoCodePercentResponse?>()
 
-    val promoCodePercentResponse: LiveData<PromoCodePercentResponse> get() = _promoCodePercentResponse
+    val promoCodePercentResponse: LiveData<PromoCodePercentResponse?> get() = _promoCodePercentResponse
     val subscribeWithCodeResponse: LiveData<ForgotResponse> get() = _subscribeWithCodeResponse
     val subscribeWithGooglePay: LiveData<ForgotResponse> get() = _subscribeWithGooglePayResponse
     val orderPayWithGooglePayResponse: LiveData<ForgotResponse> get() = _orderPayWithGooglePayResponse
@@ -69,7 +69,12 @@ class PayViewModel(application: Application) : AndroidViewModel(application) {
     fun getPromoCodePercent(code: String) = viewModelScope.launch {
         val result = payRepository.getPromoCodePercent(code)
         if (result.isSuccessful) {
-            _promoCodePercentResponse.postValue(result.body())
+            //_promoCodePercentResponse.postValue(result.body())
+            _promoCodePercentResponse.value = result.body()
         }
+    }
+
+    fun removePromoCode() {
+        _promoCodePercentResponse.value = null
     }
 }

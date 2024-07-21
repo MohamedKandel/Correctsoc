@@ -108,7 +108,11 @@ class ReceiptFragment : Fragment() {
                 } else {
                     resources.getString(R.string.one_device)
                 }
-                binding.txtDevicesNumber.text = "• $devices $device_unit"
+                if (helper.getLang(requireContext()).equals("ar")) {
+                    binding.txtDevicesNumber.text = "• $devices $device_unit".mappingNumbers()
+                } else {
+                    binding.txtDevicesNumber.text = "• $devices $device_unit"
+                }
                 when (months) {
                     6 -> {
                         binding.txtDuration.text = resources.getString(R.string.six_months)
@@ -136,14 +140,19 @@ class ReceiptFragment : Fragment() {
         binding.nextBtn.setOnClickListener {
             if (devices > 0 && months > 0) {
                 if (parentFragment is ParentPayFragment) {
-                    price = binding.txtTotal.text.toString().reMappingNumbers().replace("$", "").trim().toDouble()
+                    price =
+                        binding.txtTotal.text.toString().reMappingNumbers().replace("$", "").trim()
+                            .toDouble()
                     totalPrice =
-                        binding.txtAmount.text.toString().reMappingNumbers().replace("$", "").trim().toDouble()
+                        binding.txtAmount.text.toString().reMappingNumbers().replace("$", "").trim()
+                            .toDouble()
                     if (!binding.txtDiscount.text.toString()
                             .equals(resources.getString(R.string.discount))
                     ) {
-                        discount = binding.txtDiscount.text.toString().reMappingNumbers().replace("$", "").trim()
-                            .toDouble()
+                        discount =
+                            binding.txtDiscount.text.toString().reMappingNumbers().replace("$", "")
+                                .trim()
+                                .toDouble()
                     } else {
                         discount = 0.0
                     }
@@ -163,7 +172,6 @@ class ReceiptFragment : Fragment() {
             //apply promo-code
             if (binding.txtPromo.text.toString().isNotEmpty()) {
                 getPromoCodePercent(binding.txtPromo.text.toString())
-                //promoCodeSuccess(binding.txtPromo.text.toString())
             }
         }
 
@@ -178,22 +186,27 @@ class ReceiptFragment : Fragment() {
 
     private fun getPromoCodePercent(code: String) {
         viewModel.getPromoCodePercent(code)
-        val observer = object : Observer<PromoCodePercentResponse> {
-            override fun onChanged(value: PromoCodePercentResponse) {
-                if (value.promotionPercentage > 0) {
-                    discount = value.promotionPercentage
-                    promoCodeSuccess(code, value.promotionPercentage)
-                    Log.i(API_TAG, "$discount")
-                    Log.i(API_TAG, "$totalPrice")
+        val observer = object : Observer<PromoCodePercentResponse?> {
+            override fun onChanged(value: PromoCodePercentResponse?) {
+                if (value!= null) {
+                    if (value.promotionPercentage > 0) {
+                        discount = value.promotionPercentage
+                        promoCodeSuccess(code, discount)
+                        Log.i(API_TAG, "$discount")
+                        Log.i(API_TAG, "${value.promotionPercentage}")
+                        Log.i(API_TAG, "$totalPrice")
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            resources.getString(R.string.no_promo),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                    viewModel.promoCodePercentResponse.removeObserver(this)
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        resources.getString(R.string.no_promo),
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    discount = 0.0
                 }
-                viewModel.promoCodePercentResponse.removeObserver(this)
             }
         }
         viewModel.promoCodePercentResponse.observe(viewLifecycleOwner, observer)
@@ -203,6 +216,9 @@ class ReceiptFragment : Fragment() {
     private fun promoCodeSuccess(promo: String, discount: Double) {
         // display green layout and gif at first
         binding.promoCodeLayout.show()
+
+        Log.i("Payment data mohamed", promo)
+        Log.i("Payment data mohamed", "$discount")
 
         binding.promoCodeLayout.radius = resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
         binding.promoCodeLayout.strokeWidth =
@@ -238,25 +254,39 @@ class ReceiptFragment : Fragment() {
 
             if (helper.getLang(requireContext()).equals("ar")) {
                 binding.txtTotal.text =
-                    "${totalPrice.minus(calculateDiscount(discount, totalPrice))} $".mappingNumbers()
+                    "${
+                        (totalPrice.minus(
+                            calculateDiscount(
+                                discount,
+                                totalPrice
+                            )
+                        )).round()
+                    } $".mappingNumbers()
             } else {
                 binding.txtTotal.text =
-                    "${totalPrice.minus(calculateDiscount(discount, totalPrice))} $"
+                    "${(totalPrice.minus(calculateDiscount(discount, totalPrice))).round()} $"
             }
             //binding.txtTotal.text.toString().replace("$", "").trim().toDouble().minus(discount)
 
-            totalPrice = binding.txtAmount.text.toString().reMappingNumbers().replace("$", "").trim().toDouble()
-            this.discount = binding.txtDiscount.text.toString().reMappingNumbers().replace("$", "").trim().toDouble()
-            price = binding.txtTotal.text.toString().reMappingNumbers().replace("$", "").trim().toDouble()
+            totalPrice =
+                binding.txtAmount.text.toString().reMappingNumbers().replace("$", "").trim()
+                    .toDouble()
+            this.discount =
+                binding.txtDiscount.text.toString().reMappingNumbers().replace("$", "").trim()
+                    .toDouble()
+            price = binding.txtTotal.text.toString().reMappingNumbers().replace("$", "").trim()
+                .toDouble()
 
             binding.txtViewPromoName.text = promo
 
             binding.promoCode.hide()
             binding.promoCodeSuccessLayout.show()
             if (helper.getLang(requireContext()).equals("ar")) {
-                binding.txtViewDiscountPercent.text = "${discount * 100}% ${resources.getString(R.string.discount_off)}".mappingNumbers()
+                binding.txtViewDiscountPercent.text =
+                    "${discount * 100}% ${resources.getString(R.string.discount_off)}".mappingNumbers()
             } else {
-                binding.txtViewDiscountPercent.text = "${discount * 100}% ${resources.getString(R.string.discount_off)}"
+                binding.txtViewDiscountPercent.text =
+                    "${discount * 100}% ${resources.getString(R.string.discount_off)}"
             }
         }, 1000)
 
@@ -268,6 +298,7 @@ class ReceiptFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun clearPromoCode(promo: String) {
+        viewModel.removePromoCode()
         binding.promoCodeLayout.radius = resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
         binding.promoCodeLayout.strokeWidth =
             resources.getDimension(com.intuit.sdp.R.dimen._2sdp).toInt()
@@ -288,8 +319,10 @@ class ReceiptFragment : Fragment() {
         }
         promoCode = ""
         discount = 0.0
-        totalPrice = binding.txtAmount.text.toString().reMappingNumbers().replace("$", "").trim().toDouble()
-        price = binding.txtTotal.text.toString().reMappingNumbers().replace("$", "").trim().toDouble()
+        totalPrice =
+            binding.txtAmount.text.toString().reMappingNumbers().replace("$", "").trim().toDouble()
+        price =
+            binding.txtTotal.text.toString().reMappingNumbers().replace("$", "").trim().toDouble()
 
         binding.txtPromo.setText(promo)
         binding.txtPromo.setSelection(binding.txtPromo.text.length)
@@ -313,8 +346,10 @@ class ReceiptFragment : Fragment() {
                     totalPrice = it.result.toDouble()
                     price = it.result.toDouble()
 
-                    if (totalPrice != binding.txtAmount.text.toString().reMappingNumbers().replace("$", "").trim()
-                            .toDouble()) {
+                    if (totalPrice != binding.txtAmount.text.toString().reMappingNumbers()
+                            .replace("$", "").trim()
+                            .toDouble()
+                    ) {
                         if (helper.getLang(requireContext()).equals("ar")) {
                             binding.txtAmount.text = "${it.result} $".mappingNumbers()
                             binding.txtTotal.text = "${it.result} $".mappingNumbers()

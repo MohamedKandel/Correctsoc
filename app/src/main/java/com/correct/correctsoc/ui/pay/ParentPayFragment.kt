@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentParentPayBinding
 import com.correct.correctsoc.helper.FragmentChangedListener
@@ -67,22 +68,31 @@ class ParentPayFragment : Fragment(), NextStepListener {
             childFragmentManager.popBackStack()
             return
         }
-        val parentPayFragment = currentFragment.parentFragment as ParentPayFragment
-        when (currentFragment) {
-            is PaymentMethodFragment -> {
-                changeSteps(1)
-            }
+        try {
+            val parentPayFragment = currentFragment.parentFragment as ParentPayFragment
+            when (currentFragment) {
+                is PaymentDetailsFragment -> {
+                    findNavController().navigate(R.id.homeFragment)
+                }
 
-            is ActivationCodeFragment -> {
-                changeSteps(2)
-            }
+                is PaymentMethodFragment -> {
+                    changeSteps(1)
+                }
 
-            is PaymentSuccessFragment -> {
-                changeSteps(2)
+                is ActivationCodeFragment -> {
+                    changeSteps(2)
+                }
+
+                is PaymentSuccessFragment -> {
+                    changeSteps(2)
+                }
             }
+            parentPayFragment.changeSteps(2)
+            parentFragmentManager.popBackStack()
+        }catch (ex: Exception) {
+            findNavController().navigate(R.id.homeFragment)
+            ex.stackTrace
         }
-        parentPayFragment.changeSteps(2)
-        parentFragmentManager.popBackStack()
     }
 
     fun replaceFragment(
