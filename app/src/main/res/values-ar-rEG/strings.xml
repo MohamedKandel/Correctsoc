@@ -6,13 +6,13 @@
     <string name="self_test">فحص سلامة الراوتر</string>
     <string name="device_scan">فحص الاجهزة المتصلة بالواي فاي</string>
     <string name="apps_scan">كشف تطبيقات التجسس</string>
-    <string name="premium">شراء النسخة البريميم برو</string>
+    <string name="premium">شراء النسخة البريميم</string>
     <string name="support">الدعم الفني</string>
     <string name="setting">الإعدادات</string>
     <string name="reward">الهدية المجانية</string>
     <string name="community">الإنضمام للمجموعة</string>
     <string name="rate">تقييمنا</string>
-    <string name="about">حولنا</string>
+    <string name="about">حول</string>
     <string name="logout">تسجيل الخروج</string>
     <string name="general">العام</string>
     <string name="notification">إعدادات الاشعارات</string>
@@ -131,9 +131,9 @@
 
     <string name="pay_details">تفاصيل الدفع</string>
     <string name="request_info">أدخل بياناتك</string>
-    <string name="device_number">عدد الأجهزة</string>
+    <string name="device_number">حدد عدد الأجهزة التي تريد شرائها</string>
     <string name="enter_device_number">أدخل عدد الأجهزة</string>
-    <string name="duration">المدة</string>
+    <string name="duration">حدد مدة الاشتراك</string>
     <string name="total_price">السعر الإجمالي : </string>
     <array name="durations">
         <item>٦ أشهر</item>
@@ -152,8 +152,9 @@
     <string name="select_payment">أختار واحدة من طرق الدفع التالية</string>
     <string name="activation_code">كود التفعيل</string>
     <string name="google_pay_msg">ادفع مباشرة من بطاقتك المصرفية</string>
-    <string name="activation_msg">أحصل على كود التفعيل من خلال واتساب</string>
-    <string name="activation_msg_2">الكود الذي حصلت عليه</string>
+    <string name="activation_msg">أحصل على كود التفعيل من خلال الدعم عن طريق الواتساب</string>
+    <string name="activation_msg_2">أدخل الكود يدوي</string>
+    <string name="enter_promo">أدخل كود الخصم</string>
     <string name="phone_not_found">لا يوجد مستخدم مسجل على هذا الهاتف من قبل</string>
     <string name="phone_empty">لا يوجد مستخدم مسجل على هذا الهاتف من قبل\nمن فضلك سجل مستخدم أولًا او ادخل رقم هاتفك</string>
     <string name="empty_device_duration">من فضلك ادخل عدد الاجهزة والمدة المراد شرائها</string>
@@ -176,7 +177,7 @@
     <string name="one_year">سنة واحدة</string>
     <string name="more_devices">أجهزة</string>
     <string name="one_device">جهاز</string>
-    <string name="discount">خصم</string>
+    <string name="discount">تم خصم</string>
     <string name="payment_successful">تم الدفع\nبنجاح</string>
     <string name="scan_successful">تم المسح بنجاح</string>
     <string name="buy">أشترِ الأن</string>
@@ -187,4 +188,5 @@
     <string name="no_promo">عذرًا… كود الخصم هذا غير متاح</string>
     <string name="discount_off">خصم</string>
     <string name="error">عذرًا… حدث خطأ ما من فضلك حاول في وقت لاحق</string>
+    <string name="no_internet_connection">لايوجد اتصال بالانترنت</string>
 </resources>

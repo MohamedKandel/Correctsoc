@@ -16,6 +16,7 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -33,6 +34,8 @@ import com.correct.correctsoc.data.user.AdsResult
 import com.correct.correctsoc.data.user.UserPlanResponse
 import com.correct.correctsoc.databinding.FragmentHomeBinding
 import com.correct.correctsoc.helper.ClickListener
+import com.correct.correctsoc.helper.ConnectionManager
+import com.correct.correctsoc.helper.ConnectivityListener
 import com.correct.correctsoc.helper.Constants.CLICKED
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
 import com.correct.correctsoc.helper.Constants.SOURCE
@@ -78,6 +81,8 @@ class HomeFragment : Fragment(), ClickListener {
     private lateinit var snapHelper: LinearSnapHelper
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var connectionManager: ConnectionManager
+    private var isConnected = MutableLiveData<Boolean>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -102,7 +107,37 @@ class HomeFragment : Fragment(), ClickListener {
 
         fragmentListener.onFragmentChangedListener(R.id.homeFragment)
 
-        setDeviceOn(helper.getToken(requireContext()))
+        connectionManager = ConnectionManager(requireContext())
+
+        isConnected.postValue(false)
+        binding.recyclerViewAds.hide()
+
+        connectionManager.observe()
+        connectionManager.statusLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                ConnectivityListener.Status.AVAILABLE -> {
+                    isConnected.postValue(true)
+                    binding.recyclerViewAds.show()
+                    getAds()
+                    setDeviceOn(helper.getToken(requireContext()))
+                }
+
+                ConnectivityListener.Status.UNAVAILABLE -> {
+                    isConnected.postValue(false)
+                    binding.recyclerViewAds.hide()
+                }
+
+                ConnectivityListener.Status.LOST -> {
+                    isConnected.postValue(false)
+                    binding.recyclerViewAds.hide()
+                }
+
+                ConnectivityListener.Status.LOSING -> {
+                    isConnected.postValue(false)
+                    binding.recyclerViewAds.hide()
+                }
+            }
+        }
 
         list = mutableListOf()
         adapter = MenuAdapter(requireContext(), list, this)
@@ -113,8 +148,6 @@ class HomeFragment : Fragment(), ClickListener {
 
         binding.drawerMenu.recyclerView.adapter = adapter
 
-
-
         lifecycleScope.launch {
             val id = usersDB.dao().getUserID() ?: ""
             val user = usersDB.dao().getUser(id)
@@ -124,7 +157,11 @@ class HomeFragment : Fragment(), ClickListener {
                 Log.v(TAG, user.token)
                 Log.v(TAG, user.password)
                 Log.v(TAG, user.username)
-                getUserPlan(user.id)
+                isConnected.observe(viewLifecycleOwner) {
+                    if (it) {
+                        getUserPlan(user.id)
+                    }
+                }
             }
         }
 
@@ -134,51 +171,76 @@ class HomeFragment : Fragment(), ClickListener {
         fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
 
         binding.btnScan.setOnClickListener {
-            validateToken(helper.getToken(requireContext())) {
-                binding.placeholder.show()
-                binding.dialog.root.show()
-                isDialogVisible = true
-                binding.dialog.root.startAnimation(fadeIn)
+            isConnected.observe(viewLifecycleOwner) {
+                if (it) {
+                    validateToken(helper.getToken(requireContext())) {
+                        binding.placeholder.show()
+                        binding.dialog.root.show()
+                        isDialogVisible = true
+                        binding.dialog.root.startAnimation(fadeIn)
 
-                val btn_pen_scan =
-                    binding.dialog.root.findViewById<RelativeLayout>(R.id.btn_self_scan)
-                val btn_ip_scan = binding.dialog.root.findViewById<RelativeLayout>(R.id.btn_ip_scan)
+                        val btn_pen_scan =
+                            binding.dialog.root.findViewById<RelativeLayout>(R.id.btn_self_scan)
+                        val btn_ip_scan =
+                            binding.dialog.root.findViewById<RelativeLayout>(R.id.btn_ip_scan)
 
-                btn_pen_scan.setOnClickListener {
-                    findNavController().navigate(R.id.selfPenFragment)
-                    isDialogVisible = false
-                    binding.placeholder.hide()
-                    binding.dialog.root.startAnimation(fadeOut)
-                    binding.dialog.root.hide()
-                }
+                        btn_pen_scan.setOnClickListener {
+                            findNavController().navigate(R.id.selfPenFragment)
+                            isDialogVisible = false
+                            binding.placeholder.hide()
+                            binding.dialog.root.startAnimation(fadeOut)
+                            binding.dialog.root.hide()
+                        }
 
-                btn_ip_scan.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.putString(TYPE, IP_ADDRESS)
-                    findNavController().navigate(R.id.insertLinkFragment, bundle)
-                    isDialogVisible = false
-                    binding.placeholder.hide()
-                    binding.dialog.root.startAnimation(fadeOut)
-                    binding.dialog.root.hide()
+                        btn_ip_scan.setOnClickListener {
+                            val bundle = Bundle()
+                            bundle.putString(TYPE, IP_ADDRESS)
+                            findNavController().navigate(R.id.insertLinkFragment, bundle)
+                            isDialogVisible = false
+                            binding.placeholder.hide()
+                            binding.dialog.root.startAnimation(fadeOut)
+                            binding.dialog.root.hide()
+                        }
+                    }
+                } else {
+                    noInternet()
                 }
             }
         }
 
         binding.btnAppScan.setOnClickListener {
-            validateToken(helper.getToken(requireContext())) {
-                findNavController().navigate(R.id.applicationScanFragment)
+            isConnected.observe(viewLifecycleOwner) {
+                if (it) {
+                    validateToken(helper.getToken(requireContext())) {
+                        findNavController().navigate(R.id.applicationScanFragment)
+                    }
+                } else {
+                    noInternet()
+                }
             }
         }
 
         binding.btnIpScan.setOnClickListener {
-            validateToken(helper.getToken(requireContext())) {
-                findNavController().navigate(R.id.deviceScanningFragment)
+            isConnected.observe(viewLifecycleOwner) {
+                if (it) {
+                    validateToken(helper.getToken(requireContext())) {
+                        findNavController().navigate(R.id.deviceScanningFragment)
+                    }
+                } else {
+                    noInternet()
+                }
             }
         }
 
         binding.btnWebScan.setOnClickListener {
-            validateToken(helper.getToken(requireContext())) {
-                findNavController().navigate(R.id.insertLinkFragment)
+            isConnected.observe(viewLifecycleOwner) {
+                if (it) {
+                    validateToken(helper.getToken(requireContext())) {
+                        findNavController().navigate(R.id.insertLinkFragment)
+                    }
+                } else {
+                    noInternet()
+                }
             }
             //findNavController().navigate(R.id.insertLinkFragment)
         }
@@ -268,26 +330,6 @@ class HomeFragment : Fragment(), ClickListener {
             }
         }
 
-        /*if (helper.isUnknownSourcesEnabled(requireContext())) {
-            val dialog = AlertDialog.Builder(requireContext())
-            dialog.setTitle("Warning")
-            dialog.setIcon(R.drawable.warning)
-            dialog.setMessage("Unknown sources is enabled, for your security you can disable it")
-            dialog.setPositiveButton("ok") { dialog, which ->
-                dialog.dismiss()
-                dialog.cancel()
-                val intent = Intent(Settings.ACTION_SECURITY_SETTINGS)
-                startActivity(intent)
-            }
-            dialog.setNegativeButton("cancel") { dialog, which ->
-                dialog.dismiss()
-                dialog.cancel()
-            }
-            dialog.setCancelable(false)
-            dialog.show()
-        }*/
-
-        getAds()
         startAutoScrolling()
 
         snapHelper = LinearSnapHelper()
@@ -307,7 +349,8 @@ class HomeFragment : Fragment(), ClickListener {
                     val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
                     val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
                     for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
-                        val viewHolder = recyclerView.findViewHolderForAdapterPosition(i) as AdsAdapter.ViewHolder?
+                        val viewHolder =
+                            recyclerView.findViewHolderForAdapterPosition(i) as AdsAdapter.ViewHolder?
                         viewHolder?.let {
                             val displayedText = it.description.getDisplayedText()
                             if (displayedText.length < ads_list[position].description.length) {
@@ -349,7 +392,11 @@ class HomeFragment : Fragment(), ClickListener {
                                 "${model.months} ${resources.getString(R.string.months)}"
                         }
                     } else {
-                        Toast.makeText(requireContext(), value.errorMessages, Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            requireContext(),
+                            value.errorMessages,
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     }
                     homeViewModel.userPlanResponse.removeObserver(this)
@@ -363,7 +410,7 @@ class HomeFragment : Fragment(), ClickListener {
         homeViewModel.getAdvertisement()
         val observer = object : Observer<AdsResponse?> {
             override fun onChanged(value: AdsResponse?) {
-                if(value!= null) {
+                if (value != null) {
                     if (value.isSuccess) {
                         ads_list.clear()
                         if (value.result != null) {
@@ -373,18 +420,25 @@ class HomeFragment : Fragment(), ClickListener {
                             ads_adapter.updateAdapter(ads_list)
                         }
                     } else {
-                        Toast.makeText(requireContext(), value.errorMessages, Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            requireContext(),
+                            value.errorMessages,
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     }
                     homeViewModel.advertisements.removeObserver(this)
                 } else {
-                    Toast.makeText(requireContext(),resources.getString(R.string.error),Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        resources.getString(R.string.error),
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
             }
         }
         homeViewModel.advertisements.observe(viewLifecycleOwner, observer)
-
     }
 
     private fun startAutoScrolling() {
@@ -484,6 +538,7 @@ class HomeFragment : Fragment(), ClickListener {
             }
         }
         viewModel.changeDeviceStatus.observe(viewLifecycleOwner, observer)
+
     }
 
     private fun setDeviceOff(token: String) {
@@ -516,53 +571,74 @@ class HomeFragment : Fragment(), ClickListener {
         }
     }
 
+    private fun noInternet() {
+        AlertDialog.Builder(requireContext())
+            .buildDialog(title = resources.getString(R.string.warning),
+                msg = resources.getString(R.string.no_internet_connection),
+                icon = R.drawable.no_internet_icon,
+                positiveButton = resources.getString(R.string.ok),
+                negativeButton = resources.getString(R.string.cancel),
+                positiveButtonFunction = {
+
+                },
+                negativeButtonFunction = {
+
+                })
+    }
+
     override fun onItemClickListener(position: Int, extras: Bundle?) {
         if (extras != null) {
-            val clicked = extras.getString(CLICKED)
-            if (clicked.equals("menu")) {
-                when (position) {
-                    //premium
-                    0 -> {
-                        Log.i(TAG, "onItemClickListener: premium")
-                        findNavController().navigate(R.id.parentPayFragment)
-                    }
-                    //support
-                    1 -> {
-                        Log.i(TAG, "onItemClickListener: support")
-                    }
-                    //setting
-                    2 -> {
-                        Log.i(TAG, "onItemClickListener: settings")
-                        findNavController().navigate(R.id.settingFragment)
-                    }
-                    //about
-                    3 -> {
-                        val bundle = Bundle()
-                        bundle.putInt(SOURCE, R.id.homeFragment)
-                        findNavController().navigate(R.id.aboutFragment, bundle)
-                        Log.i(TAG, "onItemClickListener: about")
-                    }
-                    //logout
-                    4 -> {
-                        lifecycleScope.launch {
-                            val id = usersDB.dao().getUserID() ?: ""
-                            val phone = usersDB.dao().getUserPhone(id) ?: ""
-                            val body = SignOutBody(
-                                phoneNumber = phone,
-                                device = helper.getDeviceID(requireContext())
-                            )
-                            signOut(body, helper.getToken(requireContext()))
-                        }
+            isConnected.observe(viewLifecycleOwner) {
+                if (it) {
+                    val clicked = extras.getString(CLICKED)
+                    if (clicked.equals("menu")) {
+                        when (position) {
+                            //premium
+                            0 -> {
+                                Log.i(TAG, "onItemClickListener: premium")
+                                findNavController().navigate(R.id.parentPayFragment)
+                            }
+                            //support
+                            1 -> {
+                                Log.i(TAG, "onItemClickListener: support")
+                            }
+                            //setting
+                            2 -> {
+                                Log.i(TAG, "onItemClickListener: settings")
+                                findNavController().navigate(R.id.settingFragment)
+                            }
+                            //about
+                            3 -> {
+                                val bundle = Bundle()
+                                bundle.putInt(SOURCE, R.id.homeFragment)
+                                findNavController().navigate(R.id.aboutFragment, bundle)
+                                Log.i(TAG, "onItemClickListener: about")
+                            }
+                            //logout
+                            4 -> {
+                                lifecycleScope.launch {
+                                    val id = usersDB.dao().getUserID() ?: ""
+                                    val phone = usersDB.dao().getUserPhone(id) ?: ""
+                                    val body = SignOutBody(
+                                        phoneNumber = phone,
+                                        device = helper.getDeviceID(requireContext())
+                                    )
+                                    signOut(body, helper.getToken(requireContext()))
+                                }
 //                helper.setRemember(requireContext(), false)
 //                findNavController().navigate(R.id.registerFragment)
 
-                        Log.i(TAG, "onItemClickListener: logout")
+                                Log.i(TAG, "onItemClickListener: logout")
+                            }
+                        }
+                    } else {
+                        // ads clicked
+                        Log.d("clicked mohamed", "ads clicked")
+                        findNavController().navigate(R.id.adFragment, extras)
                     }
+                } else {
+                    noInternet()
                 }
-            } else {
-                // ads clicked
-                Log.d("clicked mohamed", "ads clicked")
-                findNavController().navigate(R.id.adFragment, extras)
             }
         }
     }

@@ -102,4 +102,7 @@ dependencies {
 
     // gif
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.29")
+
+    // count edit text
+    implementation("com.github.Damercy:IncrementDecrementButton:2.0.0")
 }

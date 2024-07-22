@@ -1,6 +1,7 @@
 package com.correct.correctsoc.ui.pay
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
@@ -10,6 +11,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
@@ -33,6 +38,7 @@ import com.correct.correctsoc.helper.mappingNumbers
 import com.correct.correctsoc.helper.reMappingNumbers
 import com.correct.correctsoc.helper.upperCaseOnly
 import com.correct.correctsoc.helper.show
+import com.google.android.material.textfield.TextInputEditText
 import kotlin.math.round
 
 class ReceiptFragment : Fragment() {
@@ -137,6 +143,58 @@ class ReceiptFragment : Fragment() {
             }
         }
 
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(R.layout.promo_code_layout_dialog)
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog.setCanceledOnTouchOutside(true)
+        dialog.setCancelable(false)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val promo = dialog.findViewById<EditText>(R.id.txt_promo)
+        val btn = dialog.findViewById<Button>(R.id.btn_apply)
+        val close = dialog.findViewById<ImageView>(R.id.close_icon)
+
+        promo.upperCaseOnly()
+
+        close.setOnClickListener {
+            dialog.dismiss()
+            dialog.cancel()
+        }
+
+        btn.setOnClickListener {
+            val code = promo.text?.toString()
+            if (code != null) {
+                if (code.isNotEmpty()) {
+                    dialog.dismiss()
+                    dialog.cancel()
+                    binding.txtPromo.setText(code)
+                    getPromoCodePercent(code)
+                }
+            }
+        }
+
+        dialog.show()
+
+        binding.txtPromo.inputType = android.text.InputType.TYPE_NULL
+        binding.txtPromo.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                val imm =
+                    view?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                dialog.show()
+            }
+        }
+
+        binding.txtPromo.setOnClickListener {
+            val imm =
+                view?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view?.windowToken, 0)
+            dialog.show()
+        }
+
         binding.nextBtn.setOnClickListener {
             if (devices > 0 && months > 0) {
                 if (parentFragment is ParentPayFragment) {
@@ -168,7 +226,7 @@ class ReceiptFragment : Fragment() {
             }
         }
 
-        binding.txtApply.setOnClickListener {
+        binding.btnApply.setOnClickListener {
             //apply promo-code
             if (binding.txtPromo.text.toString().isNotEmpty()) {
                 getPromoCodePercent(binding.txtPromo.text.toString())
@@ -220,6 +278,7 @@ class ReceiptFragment : Fragment() {
         Log.i("Payment data mohamed", promo)
         Log.i("Payment data mohamed", "$discount")
 
+        binding.btnApply.visibility = View.INVISIBLE
         binding.promoCodeLayout.radius = resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
         binding.promoCodeLayout.strokeWidth =
             resources.getDimension(com.intuit.sdp.R.dimen._2sdp).toInt()
@@ -308,6 +367,7 @@ class ReceiptFragment : Fragment() {
 
         binding.txtViewDiscount.hide()
         binding.txtDiscount.hide()
+        binding.btnApply.show()
 
         //val returnDiscount = totalPrice - (discount * 100)
 

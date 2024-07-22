@@ -15,15 +15,20 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.correct.correctsoc.databinding.ActivityMainBinding
+import com.correct.correctsoc.helper.ConnectionManager
+import com.correct.correctsoc.helper.ConnectivityListener
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.buildDialog
 import com.correct.correctsoc.ui.auth.AuthViewModel
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -48,6 +53,8 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
     private lateinit var expectArray: Array<Int>
     private var acceptFragment = false
     private lateinit var viewModel: AuthViewModel
+    private lateinit var connectionManager: ConnectionManager
+    private var isConnected = MutableLiveData<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,35 +93,53 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
 
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+
+        connectionManager = ConnectionManager(this)
+        connectionManager.statusLiveData.observe(this) {
+            when (it) {
+                ConnectivityListener.Status.AVAILABLE -> isConnected.postValue(true)
+                ConnectivityListener.Status.UNAVAILABLE -> isConnected.postValue(false)
+                ConnectivityListener.Status.LOST -> isConnected.postValue(false)
+                ConnectivityListener.Status.LOSING -> isConnected.postValue(false)
+            }
+        }
     }
 
     private fun setDeviceOn(token: String) {
-        viewModel.setDeviceOn(token)
-        val observer = object : Observer<Boolean> {
-            override fun onChanged(value: Boolean) {
-                if (value) {
-                    helper.setDeviceOnline(true, this@MainActivity)
-                    Log.v("device status", "account online")
-                } else {
-                    Log.v("device status", "account failed to be online")
+        isConnected.observe(this) {
+            if (it) {
+                viewModel.setDeviceOn(token)
+                val observer = object : Observer<Boolean> {
+                    override fun onChanged(value: Boolean) {
+                        if (value) {
+                            helper.setDeviceOnline(true, this@MainActivity)
+                            Log.v("device status", "account online")
+                        } else {
+                            Log.v("device status", "account failed to be online")
+                        }
+                        viewModel.changeDeviceStatus.removeObserver(this)
+                    }
                 }
-                viewModel.changeDeviceStatus.removeObserver(this)
+                viewModel.changeDeviceStatus.observe(this, observer)
             }
         }
-        viewModel.changeDeviceStatus.observe(this, observer)
     }
 
-    private fun setDeviceOff(token: String) {
-        viewModel.setDeviceOff(token)
-        val observer = object : Observer<Boolean> {
-            override fun onChanged(value: Boolean) {
-                if (value) {
-                    helper.setDeviceOnline(false,this@MainActivity)
+        private fun setDeviceOff(token: String) {
+            isConnected.observe(this) {
+            if (it) {
+                viewModel.setDeviceOff(token)
+                val observer = object : Observer<Boolean> {
+                    override fun onChanged(value: Boolean) {
+                        if (value) {
+                            helper.setDeviceOnline(false, this@MainActivity)
+                        }
+                        viewModel.changeDeviceStatus.removeObserver(this)
+                    }
                 }
-                viewModel.changeDeviceStatus.removeObserver(this)
+                viewModel.changeDeviceStatus.observe(this, observer)
             }
         }
-        viewModel.changeDeviceStatus.observe(this, observer)
     }
 
     private fun setLocale(lang: String) {
@@ -199,9 +224,29 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
 
     override fun onResume() {
         super.onResume()
-        if (acceptFragment) {
-            setDeviceOn(helper.getToken(this))
+        connectionManager.observe()
+        connectionManager.statusLiveData.observe(this) {
+            when (it) {
+                ConnectivityListener.Status.AVAILABLE -> {
+                    if (acceptFragment) {
+                        setDeviceOn(helper.getToken(this))
+                    }
+                }
+
+                ConnectivityListener.Status.UNAVAILABLE -> {
+
+                }
+
+                ConnectivityListener.Status.LOST -> {
+
+                }
+
+                ConnectivityListener.Status.LOSING -> {
+
+                }
+            }
         }
+
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
         appUpdateInfoTask.addOnSuccessListener {
             if (it.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
@@ -287,11 +332,13 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
         }
 
     override fun onFragmentChangedListener(fragmentID: Int) {
-        if (fragmentID in expectArray) {
-            Log.v("Except array", "Except")
-            acceptFragment = false
-        } else {
-            acceptFragment = true
+        if (this::expectArray.isInitialized) {
+            if (fragmentID in expectArray) {
+                Log.v("Except array", "Except")
+                acceptFragment = false
+            } else {
+                acceptFragment = true
+            }
         }
     }
 }

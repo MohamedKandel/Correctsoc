@@ -26,6 +26,7 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
 import com.correct.correctsoc.helper.hideKeyboard
+import kotlin.math.max
 
 class PaymentDetailsFragment : Fragment() {
 
@@ -39,6 +40,8 @@ class PaymentDetailsFragment : Fragment() {
     private lateinit var viewModel: PayViewModel
     private var token = ""
     private lateinit var fragmentListener: FragmentChangedListener
+    private val minimum = 1
+    private val maximum = 10
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,8 +89,8 @@ class PaymentDetailsFragment : Fragment() {
         binding.spnDuration.setAdapter(arrayAdapter)
 
         binding.nextBtn.setOnClickListener {
-            devices = if (binding.txtDeviceNumber.text.toString().isNotEmpty()) {
-                binding.txtDeviceNumber.text.toString().toInt()
+            devices = if (binding.value.text.toString().toInt() > 0) {
+                binding.value.text.toString().toInt()
             } else {
                 0
             }
@@ -104,7 +107,7 @@ class PaymentDetailsFragment : Fragment() {
                 }
             } else {
                 Log.v("devices mohamed", "$devices")
-                Log.v("months mohamed","$months")
+                Log.v("months mohamed", "$months")
                 Toast.makeText(
                     requireContext(),
                     resources.getString(R.string.empty_device_duration),
@@ -114,7 +117,7 @@ class PaymentDetailsFragment : Fragment() {
         }
 
         binding.spnDuration.setOnClickListener {
-            Log.v("Item count","${arrayAdapter.count}")
+            Log.v("Item count", "${arrayAdapter.count}")
             it.hideKeyboard()
             if (arrayAdapter.count != durations.size) {
                 arrayAdapter = ArrayAdapter(
@@ -131,23 +134,22 @@ class PaymentDetailsFragment : Fragment() {
                 //Log.v("Selected mohamed", arrayAdapter.getItem(position).toString())
                 // Log.v("Selected mohamed", "$position")
                 if (devices > 0) {
-                    if (binding.txtDeviceNumber.text.toString().isNotEmpty()) {
-                        years = 0
-                        devices = binding.txtDeviceNumber.text.toString().toInt()
-                        when (position) {
-                            0 -> {
-                                months = 6
-                            }
+                    years = 0
+                    devices = binding.value.text.toString().toInt()
+                    when (position) {
+                        0 -> {
+                            months = 6
+                        }
 
-                            1 -> {
-                                months = 12
-                            }
+                        1 -> {
+                            months = 12
+                        }
 
-                            else -> {
-                                months = 0
-                            }
+                        else -> {
+                            months = 0
                         }
                     }
+
                 } else {
                     when (position) {
                         0 -> {
@@ -163,9 +165,28 @@ class PaymentDetailsFragment : Fragment() {
                         }
                     }
                 }
+                if (months > 0) {
+                    getCost(devices, months)
+                }
             }
 
-        binding.txtDeviceNumber.addTextChangedListener(object : TextWatcher {
+        binding.btnAdd.setOnClickListener {
+            var number = binding.value.text.toString().toInt()
+            if (number < maximum) {
+                number++
+                binding.value.text = "$number"
+            }
+        }
+
+        binding.btnMinus.setOnClickListener {
+            var number = binding.value.text.toString().toInt()
+            if (number > minimum) {
+                number--
+                binding.value.text = "$number"
+            }
+        }
+
+        /*binding.txtDeviceNumber.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -174,7 +195,7 @@ class PaymentDetailsFragment : Fragment() {
                 if (s.toString().isNotEmpty()) {
                     devices = s.toString().toInt()
                 } else {
-                    if(months > 0 && devices > 0) {
+                    if (months > 0 && devices > 0) {
                         getCost(devices, months)
                     }
                 }
@@ -183,12 +204,12 @@ class PaymentDetailsFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty() && months > 0) {
                     devices = s.toString().toInt()
-                    if(devices > 0) {
+                    if (devices > 0) {
                         getCost(devices, months)
                     }
                 }
             }
-        })
+        })*/
 
         return binding.root
     }

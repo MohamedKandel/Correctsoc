@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +16,8 @@ import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.room.UsersDB
 import com.correct.correctsoc.databinding.FragmentSplashBinding
+import com.correct.correctsoc.helper.ConnectionManager
+import com.correct.correctsoc.helper.ConnectivityListener
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.mappingNumbers
@@ -53,6 +56,7 @@ class SplashFragment : Fragment() {
         binding = FragmentSplashBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
         usersDB = UsersDB.getDBInstance(requireContext())
+
         //viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
         binding.root.keepScreenOn = true
@@ -110,7 +114,6 @@ class SplashFragment : Fragment() {
                     //checkForUsers()
                 }
             }
-
         }.start()
     }
 

@@ -11,13 +11,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentDetectingBinding
+import com.correct.correctsoc.helper.ConnectionManager
+import com.correct.correctsoc.helper.ConnectivityListener
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.buildDialog
 
 class DetectingFragment : Fragment() {
 
@@ -32,6 +37,8 @@ class DetectingFragment : Fragment() {
     private lateinit var viewModel: ScanViewModel
     private var ipAddress = ""
     private lateinit var fragmentListener: FragmentChangedListener
+    private lateinit var connectionManager: ConnectionManager
+    private var isConnected = MutableLiveData<Boolean>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -62,13 +69,65 @@ class DetectingFragment : Fragment() {
 
         binding.progressCircular.startAnimation(helper.circularAnimation(3000))
 
-        getAPIAddress()
+        connectionManager = ConnectionManager(requireContext())
 
         val thread = Thread {
-
             startProgress()
         }
         thread.start()
+
+        connectionManager.observe()
+        connectionManager.statusLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                ConnectivityListener.Status.AVAILABLE -> {
+                    isConnected.postValue(true)
+                    getAPIAddress()
+                }
+
+                ConnectivityListener.Status.UNAVAILABLE -> {
+                    isConnected.postValue(false)
+                    isRun = false
+                    noInternet()
+                    thread.interrupt()
+                    handler.post {
+                    }
+                    findNavController().navigate(R.id.selfPenFragment)
+                }
+
+                ConnectivityListener.Status.LOST -> {
+                    isConnected.postValue(false)
+                    isRun = false
+                    noInternet()
+                    thread.interrupt()
+                    handler.post {
+                    }
+                    findNavController().navigate(R.id.selfPenFragment)
+                }
+
+                ConnectivityListener.Status.LOSING -> {
+                    isConnected.postValue(false)
+                    isRun = false
+                    noInternet()
+                    thread.interrupt()
+                    handler.post {
+                    }
+                    findNavController().navigate(R.id.selfPenFragment)
+                }
+            }
+        }
+
+
+        isConnected.observe(viewLifecycleOwner) {
+            if (!it) {
+                isRun = false
+                noInternet()
+                thread.interrupt()
+                handler.post {
+                }
+                findNavController().navigate(R.id.selfPenFragment)
+            }
+        }
+
 
         binding.btnStop.setOnClickListener {
             isRun = false
@@ -123,6 +182,21 @@ class DetectingFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun noInternet() {
+        AlertDialog.Builder(requireContext())
+            .buildDialog(title = resources.getString(R.string.warning),
+                msg = resources.getString(R.string.no_internet_connection),
+                icon = R.drawable.no_internet_icon,
+                positiveButton = resources.getString(R.string.ok),
+                negativeButton = resources.getString(R.string.cancel),
+                positiveButtonFunction = {
+
+                },
+                negativeButtonFunction = {
+
+                })
     }
 
     override fun onResume() {

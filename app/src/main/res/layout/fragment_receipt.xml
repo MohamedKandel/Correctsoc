@@ -24,7 +24,7 @@
         android:layout_marginStart="@dimen/_18sdp"
         android:layout_marginTop="@dimen/_24sdp"
         android:layout_marginEnd="@dimen/_18sdp"
-        android:fontFamily="@font/barlow_semi_condensed_semibold"
+        android:fontFamily="@font/roboto_bold"
         android:text="@string/receipt_summary"
         android:textColor="@color/white"
         android:textSize="@dimen/_15ssp"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:fontFamily="@font/roboto_bold"
             android:text="@string/receipt_summary"
             android:textColor="@color/white"
             android:textSize="@dimen/_12ssp" />
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_devices_number"
             android:layout_alignParentStart="true"
-            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:fontFamily="@font/roboto_bold"
             android:text="@string/receipt_summary"
             android:textColor="#999999"
             android:textSize="@dimen/_12ssp" />
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:fontFamily="@font/roboto_bold"
             android:text="@string/zero"
             android:textColor="@color/white"
             android:textSize="@dimen/_12ssp" />
@@ -105,7 +105,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/txt_apply"
                 android:autofillHints="name"
                 android:background="@color/transparent"
                 android:fontFamily="@font/roboto_bold"
@@ -120,18 +119,18 @@
                 android:textColorHint="@color/alphaWhite"
                 android:textSize="@dimen/_12ssp" />
 
-            <TextView
-                android:id="@+id/txt_apply"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:fontFamily="@font/barlow_semi_condensed_semibold"
-                android:paddingStart="@dimen/_10sdp"
-                android:paddingEnd="@dimen/_10sdp"
-                android:text="@string/apply"
-                android:textColor="@color/apply_color"
-                android:textSize="@dimen/_12ssp" />
+<!--            <TextView-->
+<!--                android:id="@+id/txt_apply"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:fontFamily="@font/barlow_semi_condensed_semibold"-->
+<!--                android:paddingStart="@dimen/_10sdp"-->
+<!--                android:paddingEnd="@dimen/_10sdp"-->
+<!--                android:text="@string/apply"-->
+<!--                android:textColor="@color/apply_color"-->
+<!--                android:textSize="@dimen/_12ssp" />-->
 
         </RelativeLayout>
 
@@ -209,13 +208,33 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_apply"
+        android:layout_marginTop="@dimen/_18sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
+        android:backgroundTint="@color/white"
+        android:fontFamily="@font/roboto_black"
+        android:paddingStart="@dimen/_24sdp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingEnd="@dimen/_24sdp"
+        android:paddingBottom="@dimen/_8sdp"
+        android:text="@string/apply"
+        android:textColor="@color/dark_purple"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/promo_code_layout" />
+
+
     <TextView
         android:id="@+id/txtView_discount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_18sdp"
         android:layout_marginTop="@dimen/_14sdp"
-        android:fontFamily="@font/barlow_semi_condensed_semibold"
+        android:fontFamily="@font/roboto_bold"
         android:text="@string/discount"
         android:textColor="@color/white"
         android:textSize="@dimen/_12ssp"
@@ -228,7 +247,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_14sdp"
         android:layout_marginEnd="@dimen/_24sdp"
-        android:fontFamily="@font/barlow_semi_condensed_semibold"
+        android:fontFamily="@font/roboto_bold"
         android:text="@string/zero"
         android:textColor="@color/discount_color"
         android:textSize="@dimen/_12ssp"
@@ -240,10 +259,10 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_3sdp"
         android:layout_marginStart="@dimen/_18sdp"
-        android:layout_marginTop="@dimen/_38sdp"
+        android:layout_marginTop="@dimen/_19sdp"
         android:layout_marginEnd="@dimen/_18sdp"
         android:background="@color/alphaWhite"
-        app:layout_constraintTop_toBottomOf="@+id/promo_code_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_apply" />
 
     <RelativeLayout
         android:id="@+id/total_amount_layout"
@@ -264,7 +283,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:fontFamily="@font/roboto_bold"
             android:text="@string/total_price"
             android:textColor="@color/white"
             android:textSize="@dimen/_15ssp" />
@@ -286,7 +305,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_12sdp"
-        android:layout_marginTop="@dimen/_80sdp"
+        android:layout_marginTop="@dimen/_59sdp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:layout_marginBottom="@dimen/_25sdp"
         android:backgroundTint="@color/white"

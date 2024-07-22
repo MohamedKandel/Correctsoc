@@ -10,7 +10,7 @@
     <string name="self_test">Check router status</string>
     <string name="device_scan">Connected wifi device Scan</string>
     <string name="apps_scan">Scan spy apps</string>
-    <string name="premium">Buy premium pro</string>
+    <string name="premium">Buy premium</string>
     <string name="support">Get support</string>
     <string name="setting">Setting</string>
     <string name="reward">Free reward</string>
@@ -133,9 +133,9 @@
 
     <string name="pay_details">Payment Details</string>
     <string name="request_info">Enter your information</string>
-    <string name="device_number">Device Number</string>
+    <string name="device_number">Select the number of devices which you want to buy</string>
     <string name="enter_device_number">Enter number of your devices</string>
-    <string name="duration">Duration</string>
+    <string name="duration">Subscription duration</string>
     <string name="total_price">Total price : </string>
 
     <array name="durations">
@@ -156,8 +156,9 @@
     <string name="google_pay" translatable="false">Google Pay</string>
     <string name="activation_code">Activation Code</string>
     <string name="google_pay_msg">Pay directly from your bank card</string>
-    <string name="activation_msg">Get code through WhatsApp</string>
-    <string name="activation_msg_2">The code that you got</string>
+    <string name="activation_msg">Get code from support through whatsapp</string>
+    <string name="activation_msg_2">Enter the code manually</string>
+    <string name="enter_promo">Enter promo code</string>
     <string name="delete_account">Delete account</string>
 
     <string name="phone_not_found">There is no user registered in this device before</string>
@@ -198,4 +199,8 @@
     <string name="more_txt" translatable="false">…</string>
     <string name="discount_off">OFF</string>
     <string name="error">Sorry… an error occurred please try again later</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="minus" translatable="false">-</string>
+    <string name="plus" translatable="false">+</string>
+    <string name="one" translatable="false">1</string>
 </resources>
