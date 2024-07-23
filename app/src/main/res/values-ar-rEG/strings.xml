@@ -189,4 +189,5 @@
     <string name="discount_off">خصم</string>
     <string name="error">عذرًا… حدث خطأ ما من فضلك حاول في وقت لاحق</string>
     <string name="no_internet_connection">لايوجد اتصال بالانترنت</string>
+    <string name="scanning">مازال الفحص … برجاء الانتظار</string>
 </resources>

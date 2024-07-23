@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.adapter.PortsAdapter
+import com.correct.correctsoc.data.GeneralResponse
 import com.correct.correctsoc.data.openPorts.CvEs
 import com.correct.correctsoc.data.openPorts.OpenPorts
 import com.correct.correctsoc.data.openPorts.Port
@@ -49,8 +50,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -78,6 +82,9 @@ class WebScanFragment : Fragment(), ClickListener {
     private var fetchDevicesJob: Job? = null
     private lateinit var connectionManager: ConnectionManager
     private var isConnected = MutableLiveData<Boolean>()
+    private var txtJob: Job? = null
+    private var dotCount = 0
+    private var isAdding = true
 
     /*
     * 1 -> web scan
@@ -108,10 +115,17 @@ class WebScanFragment : Fragment(), ClickListener {
         //isConnected.postValue(false)
 
         fragmentListener.onFragmentChangedListener(R.id.webScanFragment)
-        binding.loadingLayout.show()
+        //binding.loadingLayout.show()
+        // display loading
+        binding.placeholder.show()
+        binding.txtProgress.show()
+        binding.progress.show()
+        binding.txtLoading.hide()
         binding.txtDeviceName.hide()
         binding.txtNameTitle.hide()
         binding.imgSecurity.hide()
+        binding.layoutError.hide()
+        //binding.secondLoadingLayout.hide()
 
         list = mutableListOf()
         adapter = PortsAdapter(list, this)
@@ -188,6 +202,8 @@ class WebScanFragment : Fragment(), ClickListener {
                     binding.txtNameTitle.show()
                     binding.imgSecurity.show()
                     binding.loadingLayout.hide()
+//                    binding.secondLoadingLayout.hide()
+                    //binding.txtLoading.hide()
                     adapter.updateAdapter(list)
                 }
             } else {
@@ -229,6 +245,8 @@ class WebScanFragment : Fragment(), ClickListener {
                     binding.imgSecurity.show()
 
                     binding.loadingLayout.hide()
+//                    binding.secondLoadingLayout.hide()
+                    //binding.txtLoading.hide()
                     adapter.updateAdapter(list)
                 }
             }
@@ -256,9 +274,15 @@ class WebScanFragment : Fragment(), ClickListener {
                                                 }
                                             binding.txtProgress.text = mprogress
                                             if (progress == 100) {
-                                                binding.loadingLayout.hide()
-
+                                                //binding.loadingLayout.hide()
+                                                binding.progress.hide()
+                                                binding.txtProgress.hide()
+//                                                binding.secondLoadingLayout.show()
+                                                binding.placeholder.show()
+                                                binding.txtLoading.show()
+                                                startDotAnimation()
                                                 if (this@WebScanFragment::value.isInitialized) {
+                                                    binding.loadingLayout.hide()
                                                     if (value.scanHostDeviceName.isEmpty()) {
                                                         binding.txtDeviceName.text = value.scanIp
                                                         deviceName = value.scanIp
@@ -267,7 +291,6 @@ class WebScanFragment : Fragment(), ClickListener {
                                                             value.scanHostDeviceName
                                                         deviceName = value.scanHostDeviceName
                                                     }
-
                                                     val isSecure = helper.isSecureSite(list)
                                                     if (isSecure) {
                                                         binding.imgSecurity.setImageResource(R.drawable.safe)
@@ -305,6 +328,8 @@ class WebScanFragment : Fragment(), ClickListener {
                                                     binding.txtDeviceName.show()
                                                     binding.txtNameTitle.show()
                                                     binding.imgSecurity.show()
+//                                                    binding.secondLoadingLayout.hide()
+                                                    binding.loadingLayout.hide()
                                                 }
 
                                                 adapter.updateAdapter(list)
@@ -320,9 +345,17 @@ class WebScanFragment : Fragment(), ClickListener {
                                         list = fetchData(input)
                                         progressJob.join()
                                         if (progressJob.isCompleted) {
+//                                            binding.secondLoadingLayout.show()
+                                            binding.txtLoading.show()
+                                            binding.placeholder.show()
+//                                            binding.viewPlaceholder.keepScreenOn = true
+                                            startDotAnimation()
                                             launch(Dispatchers.Main) {
                                                 if (!audioUtils.isAudioPlaying()) {
                                                     if (this@WebScanFragment::value.isInitialized) {
+//                                                        binding.secondLoadingLayout.hide()
+                                                        binding.placeholder.hide()
+                                                        binding.txtLoading.hide()
                                                         if (value.scanHostDeviceName.isEmpty()) {
                                                             binding.txtDeviceName.text =
                                                                 value.scanIp
@@ -370,12 +403,14 @@ class WebScanFragment : Fragment(), ClickListener {
                                                         binding.txtDeviceName.show()
                                                         binding.txtNameTitle.show()
                                                         binding.imgSecurity.show()
+                                                        binding.loadingLayout.hide()
+//                                                        binding.secondLoadingLayout.hide()
                                                     }
                                                     adapter.updateAdapter(list)
                                                 }
                                             }
                                         }
-                                    }catch (ex: Exception) {
+                                    } catch (ex: Exception) {
                                         if (ex is CancellationException) {
                                             // Cancel progress job
                                             Handler(Looper.getMainLooper()).post {
@@ -384,7 +419,6 @@ class WebScanFragment : Fragment(), ClickListener {
                                                 fetchDevicesJob?.cancel("Internet connection lost")
                                                 //findNavController().navigate(SOURCE)
                                                 onBackButtonPressed()
-                                                noInternet()
                                             }
                                         }
                                     }
@@ -448,91 +482,14 @@ class WebScanFragment : Fragment(), ClickListener {
                 positiveButton = resources.getString(R.string.ok),
                 negativeButton = resources.getString(R.string.cancel),
                 positiveButtonFunction = {
-                    //stopOperations()
-                    //findNavController().navigate(R.id.detectingFragment)
+
                 },
                 negativeButtonFunction = {
-                    //stopOperations()
-                    //findNavController().navigate(R.id.detectingFragment)
+
                 })
     }
 
-    /*private fun scanning(input: String) {
-        viewModel.scan(requireContext(), input, helper.getToken(requireContext()))
-        val mediatorLiveData = MediatorLiveData<Pair<OpenPorts, Boolean>>()
-        mediatorLiveData.addSource(viewModel.scanResponse) {
-            val isSuccessful = viewModel.isRequestSuccessfull.value ?: false
-            mediatorLiveData.value = Pair(it, isSuccessful)
-        }
 
-        mediatorLiveData.addSource(viewModel.isRequestSuccessfull) {
-            val openPorts = viewModel.scanResponse.value ?: OpenPorts(
-                "", "",
-                listOf(Port("", 0, "", "", "", listOf(CvEs(0.0, "", ""))))
-            )
-            mediatorLiveData.value = Pair(openPorts, it)
-        }
-        mediatorLiveData.observe(viewLifecycleOwner) {
-            if (it.second) {
-                if (it.first.scanHostDeviceName != null) {
-                    if (it.first.scanHostDeviceName.isEmpty()) {
-                        binding.txtDeviceName.text = it.first.scanIp
-                        deviceName = it.first.scanIp
-                    } else {
-                        binding.txtDeviceName.text = it.first.scanHostDeviceName
-                        deviceName = it.first.scanHostDeviceName
-                    }
-                    list = it.first.openPortsInfo.toMutableList()
-                    adapter.updateAdapter(list)
-
-                    val isSecure = helper.isSecureSite(list)
-                    if (isSecure) {
-                        binding.imgSecurity.setImageResource(R.drawable.safe)
-                        binding.txtNameTitle.setTextColor(
-                            resources.getColor(
-                                R.color.safe_color,
-                                context?.theme
-                            )
-                        )
-                        if (helper.getLang(requireContext()).equals("en")) {
-                            playSound(scan_type, "en", true)
-                            //audioUtils.playAudio(requireContext(), R.raw.secure_en)
-                        } else {
-                            playSound(scan_type, "ar", true)
-                            //audioUtils.playAudio(requireContext(), R.raw.secure_ar)
-                        }
-                    } else {
-                        binding.imgSecurity.setImageResource(R.drawable.danger)
-                        binding.txtNameTitle.setTextColor(
-                            resources.getColor(
-                                R.color.danger_color,
-                                context?.theme
-                            )
-                        )
-                        if (helper.getLang(requireContext()).equals("en")) {
-                            playSound(scan_type, "en", false)
-                            //audioUtils.playAudio(requireContext(), R.raw.danger_en)
-                        } else {
-                            playSound(scan_type, "ar", false)
-                            //audioUtils.playAudio(requireContext(), R.raw.danger_ar)
-                        }
-                    }
-                    isSafe = isSecure
-
-                    binding.txtDeviceName.show()
-                    binding.txtNameTitle.show()
-                    binding.imgSecurity.show()
-                } else {
-                    Log.v("Error mohamed", "null")
-                    Toast.makeText(
-                        requireContext(), resources.getString(R.string.invalid_link),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-            binding.loadingLayout.hide()
-        }
-    }*/
 
     override fun onItemClickListener(position: Int, extras: Bundle?) {
 //        TODO("Not yet implemented")
@@ -560,6 +517,11 @@ class WebScanFragment : Fragment(), ClickListener {
     }
 
     private fun onBackButtonPressed() {
+        isConnected.observe(requireActivity()) { connected ->
+            if (!connected) {
+                noInternet()
+            }
+        }
         val source = requireArguments().getString(TYPE, "")
         if (source.isNotEmpty()) {
             requireArguments().putString(TYPE, source)
@@ -583,15 +545,18 @@ class WebScanFragment : Fragment(), ClickListener {
             }
 
         }
-        println(source)
     }
 
     private fun stopOperations() {
         // Cancel progress job
         progressJob?.cancel()
         // Cancel fetch devices job
+        viewModel.cancelFetch()
         fetchDevicesJob?.cancel()
-        //findNavController().navigate(SOURCE)
+        txtJob?.cancel()
+        /*if (txtJob?.isCompleted == false) {
+            txtJob?.cancel()
+        }*/
         onBackButtonPressed()
     }
 
@@ -599,11 +564,27 @@ class WebScanFragment : Fragment(), ClickListener {
     private suspend fun fetchData(input: String): MutableList<Port> {
         return suspendCancellableCoroutine { continuation ->
             Handler(Looper.getMainLooper()).post {
+                observeScan()
                 getPorts(input, object : OnDataFetchedListener<Port> {
                     override fun onAllDataFetched(data: MutableList<Port>) {
                         continuation.resume(data, null)
                     }
                 })
+            }
+        }
+    }
+
+    private fun observeScan() {
+        viewModel.isRequestSuccessfull.observe(viewLifecycleOwner) {
+            if (!it.isSuccessful) {
+//                binding.secondLoadingLayout.hide()
+                binding.layoutError.show()
+                binding.loadingLayout.hide()
+                binding.txtCode.text = "${it.code}"
+                binding.txtMessage.text = it.message
+                Log.e("Error mohamed", it.message)
+            } else {
+//                binding.secondLoadingLayout.hide()
             }
         }
     }
@@ -689,6 +670,30 @@ class WebScanFragment : Fragment(), ClickListener {
                         audioUtils.playAudio(requireContext(), R.raw.router_insecure_en)
                     }
                 }
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun startDotAnimation() {
+        txtJob = CoroutineScope(Dispatchers.Main).launch {
+            while (isActive) {
+                delay(700)
+                if (isAdding) {
+                    dotCount++
+                    if (dotCount > 3) {
+                        isAdding = false
+                        dotCount = 2
+                    }
+                } else {
+                    dotCount--
+                    if (dotCount < 0) {
+                        isAdding = true
+                        dotCount = 1
+                    }
+                }
+                binding.txtLoading.text =
+                    resources.getString(R.string.scanning) + " " + ".".repeat(dotCount)
             }
         }
     }

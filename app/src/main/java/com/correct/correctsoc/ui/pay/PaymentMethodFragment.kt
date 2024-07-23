@@ -157,7 +157,7 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                     )
                 } else if (activation_wa) {
                     // open whatsapp with the number
-                    this.openWhatsApp("201011104445")
+                    this.openWhatsApp("201066168221")
                     binding.placeholder.hide()
                     binding.progress.hide()
                 }

@@ -36,7 +36,7 @@ class LoginFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentLoginBinding
-    private var isRemember = false
+//    private var isRemember = false
     private lateinit var helper: HelperClass
     private var startIndx = 0
     private var endIndx = 0
@@ -73,7 +73,7 @@ class LoginFragment : Fragment() {
             source = requireArguments().getInt(SOURCE)
         }
 
-        binding.rememberLayout.setOnClickListener {
+        /*binding.rememberLayout.setOnClickListener {
             if (!isRemember) {
                 binding.rememberIcon.setImageResource(R.drawable.check_circle_icon)
                 helper.setRemember(requireContext(), true)
@@ -82,7 +82,7 @@ class LoginFragment : Fragment() {
                 helper.setRemember(requireContext(), false)
             }
             isRemember = !isRemember
-        }
+        }*/
 
         if (helper.getLang(requireContext()).equals("en")) {
             startIndx = 21
@@ -225,6 +225,7 @@ class LoginFragment : Fragment() {
                         helper.setToken(it.result.token, requireContext())
                         usersDB.dao().updateUsername(it.result.name, it.result.userid)
                     }
+                    helper.setRemember(requireContext(),true)
                     findNavController().navigate(R.id.homeFragment)
                 }
             } else {

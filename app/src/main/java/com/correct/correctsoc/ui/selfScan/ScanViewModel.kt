@@ -2,6 +2,8 @@ package com.correct.correctsoc.ui.selfScan
 
 import android.app.Application
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
@@ -14,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.correct.correctsoc.Retrofit.APIService
 import com.correct.correctsoc.Retrofit.ClientVendorRetrofit
 import com.correct.correctsoc.Retrofit.RetrofitClient
+import com.correct.correctsoc.data.GeneralResponse
 import com.correct.correctsoc.data.ResultResponse
 import com.correct.correctsoc.data.UserIPResponse
 import com.correct.correctsoc.data.openPorts.OpenPorts
@@ -32,6 +35,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 
 class ScanViewModel(application: Application) : AndroidViewModel(application) {
@@ -52,7 +56,7 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
     private var fetchJob: Job? = null
 
     val vendorResponse = MutableLiveData<String>()
-    val isRequestSuccessfull = MutableLiveData<Boolean>()
+    val isRequestSuccessfull = MutableLiveData<GeneralResponse>()
     private val _userIPResponse = MutableLiveData<UserIPResponse>()
     private val _scanResponse = MutableLiveData<OpenPorts>()
 
@@ -68,19 +72,25 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun scan(context: Context, input: String, token:String) = viewModelScope.launch {
+    fun scan(context: Context, input: String, token: String) = viewModelScope.launch {
         fetchJob = coroutineScope.launch {
             try {
                 val result = scanRepository.scan(input, token)
                 if (result.isSuccessful) {
                     _scanResponse.postValue(result.body())
-                    isRequestSuccessfull.postValue(true)
+                    isRequestSuccessfull.postValue(GeneralResponse(true, "success", 200))
                 } else {
                     _scanResponse.postValue(result.body())
-                    isRequestSuccessfull.postValue(false)
-                    Toast.makeText(context, result.message(), Toast.LENGTH_SHORT).show()
+                    isRequestSuccessfull.postValue(
+                        GeneralResponse(
+                            false,
+                            result.message(),
+                            result.code()
+                        )
+                    )
                 }
-            } catch (e: Exception) {
+            } catch (e: HttpException) {
+                Log.e(API_TAG, "scan: ${e.code()}")
                 Log.e(API_TAG, "scan: ", e)
             }
         }

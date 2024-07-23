@@ -109,7 +109,7 @@ class HomeFragment : Fragment(), ClickListener {
 
         connectionManager = ConnectionManager(requireContext())
 
-        isConnected.postValue(false)
+
         binding.recyclerViewAds.hide()
 
         connectionManager.observe()

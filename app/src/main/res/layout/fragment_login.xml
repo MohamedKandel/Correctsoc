@@ -95,7 +95,7 @@
                 android:textColor="@color/white"
                 android:textColorHint="@color/alphaWhite" />
         </com.google.android.material.textfield.TextInputLayout>
-
+<!--
         <RelativeLayout
             android:id="@+id/remember_layout"
             android:layout_width="wrap_content"
@@ -125,6 +125,7 @@
                 android:textColor="@color/alphaWhite"
                 android:textSize="@dimen/_10ssp" />
         </RelativeLayout>
+        -->
 
         <TextView
             android:id="@+id/txt_forget"

@@ -55,7 +55,6 @@ class SelfPenFragment : Fragment() {
         fragmentListener.onFragmentChangedListener(R.id.selfPenFragment)
 
         connectionManager = ConnectionManager(requireContext())
-        isConnected.postValue(false)
         connectionManager.observe()
         connectionManager.statusLiveData.observe(viewLifecycleOwner) {
             when (it) {

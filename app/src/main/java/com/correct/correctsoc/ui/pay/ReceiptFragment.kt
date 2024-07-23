@@ -55,9 +55,12 @@ class ReceiptFragment : Fragment() {
     private var promoCode = ""
     private var devices = 0
     private var months = 0
+    private var isDialogVisible = true
+    private lateinit var dialog: Dialog
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        isDialogVisible = true
         if (parentFragment is NextStepListener) {
             listener = parentFragment as NextStepListener
         } else {
@@ -70,15 +73,21 @@ class ReceiptFragment : Fragment() {
         }
         val backCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (childFragmentManager.backStackEntryCount > 1) {
-                    childFragmentManager.popBackStack()
-                    return
+                Log.v("Is dialog visible", "$isDialogVisible")
+                if (isDialogVisible) {
+                    dialog.dismiss()
+                    dialog.cancel()
+                } else {
+                    if (childFragmentManager.backStackEntryCount > 1) {
+                        childFragmentManager.popBackStack()
+                        return
+                    }
+                    // Delete parent fragment
+                    val parentPayFragment =
+                        this@ReceiptFragment.parentFragment as ParentPayFragment
+                    parentPayFragment.changeSteps(1)
+                    parentFragmentManager.popBackStack()
                 }
-                // Delete parent fragment
-                val parentPayFragment =
-                    this@ReceiptFragment.parentFragment as ParentPayFragment
-                parentPayFragment.changeSteps(1)
-                parentFragmentManager.popBackStack()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)
@@ -143,14 +152,14 @@ class ReceiptFragment : Fragment() {
             }
         }
 
-        val dialog = Dialog(requireContext())
+        dialog = Dialog(requireContext())
         dialog.setContentView(R.layout.promo_code_layout_dialog)
         dialog.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         dialog.setCanceledOnTouchOutside(true)
-        dialog.setCancelable(false)
+        dialog.setCancelable(true)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         val promo = dialog.findViewById<EditText>(R.id.txt_promo)
@@ -160,6 +169,7 @@ class ReceiptFragment : Fragment() {
         promo.upperCaseOnly()
 
         close.setOnClickListener {
+            isDialogVisible = false
             dialog.dismiss()
             dialog.cancel()
         }
@@ -168,6 +178,7 @@ class ReceiptFragment : Fragment() {
             val code = promo.text?.toString()
             if (code != null) {
                 if (code.isNotEmpty()) {
+                    isDialogVisible = false
                     dialog.dismiss()
                     dialog.cancel()
                     binding.txtPromo.setText(code)
@@ -184,6 +195,7 @@ class ReceiptFragment : Fragment() {
                 val imm =
                     view?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                isDialogVisible = true
                 dialog.show()
             }
         }
@@ -192,6 +204,7 @@ class ReceiptFragment : Fragment() {
             val imm =
                 view?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.windowToken, 0)
+            isDialogVisible = true
             dialog.show()
         }
 
@@ -460,6 +473,7 @@ class ReceiptFragment : Fragment() {
         if (binding.txtPromo.text.toString().isNotEmpty()) {
             getPromoCodePercent(binding.txtPromo.text.toString())
         }
+        isDialogVisible = false
         fragmentListener.onFragmentChangedListener(R.id.receiptFragment)
     }
 }

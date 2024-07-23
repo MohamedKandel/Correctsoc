@@ -34,10 +34,13 @@ class AudioUtils {
 
     fun releaseMedia() {
         if (this::mediaPlayer.isInitialized) {
-            if (mediaPlayer.isPlaying) {
-                mediaPlayer.stop()
+            try {
+                if (mediaPlayer.isPlaying) {
+                    mediaPlayer.stop()
+                }
+            }catch (e : Exception) {
+                e.stackTrace
             }
-            mediaPlayer.reset()
             mediaPlayer.release()
         }
     }

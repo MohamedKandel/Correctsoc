@@ -40,40 +40,39 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/security_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/header_layout"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/_12sdp"
-        android:id="@+id/security_layout">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_layout">
 
         <ImageView
+            android:id="@+id/img_security"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/img_security"
-            android:layout_marginStart="@dimen/_9sdp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_9sdp"
+            android:src="@drawable/safe"
 
-            android:src="@drawable/safe"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/txt_name_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_9sdp"
             android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_9sdp"
             android:layout_marginEnd="@dimen/_9sdp"
-            android:fontFamily="@font/roboto_medium"
             android:layout_toEndOf="@+id/img_security"
+            android:fontFamily="@font/roboto_medium"
             android:text="@string/device_name"
             android:textColor="@color/white"
             android:textSize="@dimen/_15ssp" />
 
     </RelativeLayout>
-
 
 
     <TextView
@@ -104,9 +103,44 @@
         tools:listitem="@layout/open_port_list_item" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/txt_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_70ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/barlow_semi_condensed_semibold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_40ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_code" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loading_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/loading_layout">
+        android:layout_height="match_parent">
 
         <View
             android:id="@+id/placeholder"
@@ -115,17 +149,30 @@
             android:background="#66000000" />
 
         <TextView
+            android:id="@+id/txt_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/scanning"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/txt_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:text="100 %"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14ssp"
             app:layout_constraintBottom_toBottomOf="@id/progress"
             app:layout_constraintEnd_toEndOf="@id/progress"
             app:layout_constraintStart_toStartOf="@id/progress"
-            app:layout_constraintTop_toTopOf="@id/progress"
-            android:text="100 %"
-            android:fontFamily="@font/roboto_medium"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_14ssp"/>
+            app:layout_constraintTop_toTopOf="@id/progress" />
 
 
         <ProgressBar
@@ -138,7 +185,6 @@
             app:layout_constraintBottom_toBottomOf="@id/placeholder"
             app:layout_constraintEnd_toEndOf="@id/placeholder"
             app:layout_constraintStart_toStartOf="@id/placeholder"
-
             app:layout_constraintTop_toTopOf="@id/placeholder" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

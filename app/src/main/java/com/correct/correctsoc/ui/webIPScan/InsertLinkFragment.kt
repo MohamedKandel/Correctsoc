@@ -60,7 +60,7 @@ class InsertLinkFragment : Fragment() {
         fragmentListener.onFragmentChangedListener(R.id.insertLinkFragment)
         connectionManager = ConnectionManager(requireContext())
 
-        isConnected.postValue(false)
+        isConnected.postValue(true)
         connectionManager.observe()
         connectionManager.statusLiveData.observe(viewLifecycleOwner) {
             when(it) {
@@ -101,6 +101,7 @@ class InsertLinkFragment : Fragment() {
                         if (it) {
                             scanWithArgs()
                         } else {
+                            Log.v("Scan mohamed","btn scan with args")
                             noInternet()
                         }
                     }
@@ -112,6 +113,7 @@ class InsertLinkFragment : Fragment() {
                             if (it) {
                                 scanWithArgs()
                             } else {
+                                Log.v("Scan mohamed","txt scan with args")
                                 noInternet()
                             }
                         }
@@ -121,6 +123,7 @@ class InsertLinkFragment : Fragment() {
                             if (it) {
                                 scanWithArgs()
                             } else {
+                                Log.v("Scan mohamed","txt scan with args")
                                 noInternet()
                             }
                         }
@@ -130,6 +133,7 @@ class InsertLinkFragment : Fragment() {
                             if (it) {
                                 scanWithArgs()
                             } else {
+                                Log.v("Scan mohamed","txt scan with args")
                                 noInternet()
                             }
                         }
@@ -176,6 +180,7 @@ class InsertLinkFragment : Fragment() {
                     if (it) {
                         scanWithoutArgs()
                     } else {
+                        Log.v("Scan mohamed","btn scan without args")
                         noInternet()
                     }
                 }
@@ -200,6 +205,7 @@ class InsertLinkFragment : Fragment() {
                         if (it) {
                             scanWithoutArgs()
                         } else {
+                            Log.v("Scan mohamed","txt scan without args")
                             noInternet()
                         }
                     }
@@ -209,6 +215,7 @@ class InsertLinkFragment : Fragment() {
                         if (it) {
                             scanWithoutArgs()
                         } else {
+                            Log.v("Scan mohamed","txt scan without args")
                             noInternet()
                         }
                     }
@@ -218,6 +225,7 @@ class InsertLinkFragment : Fragment() {
                         if (it) {
                             scanWithoutArgs()
                         } else {
+                            Log.v("Scan mohamed","txt scan without args")
                             noInternet()
                         }
                     }

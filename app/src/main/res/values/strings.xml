@@ -203,4 +203,5 @@
     <string name="minus" translatable="false">-</string>
     <string name="plus" translatable="false">+</string>
     <string name="one" translatable="false">1</string>
+    <string name="scanning">Still scanning … please wait</string>
 </resources>
