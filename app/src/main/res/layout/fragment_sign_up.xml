@@ -138,6 +138,7 @@
                 android:drawablePadding="@dimen/_7sdp"
                 android:hint="@string/code"
                 android:inputType="text"
+                android:enabled="false"
                 android:textColor="@color/white"
                 android:textColorHint="@color/alphaWhite" />
         </com.google.android.material.textfield.TextInputLayout>
