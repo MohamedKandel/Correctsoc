@@ -78,21 +78,6 @@ class SplashFragment : Fragment() {
         return binding.root
     }
 
-    /*private fun validateToken(token:String) {
-        viewModel.validateToken(token)
-        val observer = object : Observer<Boolean> {
-            override fun onChanged(value: Boolean) {
-                if (value) {
-
-                } else {
-
-                }
-                viewModel.validateTokenResponse.removeObserver(this)
-            }
-        }
-        viewModel.validateTokenResponse.observe(viewLifecycleOwner,observer)
-    }*/
-
     private fun startSplash() {
         countDownTimer = object : CountDownTimer(2000, 1000) {
             override fun onTick(millisUntilFinished: Long) {

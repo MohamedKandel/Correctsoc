@@ -48,6 +48,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -98,11 +99,11 @@ dependencies {
     implementation("com.braintreepayments.api:data-collector:4.39.0")
 
     // recyclerview swipe decorator
-    implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
+//    implementation("androidx.recyclerview:recyclerview:1.2.1")
 
     // gif
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.29")
 
     // count edit text
-    implementation("com.github.Damercy:IncrementDecrementButton:2.0.0")
+//    implementation("com.github.Damercy:IncrementDecrementButton:2.0.0")
 }
