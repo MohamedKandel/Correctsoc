@@ -190,4 +190,9 @@
         android:name="com.correct.correctsoc.ui.home.AdFragment"
         android:label="fragment_ad"
         tools:layout="@layout/fragment_ad" />
+    <fragment
+        android:id="@+id/privacyPolicyFragment"
+        android:name="com.correct.correctsoc.ui.home.PrivacyPolicyFragment"
+        android:label="fragment_privacy_policy"
+        tools:layout="@layout/fragment_privacy_policy" />
 </navigation>

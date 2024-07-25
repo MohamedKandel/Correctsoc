@@ -22,6 +22,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStreamReader
 
 
 fun String.isContainsNumbers(): Boolean {
@@ -450,4 +453,10 @@ fun TextView.getDisplayedText(): String {
         displayedText.append(lineText)
     }
     return displayedText.toString()
+}
+
+fun Context.readFile(fileRes: Int): String {
+    val inputStram = this.resources.openRawResource(fileRes)
+    val bufferedReader = BufferedReader(InputStreamReader(inputStram))
+    return bufferedReader.use { it.readText() }
 }

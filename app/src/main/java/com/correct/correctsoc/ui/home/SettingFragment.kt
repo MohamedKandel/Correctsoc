@@ -26,6 +26,8 @@ import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.buildDialog
+import com.correct.correctsoc.helper.hide
+import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.UsersDB
 import com.correct.correctsoc.ui.auth.AuthViewModel
 import kotlinx.coroutines.launch
@@ -87,6 +89,10 @@ class SettingFragment : Fragment() {
             findNavController().navigate(R.id.aboutFragment, bundle)
         }
 
+        binding.privacyLayout.setOnClickListener {
+            findNavController().navigate(R.id.privacyPolicyFragment)
+        }
+
         binding.languageLayout.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt(SOURCE, R.id.settingFragment)
@@ -118,14 +124,14 @@ class SettingFragment : Fragment() {
             }
         }
 
-        binding.privacyLayout.setOnClickListener {
+        /*binding.privacyLayout.setOnClickListener {
             Toast.makeText(
                 requireContext(),
                 resources.getString(R.string.not_supported),
                 Toast.LENGTH_SHORT
             )
                 .show()
-        }
+        }*/
 
         binding.deleteLayout.setOnClickListener {
             AlertDialog.Builder(requireContext())

@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -222,9 +223,10 @@ class LoginFragment : Fragment() {
                         usersDB.dao().insert(user)
                     } else {
                         usersDB.dao().updateToken("$TOKEN_VALUE ${it.result.token}", it.result.userid)
-                        helper.setToken(it.result.token, requireContext())
                         usersDB.dao().updateUsername(it.result.name, it.result.userid)
                     }
+                    helper.setToken(it.result.token, requireContext())
+                    Log.v("Token mohamed",helper.getToken(requireContext()))
                     helper.setRemember(requireContext(),true)
                     findNavController().navigate(R.id.homeFragment)
                 }
