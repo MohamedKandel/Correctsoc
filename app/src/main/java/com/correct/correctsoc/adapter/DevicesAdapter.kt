@@ -18,7 +18,6 @@ import com.correct.correctsoc.helper.HelperClass
 
 class DevicesAdapter(
     private val context: Context,
-    private val helper: HelperClass,
     private var list: List<DevicesData>,
     private val listener: ClickListener
 ) : RecyclerView.Adapter<DevicesAdapter.ViewHolder>() {
@@ -36,7 +35,6 @@ class DevicesAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val model = list[position]
         holder.txt_ip.text = model.ipAddress
-//        holder.img_go.setImageResource(R.drawable.arrow_img)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -50,10 +48,14 @@ class DevicesAdapter(
         //val txt_name: TextView
         val txt_ip: TextView
         val img_go: ImageView
+        val img_click: ImageView
+        val txt_click: TextView
 
         init {
             txt_ip = itemView.findViewById(R.id.txt_ip)
             img_go = itemView.findViewById(R.id.btn_go)
+            txt_click = itemView.findViewById(R.id.txt_click_here)
+            img_click = itemView.findViewById(R.id.icon_click_here)
 
             itemView.setOnClickListener {
                 val bundle = Bundle()

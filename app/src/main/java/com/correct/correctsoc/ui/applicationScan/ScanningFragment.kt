@@ -123,16 +123,20 @@ class ScanningFragment : Fragment() {
             for (app in list) {
                 binding.txtAppName.text = app.appName
                 i++
-                val random:Int = when(list.size) {
+                val random: Int = when (list.size) {
                     in 0..10 -> {
                         1500
                     }
-                    in 11 .. 15 -> {
+
+                    in 11..15 -> {
                         1000
                     }
-                    in 15 .. 20 -> {
+
+                    in 15..20 -> {
                         750
-                    } else -> {
+                    }
+
+                    else -> {
                         500
                     }
                 }
@@ -174,9 +178,15 @@ class ScanningFragment : Fragment() {
                     installerPackageName =
                         packageManager.getInstallerPackageName(packageInfo.packageName)
                 }
-                if (installerPackageName == null || !isOfficialInstaller(installerPackageName)) {
+                if (installerPackageName == null || !isOfficialInstaller(installerPackageName)
+                    && !isAllowedAppWithAndroid(packageInfo.packageName)
+                ) {
                     val appIcon = applicationInfo.loadIcon(packageManager)
                     val appName = applicationInfo.loadLabel(packageManager).toString()
+                    Log.d(
+                        "InstallerCheck",
+                        "Package: ${packageInfo.packageName}, Installer: $installerPackageName"
+                    )
                     unknownSourceApps.add(AppInfo(packageInfo.packageName, appName, appIcon))
                 }
             }
@@ -184,10 +194,19 @@ class ScanningFragment : Fragment() {
         listener.onAllAppsFetched(unknownSourceApps)
     }
 
+    private fun isAllowedAppWithAndroid(packageName: String): Boolean {
+        val officialApps = listOf(
+            "com.wego.android",
+            "com.amazon.appmanager"
+        )
+        return officialApps.contains(packageName)
+    }
+
     private fun isOfficialInstaller(installerPackageName: String): Boolean {
         // Add official installer package names here
         val officialInstallers = listOf(
             "com.android.vending",                  // Google Play Store
+            "com.xiaomi.discover",
             "com.amazon.venezia",                   // Amazon Appstore
             "com.oppo.market",                      // OPPO App Market
             "com.xiaomi.market",                    // Xiaomi Mi Market
@@ -197,6 +216,8 @@ class ScanningFragment : Fragment() {
             "com.oneplus.store",                    // OnePlus Appstore
             "com.lenovo.leos.appstore",             // Lenovo Appstore
         )
+
+        Log.d("Installing source mohamed", "application installed from $installerPackageName")
         return officialInstallers.contains(installerPackageName)
     }
 

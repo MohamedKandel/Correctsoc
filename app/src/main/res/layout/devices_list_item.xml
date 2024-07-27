@@ -1,31 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/home_btn_drawable"
     android:layout_marginStart="@dimen/_12sdp"
     android:layout_marginEnd="@dimen/_12sdp"
     android:layout_marginBottom="@dimen/_6sdp"
-    >
+    android:background="@drawable/home_btn_drawable">
 
     <TextView
+        android:id="@+id/txt_ip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
         android:layout_alignParentLeft="true"
-        android:text="@string/device_scan"
         android:fontFamily="@font/roboto_medium"
-        android:textSize="@dimen/_15ssp"
-        android:id="@+id/txt_ip" />
+        android:text="192.168.1.200"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_15ssp" />
+
+    <TextView
+        android:id="@+id/txt_click_here"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/icon_click_here"
+        android:layout_toEndOf="@id/txt_ip"
+        android:fontFamily="@font/roboto_medium"
+        android:gravity="end"
+        android:text="@string/click_here"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12ssp" />
 
     <ImageView
+        android:id="@+id/icon_click_here"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/btn_go"
+        android:background="@android:color/transparent"
+        android:paddingStart="@dimen/_7sdp"
+        android:paddingEnd="@dimen/_7sdp"
+        android:src="@drawable/hand_icon" />
+
+    <ImageView
+        android:id="@+id/btn_go"
         android:layout_width="@dimen/_24sdp"
         android:layout_height="@dimen/_24sdp"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/arrow_img"
-        android:id="@+id/btn_go"
-        />
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/arrow_img" />
 
 
 </RelativeLayout>

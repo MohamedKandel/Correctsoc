@@ -48,6 +48,7 @@ class DevicesFragment : Fragment(), ClickListener {
     private lateinit var binding: FragmentDevicesBinding
     private lateinit var list: MutableList<DevicesData>
     private lateinit var adapter: DevicesAdapter
+
     /*private var isVisible = false
     private lateinit var slideIn: Animation
     private lateinit var slideOut: Animation
@@ -81,7 +82,7 @@ class DevicesFragment : Fragment(), ClickListener {
 
         fragmentListener.onFragmentChangedListener(R.id.devicesFragment)
         list = mutableListOf()
-        adapter = DevicesAdapter(requireContext(), helper, list, this)
+        adapter = DevicesAdapter(requireContext(), list, this)
         binding.devicesRecyclerView.adapter = adapter
 
 
@@ -250,12 +251,14 @@ class DevicesFragment : Fragment(), ClickListener {
             requireArguments().putParcelable(ITEM, model)
             findNavController().navigate(R.id.deviceDataFragment, requireArguments())
             Log.i(TAG, "onItemClickListener: ${model.macAddress}")
+            Log.i(TAG, "onItemClickListener: ${model.macAddress}")
         }
     }
 
     override fun onLongItemClickListener(position: Int, extras: Bundle?) {
         //TODO("Not yet implemented")
     }
+
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.devicesFragment)

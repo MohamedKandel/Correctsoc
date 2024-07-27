@@ -17,14 +17,19 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnDataFetchedListener
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
+import com.correct.correctsoc.helper.mappingNumbers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import tej.androidnetworktools.lib.Device
+import tej.androidnetworktools.lib.scanner.NetworkScanner
+import tej.androidnetworktools.lib.scanner.OnNetworkScanListener
 import tej.wifitoolslib.DevicesFinder
 import tej.wifitoolslib.interfaces.OnDeviceFindListener
 import tej.wifitoolslib.models.DeviceItem
@@ -39,6 +44,7 @@ class DeviceScanningFragment : Fragment() {
     private lateinit var helper: HelperClass
     private var progressJob: Job? = null
     private var fetchDevicesJob: Job? = null
+    private lateinit var mlist: MutableList<DevicesData>
     private lateinit var fragmentListener: FragmentChangedListener
 
     override fun onAttach(context: Context) {
@@ -51,6 +57,7 @@ class DeviceScanningFragment : Fragment() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,33 +80,49 @@ class DeviceScanningFragment : Fragment() {
         //Log.i("Vendor mohamed", "onCreateView: ${getVendorName("e6:61:c0:14:78:88")}")
 
         CoroutineScope(Dispatchers.Main).launch {
-            var list = mutableListOf<DevicesData>()
-            val progressJob = launch(Dispatchers.Main) {
+            val progressJob = launch {
                 progress(object : OnProgressUpdatedListener {
-                    @SuppressLint("SetTextI18n")
                     override fun onUpdateProgressLoad(progress: Int) {
-                        // Optional: Update UI based on progress
                         binding.txtPercent.text = "$progress%"
-                        if (progress == 100) {
-                            Log.e("List Devices mohamed", "onCreateView: ${list.size}")
-                            Log.i("Devices mohamed", "onUpdateProgressLoad: finished")
-                            val bundle = Bundle()
-                            bundle.putParcelableArrayList(LIST, ArrayList(list))
-                            findNavController().navigate(R.id.devicesFragment, bundle)
-                        }
                     }
                 }) {
-                    fetchDevicesJob?.isActive == false
+                    fetchDevicesJob?.isCancelled == false
                 }
+                // Ensure progress reaches 100% when data fetching is done
+                /*if (helper.getLang(requireContext()).equals("ar")) {
+                    binding.txtPercent.text = "100%".mappingNumbers()
+                } else {
+                    binding.txtPercent.text = "100%"
+                }*/
             }
 
             // Launch coroutine to fetch devices
-            fetchDevicesJob = launch(Dispatchers.IO) {
-                list = fetchDevices()
-                Log.e("List Devices mohamed", "onCreateView: ${list.size}")
-                // Wait for progress job to complete
-                progressJob.join()
+            val fetchDevicesJob = launch(Dispatchers.IO) {
+                this@DeviceScanningFragment.fetchDevicesJob?.start()
+                mlist = fetchDevices() // Fetch data
+                Log.e("List Devices mohamed fetch job", "onCreateView: ${mlist.size}")
+                // Wait for progress to complete to 100%
+                withContext(Dispatchers.Main) {
+                    // This ensures that progressJob completes
+                    progressJob.join()
+                    // Ensure progress is 100%
+                    binding.txtPercent.text = "100%"
+
+                    // Navigate after devices are fetched and progress is completed
+                    if (this@DeviceScanningFragment::mlist.isInitialized) {
+                        if (fetchDevicesJob?.isActive == true || progressJob.isActive) {
+                            Log.e("List Devices mohamed fetch job", "onCreateView: ${mlist.size}")
+                            val bundle = Bundle()
+                            bundle.putParcelableArrayList(LIST, ArrayList(mlist))
+                            findNavController().navigate(R.id.devicesFragment, bundle)
+                        }
+                    }
+                }
             }
+
+            // Wait for both jobs to complete
+            fetchDevicesJob.join()
+            progressJob.cancel() // Cancel progress updates after navigation
         }
 
         binding.btnStop.setOnClickListener {
@@ -120,13 +143,14 @@ class DeviceScanningFragment : Fragment() {
     }
 
 
-
-
     private fun stopOperations() {
         // Cancel progress job
-        progressJob?.cancel()
+        progressJob?.cancel("Job Cancelled")
         // Cancel fetch devices job
-        fetchDevicesJob?.cancel()
+        fetchDevicesJob?.cancel("Job Cancelled")
+        if (fetchDevicesJob?.isCancelled == true && progressJob?.isCancelled == true) {
+            Log.i("List Device mohamed", "Jobs cancelled")
+        }
         findNavController().navigate(R.id.homeFragment)
     }
 
@@ -135,41 +159,39 @@ class DeviceScanningFragment : Fragment() {
         return suspendCancellableCoroutine { continuation ->
             getDevices(object : OnDataFetchedListener<DevicesData> {
                 override fun onAllDataFetched(data: MutableList<DevicesData>) {
-                    continuation.resume(data, null)
+                    continuation.resume(data,null)
                 }
             })
         }
     }
 
     private fun getDevices(callback: OnDataFetchedListener<DevicesData>) {
-        val list = mutableListOf<DevicesData>()
-        val deviceFinder = DevicesFinder(requireContext(), object : OnDeviceFindListener {
-            override fun onStart() {
-            }
-
-            override fun onDeviceFound(deviceItem: DeviceItem?) {
-            }
-
-            override fun onComplete(deviceItems: MutableList<DeviceItem>?) {
-                if (deviceItems != null) {
-                    for (device in deviceItems) {
-                        list.add(
-                            DevicesData(
-                                device.ipAddress,
-                                device.deviceName, device.macAddress, device.vendorName
+        mlist = mutableListOf()
+        NetworkScanner.init(requireContext())
+        NetworkScanner.scan(object : OnNetworkScanListener {
+            override fun onComplete(devices: MutableList<Device>?) {
+                if (devices != null) {
+                    for (device in devices) {
+                        if (device.ipAddress != null) {
+                            mlist.add(
+                                DevicesData(
+                                    device.ipAddress,
+                                    device.hostname, device.macAddress, device.vendorName
+                                )
                             )
-                        )
+                            Log.i("Device mohamed", device.macAddress)
+                        }
                     }
                 }
-                callback.onAllDataFetched(list)
+                callback.onAllDataFetched(mlist)
             }
 
-            override fun onFailed(errorCode: Int) {
+            override fun onFailed() {
                 Log.d("error mohamed", "onFailed: can't load")
-                callback.onAllDataFetched(list)
+                callback.onAllDataFetched(mlist)
             }
         })
-        deviceFinder.start()
+        NetworkScanner.setShowMacAddress(true)
     }
 
 
@@ -180,7 +202,7 @@ class DeviceScanningFragment : Fragment() {
                     break
                 }
                 progress.onUpdateProgressLoad(i)
-                delay(150)
+                delay(250)
             }
         }
     }
