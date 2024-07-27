@@ -45,6 +45,7 @@ class DeviceScanningFragment : Fragment() {
     private var progressJob: Job? = null
     private var fetchDevicesJob: Job? = null
     private lateinit var mlist: MutableList<DevicesData>
+    private var isCanceled = false
     private lateinit var fragmentListener: FragmentChangedListener
 
     override fun onAttach(context: Context) {
@@ -110,7 +111,7 @@ class DeviceScanningFragment : Fragment() {
 
                     // Navigate after devices are fetched and progress is completed
                     if (this@DeviceScanningFragment::mlist.isInitialized) {
-                        if (fetchDevicesJob?.isActive == true || progressJob.isActive) {
+                        if (!isCanceled) {
                             Log.e("List Devices mohamed fetch job", "onCreateView: ${mlist.size}")
                             val bundle = Bundle()
                             bundle.putParcelableArrayList(LIST, ArrayList(mlist))
@@ -145,6 +146,7 @@ class DeviceScanningFragment : Fragment() {
 
     private fun stopOperations() {
         // Cancel progress job
+        isCanceled = true
         progressJob?.cancel("Job Cancelled")
         // Cancel fetch devices job
         fetchDevicesJob?.cancel("Job Cancelled")
@@ -159,7 +161,7 @@ class DeviceScanningFragment : Fragment() {
         return suspendCancellableCoroutine { continuation ->
             getDevices(object : OnDataFetchedListener<DevicesData> {
                 override fun onAllDataFetched(data: MutableList<DevicesData>) {
-                    continuation.resume(data,null)
+                    continuation.resume(data, null)
                 }
             })
         }
@@ -172,7 +174,7 @@ class DeviceScanningFragment : Fragment() {
             override fun onComplete(devices: MutableList<Device>?) {
                 if (devices != null) {
                     for (device in devices) {
-                        if (device.ipAddress != null) {
+                        if (device != null) {
                             mlist.add(
                                 DevicesData(
                                     device.ipAddress,

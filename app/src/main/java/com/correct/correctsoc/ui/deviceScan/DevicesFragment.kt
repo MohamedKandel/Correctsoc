@@ -251,7 +251,6 @@ class DevicesFragment : Fragment(), ClickListener {
             requireArguments().putParcelable(ITEM, model)
             findNavController().navigate(R.id.deviceDataFragment, requireArguments())
             Log.i(TAG, "onItemClickListener: ${model.macAddress}")
-            Log.i(TAG, "onItemClickListener: ${model.macAddress}")
         }
     }
 
