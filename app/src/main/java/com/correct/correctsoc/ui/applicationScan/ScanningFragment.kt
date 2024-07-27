@@ -178,8 +178,10 @@ class ScanningFragment : Fragment() {
                     installerPackageName =
                         packageManager.getInstallerPackageName(packageInfo.packageName)
                 }
-                if (installerPackageName == null || !isOfficialInstaller(installerPackageName)
-                    && !isAllowedAppWithAndroid(packageInfo.packageName)
+                if ((installerPackageName == null || !isOfficialInstaller(installerPackageName))
+                    && (!isAllowedAppWithAndroid(packageInfo.packageName) && !whiteListAppsPackages(
+                        packageInfo.packageName
+                    ))
                 ) {
                     val appIcon = applicationInfo.loadIcon(packageManager)
                     val appName = applicationInfo.loadLabel(packageManager).toString()
@@ -192,6 +194,15 @@ class ScanningFragment : Fragment() {
             }
         }
         listener.onAllAppsFetched(unknownSourceApps)
+    }
+
+    private fun whiteListAppsPackages(packageName: String): Boolean {
+        val whiteList = listOf(
+            "com.android.calendar.go",
+            "com.xiaomi.midrop",
+            "com.miui.calculator.go"
+        )
+        return packageName in whiteList
     }
 
     private fun isAllowedAppWithAndroid(packageName: String): Boolean {
