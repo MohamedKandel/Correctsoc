@@ -217,7 +217,7 @@ class ScanningFragment : Fragment() {
         // Add official installer package names here
         val officialInstallers = listOf(
             "com.android.vending",                  // Google Play Store
-            "com.xiaomi.discover",
+            "com.xiaomi.discover",                  // Xiaomi's own app store or app discovery service
             "com.amazon.venezia",                   // Amazon Appstore
             "com.oppo.market",                      // OPPO App Market
             "com.xiaomi.market",                    // Xiaomi Mi Market
