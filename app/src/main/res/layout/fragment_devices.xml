@@ -86,16 +86,4 @@
         android:layout_marginTop="@dimen/_12sdp"
         tools:listitem="@layout/devices_list_item" />
 
-    <View
-        android:id="@+id/placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#66000000"
-        android:visibility="gone"/>
-
-    <include
-        android:id="@+id/drawer_menu"
-        layout="@layout/menu"
-        android:visibility="gone"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

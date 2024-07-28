@@ -48,13 +48,6 @@ class DevicesFragment : Fragment(), ClickListener {
     private lateinit var binding: FragmentDevicesBinding
     private lateinit var list: MutableList<DevicesData>
     private lateinit var adapter: DevicesAdapter
-
-    /*private var isVisible = false
-    private lateinit var slideIn: Animation
-    private lateinit var slideOut: Animation
-    private lateinit var gestureDetector: GestureDetector
-    private lateinit var menuAdapter: MenuAdapter
-    private lateinit var menuList: MutableList<MenuData>*/
     private lateinit var helper: HelperClass
     private val TAG = "DevicesFragment mohamed"
     private lateinit var fragmentListener: FragmentChangedListener
@@ -111,7 +104,6 @@ class DevicesFragment : Fragment(), ClickListener {
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 //                    TODO("Not yet implemented")
-                    //Log.i("Text mohamed", "onTextChanged: ${s.toString()}")
                     val keyword = s.toString()
                     if (keyword.length > 0) {
                         var filtered = search(keyword)
@@ -132,54 +124,6 @@ class DevicesFragment : Fragment(), ClickListener {
             })
         }
 
-        /*fillList()
-
-        if (helper.getLang(requireContext()).equals("en")) {
-            slideIn = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_en)
-            slideOut = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_en)
-        } else {
-            slideIn = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_ar)
-            slideOut = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_ar)
-        }
-
-        gestureDetector =
-            GestureDetector(requireContext(), object : OnSwipeGestureListener() {
-                override fun onSwipeRight() {
-                    // Handle swipe right
-                    Log.d(TAG, "onSwipeRight: right")
-                    if (helper.getLang(requireContext()).equals("ar") && isVisible) {
-                        closeMenu()
-                    } else if (helper.getLang(requireContext()).equals("en") && !isVisible) {
-                        openMenu()
-                    }
-                }
-
-                override fun onSwipeLeft() {
-                    // Handle swipe left
-                    Log.d(TAG, "onSwipeLeft: left")
-                    if (helper.getLang(requireContext()).equals("ar") && !isVisible) {
-                        openMenu()
-                    } else if (helper.getLang(requireContext()).equals("en") && isVisible) {
-                        closeMenu()
-                    }
-                }
-            })
-
-        binding.placeholder.setOnClickListener {
-            closeMenu()
-        }
-        binding.menuIcon.setOnClickListener {
-            if (isVisible) {
-                closeMenu()
-            } else {
-                openMenu()
-            }
-        }
-        binding.root.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
-            true
-        }*/
-
         if (helper.getLang(requireContext()).equals("ar")) {
             binding.btnBack.rotation = 180f
         }
@@ -187,34 +131,8 @@ class DevicesFragment : Fragment(), ClickListener {
         return binding.root
     }
 
-    /*private fun fillList() {
-
-        val version = if (helper.getLang(requireContext()).equals("ar")) {
-            helper.getAppVersion(requireContext()).mappingNumbers()
-        } else {
-            helper.getAppVersion(requireContext())
-        }
-
-        menuList.add(MenuData(R.drawable.premium_icon, resources.getString(R.string.premium)))
-        menuList.add(MenuData(R.drawable.support_icon, resources.getString(R.string.support)))
-        menuList.add(MenuData(R.drawable.setting_icon, resources.getString(R.string.setting)))
-        menuList.add(MenuData(R.drawable.reward_icon, resources.getString(R.string.reward)))
-        menuList.add(MenuData(R.drawable.community_icon, resources.getString(R.string.community)))
-        menuList.add(MenuData(R.drawable.rate_icon, resources.getString(R.string.rate)))
-        menuList.add(MenuData(R.drawable.about_icon, resources.getString(R.string.about)))
-        menuList.add(MenuData(R.drawable.logout_icon, resources.getString(R.string.logout)))
-        menuList.add(
-            MenuData(
-                0,
-                "${resources.getString(R.string.version)} : $version"
-            )
-        )
-
-        menuAdapter.updateAdapter(menuList)
-    }*/
-
     private fun search(keyword: String): MutableList<DevicesData> {
-        var filterList = mutableListOf<DevicesData>()
+        val filterList = mutableListOf<DevicesData>()
         for (device in list) {
             if (device.ipAddress.contains(keyword)) {
                 filterList.add(device)
@@ -223,21 +141,6 @@ class DevicesFragment : Fragment(), ClickListener {
 
         return filterList
     }
-
-    /*private fun openMenu() {
-        binding.placeholder.view()
-        binding.drawerMenu.root.visibility = View.VISIBLE
-        binding.drawerMenu.root.startAnimation(slideIn)
-        binding.drawerMenu.recyclerView.scrollToPosition(0)
-        isVisible = true
-    }
-
-    private fun closeMenu() {
-        binding.placeholder.hide()
-        binding.drawerMenu.root.startAnimation(slideOut)
-        binding.drawerMenu.root.hide()
-        isVisible = false
-    }*/
 
     override fun onItemClickListener(position: Int, extras: Bundle?) {
         //TODO("Not yet implemented")
