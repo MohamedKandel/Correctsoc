@@ -18,6 +18,7 @@ import com.correct.correctsoc.databinding.FragmentDeviceDataBinding
 import com.correct.correctsoc.helper.Constants.ITEM
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.mappingNumbers
 import com.correct.correctsoc.ui.selfScan.ScanViewModel
 
 
@@ -59,7 +60,12 @@ class DeviceDataFragment : Fragment() {
             } else {
                 model = requireArguments().getParcelable(ITEM)!!
             }
-            binding.txtTitle.text = model.ipAddress
+            if (helper.getLang(requireContext()).equals("ar")) {
+                binding.txtTitle.text = model.ipAddress.mappingNumbers()
+                binding.btnBack.rotation = 180f
+            } else {
+                binding.txtTitle.text = model.ipAddress
+            }
             binding.txtDeviceName.text = model.deviceName
             binding.txtDeviceMac.text = model.macAddress
             // call API here
@@ -74,9 +80,7 @@ class DeviceDataFragment : Fragment() {
             }
         }
 
-        if (helper.getLang(requireContext()).equals("ar")) {
-            binding.btnBack.rotation = 180f
-        }
+        
 
         return binding.root
     }

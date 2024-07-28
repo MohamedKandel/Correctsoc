@@ -26,6 +26,8 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
 import com.correct.correctsoc.helper.hideKeyboard
+import com.correct.correctsoc.helper.mappingNumbers
+import com.correct.correctsoc.helper.reMappingNumbers
 import kotlin.math.max
 
 class PaymentDetailsFragment : Fragment() {
@@ -90,7 +92,7 @@ class PaymentDetailsFragment : Fragment() {
 
         binding.nextBtn.setOnClickListener {
             devices = if (binding.value.text.toString().toInt() > 0) {
-                binding.value.text.toString().toInt()
+                binding.value.text.toString().reMappingNumbers().toInt()
             } else {
                 0
             }
@@ -116,6 +118,12 @@ class PaymentDetailsFragment : Fragment() {
             }
         }
 
+        if (helper.getLang(requireContext()).equals("ar")) {
+            binding.value.text = binding.value.text.toString().mappingNumbers()
+        } else {
+            binding.value.text = binding.value.text.toString()
+        }
+
         binding.spnDuration.setOnClickListener {
             Log.v("Item count", "${arrayAdapter.count}")
             it.hideKeyboard()
@@ -135,7 +143,7 @@ class PaymentDetailsFragment : Fragment() {
                 // Log.v("Selected mohamed", "$position")
                 if (devices > 0) {
                     years = 0
-                    devices = binding.value.text.toString().toInt()
+                    devices = binding.value.text.toString().reMappingNumbers().toInt()
                     when (position) {
                         0 -> {
                             months = 6
@@ -174,7 +182,11 @@ class PaymentDetailsFragment : Fragment() {
             var number = binding.value.text.toString().toInt()
             if (number < maximum) {
                 number++
-                binding.value.text = "$number"
+                if (helper.getLang(requireContext()).equals("ar")) {
+                    binding.value.text = "$number".mappingNumbers()
+                } else {
+                    binding.value.text = "$number"
+                }
             }
         }
 
@@ -182,34 +194,13 @@ class PaymentDetailsFragment : Fragment() {
             var number = binding.value.text.toString().toInt()
             if (number > minimum) {
                 number--
-                binding.value.text = "$number"
+                if (helper.getLang(requireContext()).equals("ar")) {
+                    binding.value.text = "$number".mappingNumbers()
+                } else {
+                    binding.value.text = "$number"
+                }
             }
         }
-
-        /*binding.txtDeviceNumber.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString().isNotEmpty()) {
-                    devices = s.toString().toInt()
-                } else {
-                    if (months > 0 && devices > 0) {
-                        getCost(devices, months)
-                    }
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                if (s.toString().isNotEmpty() && months > 0) {
-                    devices = s.toString().toInt()
-                    if (devices > 0) {
-                        getCost(devices, months)
-                    }
-                }
-            }
-        })*/
 
         return binding.root
     }

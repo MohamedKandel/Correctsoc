@@ -388,8 +388,13 @@ class HomeFragment : Fragment(), ClickListener {
                         val model = value.result
                         if (model != null) {
                             binding.drawerMenu.txtAccountType.text = model.planName
-                            binding.drawerMenu.txtRemind.text =
-                                "${model.months} ${resources.getString(R.string.months)}"
+                            if (helper.getLang(requireContext()).equals("ar")) {
+                                binding.drawerMenu.txtRemind.text =
+                                    "${model.months} ${resources.getString(R.string.months)}".mappingNumbers()
+                            } else {
+                                binding.drawerMenu.txtRemind.text =
+                                    "${model.months} ${resources.getString(R.string.months)}"
+                            }
                         }
                     } else {
                         Toast.makeText(

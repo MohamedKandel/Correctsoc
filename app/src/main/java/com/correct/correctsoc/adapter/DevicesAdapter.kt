@@ -15,9 +15,11 @@ import com.correct.correctsoc.data.DevicesData
 import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.Constants.ITEM
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.mappingNumbers
 
 class DevicesAdapter(
     private val context: Context,
+    private val helper: HelperClass,
     private var list: List<DevicesData>,
     private val listener: ClickListener
 ) : RecyclerView.Adapter<DevicesAdapter.ViewHolder>() {
@@ -34,7 +36,12 @@ class DevicesAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val model = list[position]
-        holder.txt_ip.text = model.ipAddress
+        if (helper.getLang(context).equals("ar")) {
+            holder.txt_ip.text = model.ipAddress.mappingNumbers()
+            holder.img_go.rotation = 180f
+        } else {
+            holder.txt_ip.text = model.ipAddress
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

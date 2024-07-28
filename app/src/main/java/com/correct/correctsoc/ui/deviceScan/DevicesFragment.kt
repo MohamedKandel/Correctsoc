@@ -82,7 +82,7 @@ class DevicesFragment : Fragment(), ClickListener {
 
         fragmentListener.onFragmentChangedListener(R.id.devicesFragment)
         list = mutableListOf()
-        adapter = DevicesAdapter(requireContext(), list, this)
+        adapter = DevicesAdapter(requireContext(), helper, list, this)
         binding.devicesRecyclerView.adapter = adapter
 
 
