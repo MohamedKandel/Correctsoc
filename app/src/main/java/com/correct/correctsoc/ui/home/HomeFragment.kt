@@ -117,7 +117,7 @@ class HomeFragment : Fragment(), ClickListener {
             when (it) {
                 ConnectivityListener.Status.AVAILABLE -> {
                     isConnected.postValue(true)
-                    binding.recyclerViewAds.show()
+                    binding.recyclerViewAds.hide()
                     getAds()
                     setDeviceOn(helper.getToken(requireContext()))
                 }
@@ -170,8 +170,33 @@ class HomeFragment : Fragment(), ClickListener {
         fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
         fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
 
-        binding.btnScan.setOnClickListener {
+        binding.btnRouter.setOnClickListener {
             isConnected.observe(viewLifecycleOwner) {
+                if (it) {
+                    validateToken(helper.getToken(requireContext())) {
+                        findNavController().navigate(R.id.selfPenFragment)
+                    }
+                } else {
+                    noInternet()
+                }
+            }
+        }
+
+        binding.btnIpScan.setOnClickListener {
+            isConnected.observe(viewLifecycleOwner) {
+                if (it) {
+                    val bundle = Bundle()
+                    bundle.putString(TYPE, IP_ADDRESS)
+                    findNavController().navigate(R.id.insertLinkFragment, bundle)
+                } else {
+                    noInternet()
+                }
+            }
+        }
+
+        binding.btnScan.setOnClickListener {
+            Toast.makeText(requireContext(),"Not implemented yet",Toast.LENGTH_SHORT).show()
+            /*isConnected.observe(viewLifecycleOwner) {
                 if (it) {
                     validateToken(helper.getToken(requireContext())) {
                         binding.placeholder.show()
@@ -205,7 +230,7 @@ class HomeFragment : Fragment(), ClickListener {
                 } else {
                     noInternet()
                 }
-            }
+            }*/
         }
 
         binding.btnAppScan.setOnClickListener {
@@ -220,7 +245,7 @@ class HomeFragment : Fragment(), ClickListener {
             }
         }
 
-        binding.btnIpScan.setOnClickListener {
+        binding.btnConnectedDevices.setOnClickListener {
             isConnected.observe(viewLifecycleOwner) {
                 if (it) {
                     validateToken(helper.getToken(requireContext())) {

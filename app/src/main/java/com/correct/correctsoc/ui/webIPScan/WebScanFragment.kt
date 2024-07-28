@@ -13,10 +13,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.adapter.PortsAdapter
@@ -283,79 +285,7 @@ class WebScanFragment : Fragment(), ClickListener {
                                                 startDotAnimation()
                                                 if (this@WebScanFragment::value.isInitialized) {
                                                     binding.loadingLayout.hide()
-                                                    if (value.scanHostDeviceName.isEmpty()) {
-                                                        binding.txtDeviceName.text = value.scanIp
-                                                        deviceName = value.scanIp
-                                                    } else {
-                                                        binding.txtDeviceName.text =
-                                                            value.scanHostDeviceName
-                                                        deviceName = value.scanHostDeviceName
-                                                    }
-                                                    val isSecure = helper.isSecureSite(list)
-                                                    if (isSecure) {
-                                                        binding.imgSecurity.setImageResource(R.drawable.safe)
-                                                        binding.txtNameTitle.setTextColor(
-                                                            resources.getColor(
-                                                                R.color.safe_color,
-                                                                context?.theme
-                                                            )
-                                                        )
-                                                        if (helper.getLang(requireContext())
-                                                                .equals("en")
-                                                        ) {
-                                                            playSound(scan_type, "en", true)
-                                                        } else {
-                                                            playSound(scan_type, "ar", true)
-                                                        }
-                                                    } else {
-                                                        binding.imgSecurity.setImageResource(R.drawable.danger)
-                                                        binding.txtNameTitle.setTextColor(
-                                                            resources.getColor(
-                                                                R.color.danger_color,
-                                                                context?.theme
-                                                            )
-                                                        )
-                                                        if (helper.getLang(requireContext())
-                                                                .equals("en")
-                                                        ) {
-                                                            playSound(scan_type, "en", false)
-                                                        } else {
-                                                            playSound(scan_type, "ar", false)
-                                                        }
-                                                    }
-                                                    isSafe = isSecure
-
-                                                    binding.txtDeviceName.show()
-                                                    binding.txtNameTitle.show()
-                                                    binding.imgSecurity.show()
-//                                                    binding.secondLoadingLayout.hide()
-                                                    binding.loadingLayout.hide()
-                                                }
-
-                                                adapter.updateAdapter(list)
-                                            }
-                                        }
-                                    }) {
-                                        fetchDevicesJob?.isActive == false
-                                    }
-                                }
-
-                                fetchDevicesJob = launch(Dispatchers.IO) {
-                                    try {
-                                        list = fetchData(input)
-                                        progressJob.join()
-                                        if (progressJob.isCompleted) {
-//                                            binding.secondLoadingLayout.show()
-                                            binding.txtLoading.show()
-                                            binding.placeholder.show()
-//                                            binding.viewPlaceholder.keepScreenOn = true
-                                            startDotAnimation()
-                                            launch(Dispatchers.Main) {
-                                                if (!audioUtils.isAudioPlaying()) {
-                                                    if (this@WebScanFragment::value.isInitialized) {
-//                                                        binding.secondLoadingLayout.hide()
-                                                        binding.placeholder.hide()
-                                                        binding.txtLoading.hide()
+                                                    if (value.scanIp != null && value.scanHostDeviceName != null && value.openPortsInfo != null) {
                                                         if (value.scanHostDeviceName.isEmpty()) {
                                                             binding.txtDeviceName.text =
                                                                 value.scanIp
@@ -365,7 +295,6 @@ class WebScanFragment : Fragment(), ClickListener {
                                                                 value.scanHostDeviceName
                                                             deviceName = value.scanHostDeviceName
                                                         }
-
                                                         val isSecure = helper.isSecureSite(list)
                                                         if (isSecure) {
                                                             binding.imgSecurity.setImageResource(R.drawable.safe)
@@ -403,7 +332,112 @@ class WebScanFragment : Fragment(), ClickListener {
                                                         binding.txtDeviceName.show()
                                                         binding.txtNameTitle.show()
                                                         binding.imgSecurity.show()
+//                                                    binding.secondLoadingLayout.hide()
                                                         binding.loadingLayout.hide()
+                                                    } else {
+                                                        binding.loadingLayout.hide()
+                                                        if(helper.getLang(requireContext()).equals("ar")) {
+                                                            playSound(scan_type,"ar",isSecure = false,isValid = false)
+                                                        } else {
+                                                            playSound(scan_type,"en",isSecure = false,isValid = false)
+                                                        }
+                                                    }
+                                                }
+
+                                                adapter.updateAdapter(list)
+                                            }
+                                        }
+                                    }) {
+                                        fetchDevicesJob?.isActive == false
+                                    }
+                                }
+
+                                fetchDevicesJob = launch(Dispatchers.IO) {
+                                    try {
+                                        list = fetchData(input)
+                                        progressJob.join()
+                                        if (progressJob.isCompleted) {
+//                                            binding.secondLoadingLayout.show()
+                                            binding.txtLoading.show()
+                                            binding.placeholder.show()
+//                                            binding.viewPlaceholder.keepScreenOn = true
+                                            startDotAnimation()
+                                            launch(Dispatchers.Main) {
+                                                if (!audioUtils.isAudioPlaying()) {
+                                                    if (this@WebScanFragment::value.isInitialized) {
+//                                                        binding.secondLoadingLayout.hide()
+                                                        binding.placeholder.hide()
+                                                        binding.txtLoading.hide()
+                                                        if (value.scanIp != null && value.scanHostDeviceName != null && value.openPortsInfo != null) {
+                                                            if (value.scanHostDeviceName.isEmpty()) {
+                                                                binding.txtDeviceName.text =
+                                                                    value.scanIp
+                                                                deviceName = value.scanIp
+                                                            } else {
+                                                                binding.txtDeviceName.text =
+                                                                    value.scanHostDeviceName
+                                                                deviceName =
+                                                                    value.scanHostDeviceName
+                                                            }
+
+                                                            val isSecure = helper.isSecureSite(list)
+                                                            if (isSecure) {
+                                                                binding.imgSecurity.setImageResource(
+                                                                    R.drawable.safe
+                                                                )
+                                                                binding.txtNameTitle.setTextColor(
+                                                                    resources.getColor(
+                                                                        R.color.safe_color,
+                                                                        context?.theme
+                                                                    )
+                                                                )
+                                                                if (helper.getLang(requireContext())
+                                                                        .equals("en")
+                                                                ) {
+                                                                    playSound(scan_type, "en", true)
+                                                                } else {
+                                                                    playSound(scan_type, "ar", true)
+                                                                }
+                                                            } else {
+                                                                binding.imgSecurity.setImageResource(
+                                                                    R.drawable.danger
+                                                                )
+                                                                binding.txtNameTitle.setTextColor(
+                                                                    resources.getColor(
+                                                                        R.color.danger_color,
+                                                                        context?.theme
+                                                                    )
+                                                                )
+                                                                if (helper.getLang(requireContext())
+                                                                        .equals("en")
+                                                                ) {
+                                                                    playSound(
+                                                                        scan_type,
+                                                                        "en",
+                                                                        false
+                                                                    )
+                                                                } else {
+                                                                    playSound(
+                                                                        scan_type,
+                                                                        "ar",
+                                                                        false
+                                                                    )
+                                                                }
+                                                            }
+                                                            isSafe = isSecure
+
+                                                            binding.txtDeviceName.show()
+                                                            binding.txtNameTitle.show()
+                                                            binding.imgSecurity.show()
+                                                            binding.loadingLayout.hide()
+                                                        } else {
+                                                            binding.loadingLayout.hide()
+                                                            if(helper.getLang(requireContext()).equals("ar")) {
+                                                                playSound(scan_type,"ar",isSecure = false,isValid = false)
+                                                            } else {
+                                                                playSound(scan_type,"en",isSecure = false,isValid = false)
+                                                            }
+                                                        }
 //                                                        binding.secondLoadingLayout.hide()
                                                     }
                                                     adapter.updateAdapter(list)
@@ -488,7 +522,6 @@ class WebScanFragment : Fragment(), ClickListener {
 
                 })
     }
-
 
 
     override fun onItemClickListener(position: Int, extras: Bundle?) {
@@ -596,9 +629,11 @@ class WebScanFragment : Fragment(), ClickListener {
             override fun onChanged(value: OpenPorts?) {
                 if (value != null) {
                     this@WebScanFragment.value = value
-                    list.addAll(value.openPortsInfo)
-                    callback.onAllDataFetched(list)
-                    viewModel.scanResponse.removeObserver(this)
+                    if (value.openPortsInfo != null) {
+                        list.addAll(value.openPortsInfo)
+                        callback.onAllDataFetched(list)
+                        viewModel.scanResponse.removeObserver(this)
+                    }
                 }
             }
         }
@@ -618,56 +653,76 @@ class WebScanFragment : Fragment(), ClickListener {
     }
 
 
-    private fun playSound(scanType: Int, lang: String, isSecure: Boolean) {
-        if (isSecure) {
+    private fun playSound(scanType: Int, lang: String, isSecure: Boolean, isValid: Boolean = true) {
+        if (!isValid) {
             when (scanType) {
                 1 -> {
-                    if (lang.equals("ar")) {
-                        audioUtils.playAudio(requireContext(), R.raw.url_secure_ar)
+                    if (helper.getLang(requireContext()).equals("ar")) {
+                        audioUtils.playAudio(requireContext(), R.raw.invalid_url_ar)
                     } else {
-                        audioUtils.playAudio(requireContext(), R.raw.url_secure_en)
+                        audioUtils.playAudio(requireContext(), R.raw.invalid_url_en)
                     }
                 }
 
                 2 -> {
-                    if (lang.equals("ar")) {
-                        audioUtils.playAudio(requireContext(), R.raw.ip_secure_ar)
+                    if (helper.getLang(requireContext()).equals("ar")) {
+                        audioUtils.playAudio(requireContext(), R.raw.invalid_ip_ar)
                     } else {
-                        audioUtils.playAudio(requireContext(), R.raw.ip_secure_en)
-                    }
-                }
-
-                3 -> {
-                    if (lang.equals("ar")) {
-                        audioUtils.playAudio(requireContext(), R.raw.router_secure_ar)
-                    } else {
-                        audioUtils.playAudio(requireContext(), R.raw.router_secure_en)
+                        audioUtils.playAudio(requireContext(), R.raw.invalid_ip_en)
                     }
                 }
             }
         } else {
-            when (scanType) {
-                1 -> {
-                    if (lang.equals("ar")) {
-                        audioUtils.playAudio(requireContext(), R.raw.url_insecure_ar)
-                    } else {
-                        audioUtils.playAudio(requireContext(), R.raw.url_insecure_en)
+            if (isSecure) {
+                when (scanType) {
+                    1 -> {
+                        if (lang.equals("ar")) {
+                            audioUtils.playAudio(requireContext(), R.raw.url_secure_ar)
+                        } else {
+                            audioUtils.playAudio(requireContext(), R.raw.url_secure_en)
+                        }
+                    }
+
+                    2 -> {
+                        if (lang.equals("ar")) {
+                            audioUtils.playAudio(requireContext(), R.raw.ip_secure_ar)
+                        } else {
+                            audioUtils.playAudio(requireContext(), R.raw.ip_secure_en)
+                        }
+                    }
+
+                    3 -> {
+                        if (lang.equals("ar")) {
+                            audioUtils.playAudio(requireContext(), R.raw.router_secure_ar)
+                        } else {
+                            audioUtils.playAudio(requireContext(), R.raw.router_secure_en)
+                        }
                     }
                 }
-
-                2 -> {
-                    if (lang.equals("ar")) {
-                        audioUtils.playAudio(requireContext(), R.raw.ip_insecure_ar)
-                    } else {
-                        audioUtils.playAudio(requireContext(), R.raw.ip_insecure_en)
+            } else {
+                when (scanType) {
+                    1 -> {
+                        if (lang.equals("ar")) {
+                            audioUtils.playAudio(requireContext(), R.raw.url_insecure_ar)
+                        } else {
+                            audioUtils.playAudio(requireContext(), R.raw.url_insecure_en)
+                        }
                     }
-                }
 
-                3 -> {
-                    if (lang.equals("ar")) {
-                        audioUtils.playAudio(requireContext(), R.raw.router_insecure_ar)
-                    } else {
-                        audioUtils.playAudio(requireContext(), R.raw.router_insecure_en)
+                    2 -> {
+                        if (lang.equals("ar")) {
+                            audioUtils.playAudio(requireContext(), R.raw.ip_insecure_ar)
+                        } else {
+                            audioUtils.playAudio(requireContext(), R.raw.ip_insecure_en)
+                        }
+                    }
+
+                    3 -> {
+                        if (lang.equals("ar")) {
+                            audioUtils.playAudio(requireContext(), R.raw.router_insecure_ar)
+                        } else {
+                            audioUtils.playAudio(requireContext(), R.raw.router_insecure_en)
+                        }
                     }
                 }
             }
@@ -676,8 +731,9 @@ class WebScanFragment : Fragment(), ClickListener {
 
     @SuppressLint("SetTextI18n")
     private fun startDotAnimation() {
-        txtJob = CoroutineScope(Dispatchers.Main).launch {
-            while (isActive) {
+        //txtJob = CoroutineScope(Dispatchers.Main).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
+            while (viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
                 delay(700)
                 if (isAdding) {
                     dotCount++
@@ -700,6 +756,7 @@ class WebScanFragment : Fragment(), ClickListener {
 
     override fun onDestroyView() {
         audioUtils.releaseMedia()
+        txtJob?.cancel()
         super.onDestroyView()
     }
 

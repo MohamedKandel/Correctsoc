@@ -172,7 +172,7 @@
     <string name="receipt_summary">ملخص الاستلام</string>
     <string name="promo_code">كود الخصم</string>
     <string name="apply">تفعيل</string>
-
+    <string name="app_lock">غلق التطبيقات</string>
     <string name="six_months">٦ أشهر</string>
     <string name="one_year">سنة واحدة</string>
     <string name="more_devices">أجهزة</string>

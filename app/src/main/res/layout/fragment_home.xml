@@ -14,7 +14,7 @@
         android:textDirection="locale"
         android:id="@+id/scrollView">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layoutDirection="locale"
@@ -25,6 +25,8 @@
                 android:id="@+id/menuIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="@dimen/_6sdp"
                 android:layout_marginTop="@dimen/_39sdp"
                 android:layout_marginEnd="@dimen/_6sdp"
@@ -39,31 +41,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="@dimen/_39sdp"
-                android:layout_toEndOf="@id/menuIcon"
+                app:layout_constraintStart_toEndOf="@id/menuIcon"
+                app:layout_constraintTop_toTopOf="@id/menuIcon"
+                app:layout_constraintBottom_toBottomOf="@id/menuIcon"
                 android:fontFamily="@font/barlow_bold"
                 android:padding="@dimen/_5sdp"
                 android:text="@string/network_scanner"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_23ssp" />
+                android:textSize="@dimen/_18ssp" />
+
 
             <GridLayout
                 android:id="@+id/grid_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/menuIcon"
+                app:layout_constraintTop_toBottomOf="@id/menuIcon"
+
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_22sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:columnCount="2"
-                android:rowCount="2">
+                android:rowCount="3">
 
                 <RelativeLayout
                     android:id="@+id/btn_app_scan"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_row="0"
                     android:layout_rowWeight="1"
                     android:layout_column="0"
@@ -80,7 +85,7 @@
                         android:src="@drawable/app_scanning_icon" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/app_scanning_icon"
                         android:layout_centerHorizontal="true"
@@ -92,13 +97,13 @@
                         android:gravity="center"
                         android:text="@string/apps_scan"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_14ssp" />
+                        android:textSize="@dimen/_12ssp" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/btn_web_scan"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_row="0"
                     android:layout_rowWeight="1"
                     android:layout_column="1"
@@ -115,7 +120,7 @@
                         android:src="@drawable/web_scanning_icon" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/web_scanning_icon"
                         android:layout_centerHorizontal="true"
@@ -134,7 +139,7 @@
                 <RelativeLayout
                     android:id="@+id/btn_ip_scan"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_row="1"
                     android:layout_rowWeight="1"
                     android:layout_column="0"
@@ -149,11 +154,10 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-
                         android:src="@drawable/ip_scanning_icon" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ip_scanning_icon"
                         android:layout_centerHorizontal="true"
@@ -163,15 +167,15 @@
                         android:layout_marginBottom="@dimen/_20sdp"
                         android:fontFamily="@font/roboto_medium"
                         android:gravity="center"
-                        android:text="@string/router_scan"
+                        android:text="@string/ip_scan"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_10ssp" />
+                        android:textSize="@dimen/_12ssp" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/btn_scan"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_row="1"
                     android:layout_rowWeight="1"
                     android:layout_column="1"
@@ -188,7 +192,7 @@
                         android:src="@drawable/scanning_icon" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/scanning_icon"
                         android:layout_centerHorizontal="true"
@@ -198,9 +202,80 @@
                         android:layout_marginBottom="@dimen/_18sdp"
                         android:fontFamily="@font/roboto_medium"
                         android:gravity="center"
-                        android:text="@string/ip_scan"
+                        android:text="@string/app_lock"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_13ssp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/btn_connected_devices"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_row="2"
+                    android:layout_rowWeight="1"
+                    android:layout_column="0"
+                    android:layout_columnWeight="1"
+                    android:layout_marginTop="@dimen/_24sdp"
+                    android:layout_marginEnd="@dimen/_18sdp"
+                    android:background="@drawable/home_icon_drawable">
+
+                    <ImageView
+                        android:id="@+id/connected_devices_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/connected_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/connected_devices_icon"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:layout_marginBottom="@dimen/_20sdp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:gravity="center"
+                        android:text="@string/router_scan"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_12ssp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/btn_router"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_row="2"
+                    android:layout_rowWeight="1"
+                    android:layout_column="1"
+                    android:layout_columnWeight="1"
+                    android:layout_marginTop="@dimen/_24sdp"
+                    android:background="@drawable/home_icon_drawable">
+
+                    <ImageView
+                        android:id="@+id/router_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/router_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/router_icon"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:layout_marginBottom="@dimen/_20sdp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:gravity="center"
+                        android:text="@string/self_test"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_12ssp" />
                 </RelativeLayout>
 
             </GridLayout>
@@ -209,9 +284,9 @@
                 android:id="@+id/recyclerViewAds"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_110sdp"
-                android:layout_below="@+id/grid_layout"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
+                app:layout_constraintTop_toBottomOf="@id/grid_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_22sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
@@ -224,9 +299,9 @@
                 android:id="@+id/txt_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/recyclerViewAds"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
+                app:layout_constraintTop_toBottomOf="@id/grid_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="@dimen/_24sdp"
                 android:layout_marginBottom="@dimen/_18sdp"
@@ -235,7 +310,7 @@
                 android:text="@string/version"
                 android:textColor="@color/alphaWhite"
                 android:textSize="@dimen/_12ssp" />
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
     <View
