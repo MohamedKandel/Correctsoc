@@ -24,6 +24,7 @@ import com.correct.correctsoc.data.auth.ConfirmPhoneBody
 import com.correct.correctsoc.data.auth.UpdatePhoneBody
 import com.correct.correctsoc.data.auth.ValidateOTPBody
 import com.correct.correctsoc.databinding.FragmentOTPBinding
+import com.correct.correctsoc.helper.Constants.PHONE
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TAG
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
@@ -145,15 +146,33 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
     }
 
     private fun getUserPhone() {
-        lifecycleScope.launch {
-            val id = usersDB.dao().getUserID() ?: ""
-            val phone = if (id.isNotEmpty()) {
-                usersDB.dao().getUserPhone(id) ?: ""
+        if (arguments != null) {
+            val phone = requireArguments().getString(PHONE)?: ""
+            if (phone.isNotEmpty()) {
+                binding.txtMsg.append(" $phone")
             } else {
-                usersDB.dao().getUserPhone("1")
+                lifecycleScope.launch {
+                    val id = usersDB.dao().getUserID() ?: ""
+                    val mphone = if (id.isNotEmpty()) {
+                        usersDB.dao().getUserPhone(id) ?: ""
+                    } else {
+                        usersDB.dao().getUserPhone("1")
+                    }
+                    binding.txtMsg.append(" $mphone")
+                }
             }
-            binding.txtMsg.append(" $phone")
+        } else {
+            lifecycleScope.launch {
+                val id = usersDB.dao().getUserID() ?: ""
+                val phone = if (id.isNotEmpty()) {
+                    usersDB.dao().getUserPhone(id) ?: ""
+                } else {
+                    usersDB.dao().getUserPhone("1")
+                }
+                binding.txtMsg.append(" $phone")
+            }
         }
+        /**/
     }
 
     private fun confirmOTP(body: ConfirmPhoneBody) {

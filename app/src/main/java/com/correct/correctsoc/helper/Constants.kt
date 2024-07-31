@@ -35,6 +35,7 @@ object Constants {
     const val PHONE_NUMBER = "phone number"
     const val AD_OBJECT = "ad object"
     const val PACKAGE = "Package name"
+    const val PHONE = "phone number"
     const val NOTIFICATION = "Notification"
     const val ISLOCKED = "is app lock"
     // problem with EGP

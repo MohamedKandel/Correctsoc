@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.data.auth.LoginBody
 import com.correct.correctsoc.databinding.FragmentLoginBinding
+import com.correct.correctsoc.helper.Constants.PHONE
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.Constants.TOKEN_VALUE
@@ -37,7 +38,8 @@ class LoginFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentLoginBinding
-//    private var isRemember = false
+
+    //    private var isRemember = false
     private lateinit var helper: HelperClass
     private var startIndx = 0
     private var endIndx = 0
@@ -200,12 +202,13 @@ class LoginFragment : Fragment() {
                         )
                         usersDB.dao().insert(user)
                     } else {
-                        usersDB.dao().updateToken("$TOKEN_VALUE ${it.result.token}", it.result.userid)
+                        usersDB.dao()
+                            .updateToken("$TOKEN_VALUE ${it.result.token}", it.result.userid)
                         usersDB.dao().updateUsername(it.result.name, it.result.userid)
                     }
                     helper.setToken(it.result.token, requireContext())
-                    Log.v("Token mohamed",helper.getToken(requireContext()))
-                    helper.setRemember(requireContext(),true)
+                    Log.v("Token mohamed", helper.getToken(requireContext()))
+                    helper.setRemember(requireContext(), true)
                     findNavController().navigate(R.id.homeFragment)
                 }
             } else {
@@ -214,8 +217,10 @@ class LoginFragment : Fragment() {
                 if (it.errorMessages == "this Phone Number Not Confirmed not confirmed yet") {
                     forgotPassword(binding.txtPhone.text.toString())
                 }
-                Toast.makeText(requireContext(), "${it.errorMessages}\n" +
-                        "You will redirect to OTP automatically", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(), "${it.errorMessages}\n" +
+                            "You will redirect to OTP automatically", Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -229,6 +234,7 @@ class LoginFragment : Fragment() {
                 val bundle = Bundle()
                 if (it.result != null) {
                     //bundle.putString(CODE, it.result.otp)
+                    bundle.putString(PHONE, phone)
                     bundle.putString(TOKEN_KEY, it.result)
                     bundle.putInt(SOURCE, R.id.loginFragment)
                     findNavController().navigate(R.id.OTPFragment, bundle)
@@ -241,6 +247,7 @@ class LoginFragment : Fragment() {
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.loginFragment)
