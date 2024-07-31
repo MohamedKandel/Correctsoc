@@ -76,7 +76,6 @@ class HomeFragment : Fragment(), ClickListener {
     private lateinit var list: MutableList<MenuData>
     private val TAG = "HomeFragment mohamed"
     private var isVisible = false
-    private var isDialogVisible = false
     private lateinit var slideIn: Animation
     private lateinit var slideOut: Animation
     private lateinit var fadeIn: Animation
@@ -347,12 +346,7 @@ class HomeFragment : Fragment(), ClickListener {
         binding.txtVersion.append(" $version")
 
         helper.onBackPressed(this) {
-            if (isDialogVisible) {
-                isDialogVisible = false
-                binding.placeholder.hide()
-                binding.dialog.root.startAnimation(fadeOut)
-                binding.dialog.root.hide()
-            } else if (isVisible) {
+            if (isVisible) {
                 closeMenu()
             } else {
                 requireActivity().finish()
@@ -415,11 +409,6 @@ class HomeFragment : Fragment(), ClickListener {
         binding.placeholder.setOnClickListener {
             if (isVisible) {
                 closeMenu()
-            } else if (isDialogVisible) {
-                binding.placeholder.hide()
-                binding.dialog.root.startAnimation(fadeOut)
-                binding.dialog.root.hide()
-                isDialogVisible = false
             }
         }
 

@@ -321,16 +321,6 @@
         android:visibility="gone" />
 
     <include
-        android:id="@+id/dialog"
-        layout="@layout/scan_layout_dialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="@dimen/_12sdp"
-        android:layout_marginEnd="@dimen/_12sdp"
-        android:visibility="gone" />
-
-    <include
         android:id="@+id/drawer_menu"
         layout="@layout/menu"
         android:visibility="gone"/>
