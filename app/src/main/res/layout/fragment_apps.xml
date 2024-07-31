@@ -30,6 +30,7 @@
             android:src="@drawable/arrow_icon"
             android:contentDescription="@string/app_lock"/>
 
+        <!--
         <TextView
             android:id="@+id/txt_title"
             android:layout_width="wrap_content"
@@ -42,6 +43,19 @@
             android:text="@string/app_lock"
             android:textColor="@color/white"
             android:textSize="@dimen/_16ssp" />
+-->
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/btn_back"
+            android:layout_toStartOf="@id/search_badge"
+            android:fontFamily="@font/roboto_regular"
+            android:hint="@string/search"
+            android:autofillHints="name"
+            android:inputType="text"
+            android:id="@+id/txt_search"
+            android:background="@drawable/search_drawable"/>
+
 
         <ImageButton
             android:id="@+id/search_badge"

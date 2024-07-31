@@ -3,11 +3,14 @@ package com.correct.correctsoc.ui.lock
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
@@ -97,8 +100,51 @@ class AppsFragment : Fragment(), ClickListener {
                 }
             }
             adapter.updateAdapter(list)
+
+            binding.txtSearch.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    val keyword = s.toString()
+                    if (keyword.isNotEmpty()) {
+                        var filtered = search(keyword)
+                        if (filtered.size == 0) {
+                            Toast.makeText(
+                                requireContext(), resources.getText(R.string.app_search_not_found),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            filtered = list
+                        }
+                        adapter.updateAdapter(filtered)
+                    } else {
+                        adapter.updateAdapter(list)
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+
+                }
+            })
+
         }
         return binding.root
+    }
+
+    private fun search(keyWord: String): MutableList<App> {
+        val filteredList = mutableListOf<App>()
+        for (app in list) {
+            if (app.appName.contains(keyWord,true)) {
+                filteredList.add(app)
+            }
+        }
+        return filteredList
     }
 
     override fun onResume() {

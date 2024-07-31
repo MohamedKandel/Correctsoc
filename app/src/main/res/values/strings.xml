@@ -70,6 +70,7 @@
     <string name="waiting_msg">Thanks for your patience, we are scanning your Wi-Fi devices now</string>
     <string name="search">Search …</string>
     <string name="not_found_search">Sorry, we can\'t find any device with this IP address</string>
+    <string name="app_search_not_found">Sorry, we can\'t find any application with this name</string>
 
     <string name="update_title">Warning</string>
     <string name="update_msg">There is a new version of the app on store that make you more secure\n

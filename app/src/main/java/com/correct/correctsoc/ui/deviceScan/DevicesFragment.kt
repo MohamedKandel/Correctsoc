@@ -114,7 +114,10 @@ class DevicesFragment : Fragment(), ClickListener {
                             ).show()
                             filtered = list
                         }
+                        Log.i("List Devices mohamed","${list.size}")
                         adapter.updateAdapter(filtered)
+                    } else {
+                        adapter.updateAdapter(list)
                     }
                 }
 

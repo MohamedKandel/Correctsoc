@@ -65,6 +65,7 @@
     <string name="waiting_msg">شكرا على صبرك نحن نفحص الآن الاجهزة المتصلة بشبكة الواي فاي الخاصة بك</string>
     <string name="search">بحث …</string>
     <string name="not_found_search">للأسف لم يتم العثور على عنوان الـ IP هذا</string>
+    <string name="app_search_not_found">للأسف لم يتم العثور على اسم التطبيق هذا</string>
 
     <string name="update_title">تحذير</string>
     <string name="update_msg">هناك نسخة جديدة من تطبيقنا على المتجر والتي تجعلك أمن بشكل اكبر\n
