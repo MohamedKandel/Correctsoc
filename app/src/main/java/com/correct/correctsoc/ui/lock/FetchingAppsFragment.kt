@@ -40,6 +40,7 @@ class FetchingAppsFragment : Fragment() {
     private var progressJob: Job? = null
     private var fetchAppssJob: Job? = null
     private lateinit var fragmentListener: FragmentChangedListener
+    private var list = mutableListOf<App>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -71,7 +72,7 @@ class FetchingAppsFragment : Fragment() {
         }
 
         CoroutineScope(Dispatchers.Main).launch {
-            var list = mutableListOf<App>()
+            //var list = mutableListOf<App>()
             val progressJob = launch(Dispatchers.Main) {
                 progress(object : OnProgressUpdatedListener {
                     @SuppressLint("SetTextI18n")
@@ -105,6 +106,15 @@ class FetchingAppsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        val progress = binding.txtPercent.text
+        if (progress == "100%") {
+            Log.i("Progress completed","Progress is completed")
+            Log.e("List Devices onResume mohamed", "onCreateView: ${list.size}")
+            Log.d("List Devices mohamed", "onCreateView: finished")
+            val bundle = Bundle()
+            bundle.putParcelableArrayList(Constants.LIST, ArrayList(list))
+            findNavController().navigate(R.id.appsFragment, bundle)
+        }
         fragmentListener.onFragmentChangedListener(R.id.fetchingAppsFragment)
     }
 
