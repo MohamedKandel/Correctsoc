@@ -53,17 +53,12 @@ class DevicesAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         //val txt_name: TextView
-        val txt_ip: TextView
-        val img_go: ImageView
-        val img_click: ImageView
-        val txt_click: TextView
+        val txt_ip: TextView = itemView.findViewById(R.id.txt_ip)
+        val img_go: ImageView = itemView.findViewById(R.id.btn_go)
+        val img_click: ImageView = itemView.findViewById(R.id.icon_click_here)
+        val txt_click: TextView = itemView.findViewById(R.id.txt_click_here)
 
         init {
-            txt_ip = itemView.findViewById(R.id.txt_ip)
-            img_go = itemView.findViewById(R.id.btn_go)
-            txt_click = itemView.findViewById(R.id.txt_click_here)
-            img_click = itemView.findViewById(R.id.icon_click_here)
-
             itemView.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putParcelable(ITEM, list[bindingAdapterPosition])

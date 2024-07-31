@@ -67,16 +67,12 @@ class AppsAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txt_app: TextView
-        val txt_status: TextView
-        val lock_icon: ImageView
-        val app_icon: ImageView
-        init {
-            txt_app = itemView.findViewById(R.id.txt_app_name)
-            txt_status = itemView.findViewById(R.id.txt_app_status)
-            lock_icon = itemView.findViewById(R.id.img_status)
-            app_icon = itemView.findViewById(R.id.app_icon)
+        val txt_app: TextView = itemView.findViewById(R.id.txt_app_name)
+        val txt_status: TextView = itemView.findViewById(R.id.txt_app_status)
+        val lock_icon: ImageView = itemView.findViewById(R.id.img_status)
+        val app_icon: ImageView = itemView.findViewById(R.id.app_icon)
 
+        init {
             itemView.setOnClickListener {
                 Log.i("IsAppLock","${lock_icon.tag}")
                 val bundle = Bundle()

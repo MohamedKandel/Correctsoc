@@ -49,13 +49,10 @@ class MenuAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txt: TextView
-        val icon: ImageView
+        val txt: TextView = itemView.findViewById(R.id.txt)
+        val icon: ImageView = itemView.findViewById(R.id.img)
 
         init {
-            txt = itemView.findViewById(R.id.txt)
-            icon = itemView.findViewById(R.id.img)
-
             itemView.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString(CLICKED,"menu")

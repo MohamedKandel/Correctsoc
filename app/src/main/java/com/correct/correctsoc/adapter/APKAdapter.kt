@@ -49,16 +49,12 @@ class APKAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txt_appName: TextView
-        val img_icon: ImageView
-        val txt_pkgName: TextView
-        val icon_delte: ImageButton
+        val txt_appName: TextView = itemView.findViewById(R.id.app_name)
+        val img_icon: ImageView = itemView.findViewById(R.id.app_icon)
+        val txt_pkgName: TextView = itemView.findViewById(R.id.pkg_name)
+        val icon_delte: ImageButton = itemView.findViewById(R.id.delete_icon)
 
         init {
-            txt_appName = itemView.findViewById(R.id.app_name)
-            txt_pkgName = itemView.findViewById(R.id.pkg_name)
-            img_icon = itemView.findViewById(R.id.app_icon)
-            icon_delte = itemView.findViewById(R.id.delete_icon)
 
             icon_delte.setOnClickListener {
                 val bundle = Bundle()

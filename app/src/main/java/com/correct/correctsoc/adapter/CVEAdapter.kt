@@ -43,15 +43,11 @@ class CVEAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txt_id: TextView
-        val txt_url: TextView
-        val txt_cvss: TextView
+        val txt_id: TextView = itemView.findViewById(R.id.txt_id)
+        val txt_url: TextView = itemView.findViewById(R.id.txt_url)
+        val txt_cvss: TextView = itemView.findViewById(R.id.txt_cvss)
 
         init {
-            txt_id = itemView.findViewById(R.id.txt_id)
-            txt_url = itemView.findViewById(R.id.txt_url)
-            txt_cvss = itemView.findViewById(R.id.txt_cvss)
-
             txt_url.setOnClickListener {
                 val url = txt_url.text.toString().trim()
                 val bundle = Bundle()

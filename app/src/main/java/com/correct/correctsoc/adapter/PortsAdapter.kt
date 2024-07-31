@@ -67,28 +67,17 @@ class PortsAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txt_port: TextView
-        val txt_service: TextView
-        val txt_protocol: TextView
-        val txt_version: TextView
-        val txt_cpe: TextView
-        val txt_cve: TextView
-        val see_more: ImageButton
-        val cpe: TextView
-        val txt_click: TextView
+        val txt_port: TextView = itemView.findViewById(R.id.txt_port)
+        val txt_service: TextView = itemView.findViewById(R.id.txt_service)
+        val txt_protocol: TextView = itemView.findViewById(R.id.txt_protocol)
+        val txt_version: TextView = itemView.findViewById(R.id.txt_version)
+        val txt_cpe: TextView = itemView.findViewById(R.id.txt_cpe)
+        val txt_cve: TextView = itemView.findViewById(R.id.txt_cve)
+        val see_more: ImageButton = itemView.findViewById(R.id.btn_see_more)
+        val cpe: TextView = itemView.findViewById(R.id.cpe)
+        val txt_click: TextView = itemView.findViewById(R.id.txt_click_here)
 
         init {
-
-            cpe = itemView.findViewById(R.id.cpe)
-            txt_port = itemView.findViewById(R.id.txt_port)
-            txt_service = itemView.findViewById(R.id.txt_service)
-            txt_protocol = itemView.findViewById(R.id.txt_protocol)
-            txt_version = itemView.findViewById(R.id.txt_version)
-            txt_cpe = itemView.findViewById(R.id.txt_cpe)
-            txt_cve = itemView.findViewById(R.id.txt_cve)
-            see_more = itemView.findViewById(R.id.btn_see_more)
-            txt_click = itemView.findViewById(R.id.txt_click_here)
-
             txt_click.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString(CLICKED, MORE)
