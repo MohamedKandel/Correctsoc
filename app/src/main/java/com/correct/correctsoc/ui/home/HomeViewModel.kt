@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.correct.correctsoc.Retrofit.APIService
 import com.correct.correctsoc.Retrofit.RetrofitClient
 import com.correct.correctsoc.data.auth.forget.ForgotResponse
-import com.correct.correctsoc.data.user.AdsResponse
 import com.correct.correctsoc.data.user.UserPlanResponse
 import kotlinx.coroutines.launch
 
@@ -19,21 +18,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     )
 
     private val _getUserPlanResponse = MutableLiveData<UserPlanResponse>()
-    private val _getAdvertisements = MutableLiveData<AdsResponse>()
     private val _notificationMessage = MutableLiveData<ForgotResponse>()
 
     val notificationMessage: LiveData<ForgotResponse> get() = _notificationMessage
-    val advertisements: LiveData<AdsResponse> get() = _getAdvertisements
     val userPlanResponse: LiveData<UserPlanResponse> get() = _getUserPlanResponse
 
     fun getUserPlan(userID: String) = viewModelScope.launch {
         val result = homeRepository.getUserPlan(userID)
         _getUserPlanResponse.postValue(result.body())
-    }
-
-    fun getAdvertisement() = viewModelScope.launch {
-        val result = homeRepository.getAds()
-        _getAdvertisements.postValue(result.body())
     }
 
     fun getNotificationMessage() = viewModelScope.launch {

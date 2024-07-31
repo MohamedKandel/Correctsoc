@@ -279,22 +279,6 @@
 
             </GridLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewAds"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_110sdp"
-                app:layout_constraintTop_toBottomOf="@id/grid_layout"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_22sdp"
-                android:layout_marginEnd="@dimen/_12sdp"
-                android:nestedScrollingEnabled="false"
-                android:visibility="gone"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/ads_list_item" />
-
             <TextView
                 android:id="@+id/txt_version"
                 android:layout_width="match_parent"

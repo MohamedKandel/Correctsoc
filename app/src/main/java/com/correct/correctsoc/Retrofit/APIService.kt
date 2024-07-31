@@ -17,7 +17,6 @@ import com.correct.correctsoc.data.openPorts.OpenPorts
 import com.correct.correctsoc.data.pay.PromoCodePercentResponse
 import com.correct.correctsoc.data.pay.SubscibeGooglePayBody
 import com.correct.correctsoc.data.pay.SubscribeCodeBody
-import com.correct.correctsoc.data.user.AdsResponse
 import com.correct.correctsoc.data.user.UserPlanResponse
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -132,9 +131,6 @@ interface APIService {
 
     @POST("Payment/GetPromotionPercentag")
     suspend fun getPromoCodePercent(@Query("code") code: String): Response<PromoCodePercentResponse>
-
-    @GET("User/GetAdvertisements")
-    suspend fun getAdvertisements():Response<AdsResponse>
 
     @DELETE("Authentication/DeleteAccount")
     suspend fun deleteAccount(@Query("userId") userID: String,
