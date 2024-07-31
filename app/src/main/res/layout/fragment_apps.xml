@@ -30,20 +30,6 @@
             android:src="@drawable/arrow_icon"
             android:contentDescription="@string/app_lock"/>
 
-        <!--
-        <TextView
-            android:id="@+id/txt_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/btn_back"
-            android:layout_toStartOf="@id/search_badge"
-            android:gravity="center"
-            android:fontFamily="@font/roboto_medium"
-            android:text="@string/app_lock"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_16ssp" />
--->
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,18 +45,6 @@
             android:drawableTint="#56000000"
             android:drawablePadding="@dimen/_3sdp"
             android:layout_marginEnd="@dimen/_15sdp"/>
-
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/search_badge"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@android:color/transparent"-->
-<!--            android:padding="@dimen/_7sdp"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:src="@drawable/search_icon"-->
-<!--            app:tint= "@color/white"-->
-<!--            android:contentDescription="@string/app_lock"/>-->
 
     </RelativeLayout>
 
