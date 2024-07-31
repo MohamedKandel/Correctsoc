@@ -1,6 +1,7 @@
 package com.correct.correctsoc.ui.home
 
 import com.correct.correctsoc.Retrofit.APIService
+import com.correct.correctsoc.data.auth.forget.ForgotResponse
 import com.correct.correctsoc.data.user.AdsResponse
 import com.correct.correctsoc.data.user.UserPlanResponse
 import kotlinx.coroutines.Dispatchers
@@ -16,5 +17,10 @@ class HomeRepository(private val apiService: APIService) {
     suspend fun getAds():Response<AdsResponse> =
         withContext(Dispatchers.IO) {
             apiService.getAdvertisements()
+        }
+
+    suspend fun getNotificationMessage(): Response<ForgotResponse> =
+        withContext(Dispatchers.IO) {
+            apiService.getNotificationMessage()
         }
 }

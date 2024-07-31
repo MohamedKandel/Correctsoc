@@ -216,7 +216,7 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
 
 
     override fun onPause() {
-        if (acceptFragment) {
+        if (acceptFragment && helper.getDeviceStatus(this)) {
             setDeviceOff(helper.getToken(this))
         }
         super.onPause()
@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
         connectionManager.statusLiveData.observe(this) {
             when (it) {
                 ConnectivityListener.Status.AVAILABLE -> {
-                    if (acceptFragment) {
+                    if (acceptFragment && !helper.getDeviceStatus(this)) {
                         setDeviceOn(helper.getToken(this))
                     }
                 }

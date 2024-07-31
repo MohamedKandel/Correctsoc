@@ -195,4 +195,19 @@
         android:name="com.correct.correctsoc.ui.home.PrivacyPolicyFragment"
         android:label="fragment_privacy_policy"
         tools:layout="@layout/fragment_privacy_policy" />
+    <fragment
+        android:id="@+id/appsFragment"
+        android:name="com.correct.correctsoc.ui.lock.AppsFragment"
+        android:label="fragment_apps"
+        tools:layout="@layout/fragment_apps" />
+    <fragment
+        android:id="@+id/passwordFragment"
+        android:name="com.correct.correctsoc.ui.lock.PasswordFragment"
+        android:label="fragment_password"
+        tools:layout="@layout/fragment_password" />
+    <fragment
+        android:id="@+id/fetchingAppsFragment"
+        android:name="com.correct.correctsoc.ui.lock.FetchingAppsFragment"
+        android:label="fragment_fetching_apps"
+        tools:layout="@layout/fragment_fetching_apps" />
 </navigation>

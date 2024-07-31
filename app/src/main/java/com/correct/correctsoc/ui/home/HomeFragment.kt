@@ -1,10 +1,18 @@
 package com.correct.correctsoc.ui.home
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AppOpsManager
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Process
+import android.provider.Settings
 import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
@@ -12,9 +20,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -33,6 +43,7 @@ import com.correct.correctsoc.data.user.AdsResponse
 import com.correct.correctsoc.data.user.AdsResult
 import com.correct.correctsoc.data.user.UserPlanResponse
 import com.correct.correctsoc.databinding.FragmentHomeBinding
+import com.correct.correctsoc.helper.AppMonitorService
 import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.ConnectionManager
 import com.correct.correctsoc.helper.ConnectivityListener
@@ -83,6 +94,77 @@ class HomeFragment : Fragment(), ClickListener {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var connectionManager: ConnectionManager
     private var isConnected = MutableLiveData<Boolean>()
+    private val notificationLauncher: ActivityResultLauncher<String> =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) {
+            if (it) {
+                // permission is granted
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+                    if (!Settings.canDrawOverlays(requireContext())) {
+                        val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:${requireContext().packageName}")
+                        )
+                        startActivity(intent)
+                    }
+                } // call permission here
+                if (!hasUsageStatsPermission(requireContext())) {
+                    requestUsageStatsPermission(requireContext())
+                }
+                val intent = Intent(requireContext(), AppMonitorService::class.java)
+                ContextCompat.startForegroundService(requireContext(), intent)
+                findNavController().navigate(R.id.fetchingAppsFragment)
+            } else {
+                // permission is denied
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.notification_required),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+    private fun requestNotificationPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+                    == PackageManager.PERMISSION_GRANTED -> {
+                // permission granted
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+                    if (!Settings.canDrawOverlays(requireContext())) {
+                        val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:${requireContext().packageName}")
+                        )
+                        startActivity(intent)
+                    }
+                } // call permission here
+                if (!hasUsageStatsPermission(requireContext())) {
+                    requestUsageStatsPermission(requireContext())
+                }
+                val intent = Intent(requireContext(), AppMonitorService::class.java)
+                ContextCompat.startForegroundService(requireContext(), intent)
+                findNavController().navigate(R.id.fetchingAppsFragment)
+            }
+
+            shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                // show an explanation to the user
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.notification_sorry),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            else -> {
+                notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -185,9 +267,11 @@ class HomeFragment : Fragment(), ClickListener {
         binding.btnIpScan.setOnClickListener {
             isConnected.observe(viewLifecycleOwner) {
                 if (it) {
-                    val bundle = Bundle()
-                    bundle.putString(TYPE, IP_ADDRESS)
-                    findNavController().navigate(R.id.insertLinkFragment, bundle)
+                    validateToken(helper.getToken(requireContext())) {
+                        val bundle = Bundle()
+                        bundle.putString(TYPE, IP_ADDRESS)
+                        findNavController().navigate(R.id.insertLinkFragment, bundle)
+                    }
                 } else {
                     noInternet()
                 }
@@ -195,42 +279,26 @@ class HomeFragment : Fragment(), ClickListener {
         }
 
         binding.btnScan.setOnClickListener {
-            Toast.makeText(requireContext(),"Not implemented yet",Toast.LENGTH_SHORT).show()
-            /*isConnected.observe(viewLifecycleOwner) {
-                if (it) {
-                    validateToken(helper.getToken(requireContext())) {
-                        binding.placeholder.show()
-                        binding.dialog.root.show()
-                        isDialogVisible = true
-                        binding.dialog.root.startAnimation(fadeIn)
-
-                        val btn_pen_scan =
-                            binding.dialog.root.findViewById<RelativeLayout>(R.id.btn_self_scan)
-                        val btn_ip_scan =
-                            binding.dialog.root.findViewById<RelativeLayout>(R.id.btn_ip_scan)
-
-                        btn_pen_scan.setOnClickListener {
-                            findNavController().navigate(R.id.selfPenFragment)
-                            isDialogVisible = false
-                            binding.placeholder.hide()
-                            binding.dialog.root.startAnimation(fadeOut)
-                            binding.dialog.root.hide()
-                        }
-
-                        btn_ip_scan.setOnClickListener {
-                            val bundle = Bundle()
-                            bundle.putString(TYPE, IP_ADDRESS)
-                            findNavController().navigate(R.id.insertLinkFragment, bundle)
-                            isDialogVisible = false
-                            binding.placeholder.hide()
-                            binding.dialog.root.startAnimation(fadeOut)
-                            binding.dialog.root.hide()
-                        }
-                    }
+            validateToken(helper.getToken(requireContext())) {
+                // request notification permission
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestNotificationPermission()
                 } else {
-                    noInternet()
+                    if (!Settings.canDrawOverlays(requireContext())) {
+                        val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:${requireContext().packageName}")
+                        )
+                        startActivity(intent)
+                    }
+                    if (!hasUsageStatsPermission(requireContext())) {
+                        requestUsageStatsPermission(requireContext())
+                    }
+                    val intent = Intent(requireContext(), AppMonitorService::class.java)
+                    ContextCompat.startForegroundService(requireContext(), intent)
+                    findNavController().navigate(R.id.fetchingAppsFragment)
                 }
-            }*/
+            }
         }
 
         binding.btnAppScan.setOnClickListener {
@@ -402,6 +470,7 @@ class HomeFragment : Fragment(), ClickListener {
         val arr = this.split("T")
         return arr[0]
     }*/
+
 
     private fun getUserPlan(userID: String) {
         homeViewModel.getUserPlan(userID)
@@ -614,6 +683,29 @@ class HomeFragment : Fragment(), ClickListener {
                 negativeButtonFunction = {
 
                 })
+    }
+
+    private fun hasUsageStatsPermission(context: Context): Boolean {
+        val appOps = context
+            .getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+        val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            appOps.unsafeCheckOpNoThrow(
+                "android:get_usage_stats",
+                Process.myUid(), context.packageName
+            )
+        } else {
+            appOps.checkOpNoThrow(
+                "android:get_usage_stats",
+                Process.myUid(), context.packageName
+            )
+        }
+        val granted = mode == AppOpsManager.MODE_ALLOWED
+        return granted
+    }
+
+    private fun requestUsageStatsPermission(context: Context) {
+        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+        context.startActivity(intent)
     }
 
     override fun onItemClickListener(position: Int, extras: Bundle?) {

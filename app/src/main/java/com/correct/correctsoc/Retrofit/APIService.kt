@@ -140,6 +140,9 @@ interface APIService {
     suspend fun deleteAccount(@Query("userId") userID: String,
                               @Header("Authorization") token: String): Response<ForgotResponse>
 
+    @GET("User/GetNotificationMessage")
+    suspend fun getNotificationMessage(): Response<ForgotResponse>
+
     // get vendor name of device with mac address
     @GET("{macAddress}")
     fun getVendor(@Path("macAddress") macAddress: String): Call<ResponseBody>

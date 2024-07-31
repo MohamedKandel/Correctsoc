@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/scan_bg"
+    tools:context=".ui.lock.FetchingAppsFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:id="@+id/body_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layoutDirection="locale"
+            android:textDirection="locale">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/progress_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true">
+
+                <ImageView
+                    android:id="@+id/progress_circular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/circle"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="0%"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_30ssp"
+                    app:layout_constraintBottom_toBottomOf="@id/progress_circular"
+                    app:layout_constraintEnd_toEndOf="@id/progress_circular"
+                    app:layout_constraintStart_toStartOf="@id/progress_circular"
+                    app:layout_constraintTop_toTopOf="@+id/progress_circular" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/txt_app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/progress_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_36sdp"
+                android:fontFamily="@font/roboto_bold"
+
+                android:textColor="@color/white"
+                android:textSize="@dimen/_18ssp" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_stop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_app_name"
+                android:layout_marginStart="@dimen/_36sdp"
+                android:layout_marginTop="@dimen/_27sdp"
+                android:layout_marginEnd="@dimen/_36sdp"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/roboto_bold"
+                android:paddingTop="@dimen/_12sdp"
+                android:paddingBottom="@dimen/_12sdp"
+                android:text="@string/stop"
+                android:textColor="@color/dark_purple"
+                android:textSize="@dimen/_15ssp"
+                app:cornerRadius="@dimen/_15sdp" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

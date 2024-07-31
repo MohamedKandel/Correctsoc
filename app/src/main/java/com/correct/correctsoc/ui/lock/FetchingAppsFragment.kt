@@ -1,10 +1,9 @@
-package com.correct.correctsoc.ui.applicationScan
+package com.correct.correctsoc.ui.lock
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,14 +12,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
-import com.correct.correctsoc.data.AppInfo
-import com.correct.correctsoc.databinding.FragmentScanningBinding
+import com.correct.correctsoc.databinding.FragmentFetchingAppsBinding
 import com.correct.correctsoc.helper.AppsFetchedListener
-import com.correct.correctsoc.helper.Constants.LIST
+import com.correct.correctsoc.helper.Constants
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
 import com.correct.correctsoc.helper.hide
+import com.correct.correctsoc.room.App
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,13 +29,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
-class ScanningFragment : Fragment() {
+class FetchingAppsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    private lateinit var binding: FragmentScanningBinding
+    private lateinit var binding: FragmentFetchingAppsBinding
     private lateinit var helper: HelperClass
     private var progressJob: Job? = null
     private var fetchAppssJob: Job? = null
@@ -56,17 +55,23 @@ class ScanningFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentScanningBinding.inflate(inflater, container, false)
+        binding = FragmentFetchingAppsBinding.inflate(inflater,container,false)
         helper = HelperClass.getInstance()
-
-        fragmentListener.onFragmentChangedListener(R.id.scanningFragment)
+        fragmentListener.onFragmentChangedListener(R.id.fetchingAppsFragment)
 
         binding.progressCircular.startAnimation(helper.circularAnimation(3000))
-
         binding.root.keepScreenOn = true
 
+        binding.btnStop.setOnClickListener {
+            stopOperations()
+        }
+
+        helper.onBackPressed(this) {
+            stopOperations()
+        }
+
         CoroutineScope(Dispatchers.Main).launch {
-            var list = mutableListOf<AppInfo>()
+            var list = mutableListOf<App>()
             val progressJob = launch(Dispatchers.Main) {
                 progress(object : OnProgressUpdatedListener {
                     @SuppressLint("SetTextI18n")
@@ -77,8 +82,8 @@ class ScanningFragment : Fragment() {
                             Log.e("List Devices mohamed", "onCreateView: ${list.size}")
                             Log.d("List Devices mohamed", "onCreateView: finished")
                             val bundle = Bundle()
-                            bundle.putParcelableArrayList(LIST, ArrayList(list))
-                            findNavController().navigate(R.id.appScanResultFragment, bundle)
+                            bundle.putParcelableArrayList(Constants.LIST, ArrayList(list))
+                            findNavController().navigate(R.id.appsFragment, bundle)
                         }
                     }
                 }) {
@@ -95,26 +100,15 @@ class ScanningFragment : Fragment() {
             }
         }
 
-        binding.btnStop.setOnClickListener {
-            stopOperations()
-        }
-
-
-
-        helper.onBackPressed(this) {
-            stopOperations()
-            findNavController().navigate(R.id.applicationScanFragment)
-        }
-
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-        fragmentListener.onFragmentChangedListener(R.id.scanningFragment)
+        fragmentListener.onFragmentChangedListener(R.id.fetchingAppsFragment)
     }
 
-    private fun displayAppName(list: MutableList<AppInfo>) {
+    private fun displayAppName(list: MutableList<App>) {
         CoroutineScope(Dispatchers.Main).launch {
             var i = 0
             for (app in list) {
@@ -134,7 +128,7 @@ class ScanningFragment : Fragment() {
                     }
 
                     else -> {
-                        500
+                        300
                     }
                 }
                 Log.i("random number mohamed", "displayAppName: $random")
@@ -148,83 +142,33 @@ class ScanningFragment : Fragment() {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun fetchApps(): MutableList<AppInfo> {
+    suspend fun fetchApps(): MutableList<App> {
         return suspendCancellableCoroutine {
-            getApps(object : AppsFetchedListener<AppInfo> {
-                override fun onAllAppsFetched(apps: MutableList<AppInfo>) {
+            getApps(object : AppsFetchedListener<App> {
+                override fun onAllAppsFetched(apps: MutableList<App>) {
                     it.resume(apps, null)
                 }
             })
         }
     }
 
-    private fun getApps(listener: AppsFetchedListener<AppInfo>) {
+    private fun getApps(listener: AppsFetchedListener<App>) {
         val packageManager = requireContext().packageManager
+        val list = mutableListOf<App>()
         val installedPackages = packageManager.getInstalledPackages(PackageManager.GET_META_DATA)
-        val unknownSourceApps = mutableListOf<AppInfo>()
 
         for (packageInfo in installedPackages) {
             val applicationInfo = packageInfo.applicationInfo
-            if ((applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) == 0) { // Exclude system apps
-                val installerPackageName: String?
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    val installSourceInfo =
-                        packageManager.getInstallSourceInfo(packageInfo.packageName)
-                    installerPackageName = installSourceInfo.installingPackageName
-                } else {
-                    installerPackageName =
-                        packageManager.getInstallerPackageName(packageInfo.packageName)
-                }
-                if (installerPackageName == null || !isOfficialInstaller(installerPackageName)) {
-                    if(!whiteListAppsPackages(packageInfo.packageName) && !isAllowedAppWithAndroid(packageInfo.packageName)) {
-                        val appIcon = applicationInfo.loadIcon(packageManager)
-                        val appName = applicationInfo.loadLabel(packageManager).toString()
-                        Log.d(
-                            "InstallerCheck",
-                            "Package: ${packageInfo.packageName}, Installer: $installerPackageName"
-                        )
-                        unknownSourceApps.add(AppInfo(packageInfo.packageName, appName, appIcon))
-                    }
-                }
+            val isSystemApp = (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+            val hasLauncherIntent = packageManager.getLaunchIntentForPackage(packageInfo.packageName) != null
+
+            if (!isSystemApp || hasLauncherIntent) {
+                val appName = applicationInfo.loadLabel(packageManager).toString()
+                val packageName = packageInfo.packageName
+                list.add(App(packageName = packageName, appName = appName,"",1))
             }
         }
-        listener.onAllAppsFetched(unknownSourceApps)
-    }
-
-    private fun whiteListAppsPackages(packageName: String): Boolean {
-        val whiteList = listOf(
-            "com.android.calendar.go",
-            "com.xiaomi.midrop",
-            "com.miui.calculator.go"
-        )
-        return packageName in whiteList
-    }
-
-    private fun isAllowedAppWithAndroid(packageName: String): Boolean {
-        val officialApps = listOf(
-            "com.wego.android",
-            "com.amazon.appmanager"
-        )
-        return officialApps.contains(packageName)
-    }
-
-    private fun isOfficialInstaller(installerPackageName: String): Boolean {
-        // Add official installer package names here
-        val officialInstallers = listOf(
-            "com.android.vending",                  // Google Play Store
-            "com.xiaomi.discover",                  // Xiaomi's own app store or app discovery service
-            "com.amazon.venezia",                   // Amazon Appstore
-            "com.oppo.market",                      // OPPO App Market
-            "com.xiaomi.market",                    // Xiaomi Mi Market
-            "com.huawei.appmarket",                 // Huawei AppGallery
-            "com.sec.android.app.samsungapps",      // Samsung Galaxy Sore
-            "com.bbk.appstore",                     // VIVO Appstore
-            "com.oneplus.store",                    // OnePlus Appstore
-            "com.lenovo.leos.appstore",             // Lenovo Appstore
-        )
-
-        Log.d("Installing source mohamed", "application installed from $installerPackageName")
-        return officialInstallers.contains(installerPackageName)
+        listener.onAllAppsFetched(list)
     }
 
     suspend fun progress(progress: OnProgressUpdatedListener, isCanceled: () -> Boolean) {
@@ -244,7 +188,6 @@ class ScanningFragment : Fragment() {
         progressJob?.cancel()
         // Cancel fetch devices job
         fetchAppssJob?.cancel()
-        findNavController().navigate(R.id.applicationScanFragment)
+        findNavController().navigate(R.id.homeFragment)
     }
-
 }

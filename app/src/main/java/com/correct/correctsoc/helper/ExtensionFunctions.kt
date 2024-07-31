@@ -125,7 +125,7 @@ fun MutableLiveData<MutableList<Int>>.contains(item: Int): Boolean {
     return this.value?.contains(item) ?: false
 }
 
-fun String.reMappingNumbers():String {
+fun String.reMappingNumbers(): String {
     var str = ""
     val map = mapOf(
         '١' to "1",
@@ -415,6 +415,31 @@ fun EditText.upperCaseOnly() {
         }
     })
 }
+fun TextView.mappingPassword(): String {
+    var char = ""
+    this.addTextChangedListener(object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+            char = s.toString()
+            this@mappingPassword.removeTextChangedListener(this) // Remove listener to prevent infinite loop
+            s?.let {
+                val upperCaseText = it.toString().uppercase()
+                if (upperCaseText != it.toString()) {
+                    this@mappingPassword.setText(upperCaseText)
+                }
+            }
+            this@mappingPassword.addTextChangedListener(this) // Re-attach listener
+        }
+    })
+    return char
+}
 
 fun String.parseBase64(): Bitmap {
     val decodedString: ByteArray = Base64.decode(this, Base64.DEFAULT)
@@ -434,7 +459,7 @@ fun Fragment.openWhatsApp(tel: String) {
     this.startActivity(intent)
 }
 
-fun View.hide(){
+fun View.hide() {
     this.visibility = View.GONE
 }
 

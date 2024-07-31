@@ -6,6 +6,6 @@ interface PackageListener {
     fun onApplicationDeleted()
 }
 
-interface AppsFetchedListener {
-    fun onAllAppsFetched(apps: MutableList<AppInfo>)
+interface AppsFetchedListener<T> {
+    fun onAllAppsFetched(apps: MutableList<T>)
 }

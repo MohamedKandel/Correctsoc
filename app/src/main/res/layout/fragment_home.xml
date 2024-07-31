@@ -56,7 +56,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/menuIcon"
-
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="@dimen/_12sdp"
@@ -176,11 +175,12 @@
                     android:id="@+id/btn_scan"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_row="1"
+                    android:layout_row="2"
                     android:layout_rowWeight="1"
-                    android:layout_column="1"
+                    android:layout_column="0"
                     android:layout_columnWeight="1"
                     android:layout_marginTop="@dimen/_24sdp"
+                    android:layout_marginEnd="@dimen/_18sdp"
                     android:background="@drawable/home_icon_drawable">
 
                     <ImageView
@@ -211,12 +211,11 @@
                     android:id="@+id/btn_connected_devices"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_row="2"
+                    android:layout_row="1"
                     android:layout_rowWeight="1"
-                    android:layout_column="0"
+                    android:layout_column="1"
                     android:layout_columnWeight="1"
                     android:layout_marginTop="@dimen/_24sdp"
-                    android:layout_marginEnd="@dimen/_18sdp"
                     android:background="@drawable/home_icon_drawable">
 
                     <ImageView
@@ -291,6 +290,7 @@
                 android:layout_marginTop="@dimen/_22sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:nestedScrollingEnabled="false"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/ads_list_item" />

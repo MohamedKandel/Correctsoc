@@ -74,17 +74,6 @@ class LoginFragment : Fragment() {
             source = requireArguments().getInt(SOURCE)
         }
 
-        /*binding.rememberLayout.setOnClickListener {
-            if (!isRemember) {
-                binding.rememberIcon.setImageResource(R.drawable.check_circle_icon)
-                helper.setRemember(requireContext(), true)
-            } else {
-                binding.rememberIcon.setImageResource(R.drawable.dot_icon)
-                helper.setRemember(requireContext(), false)
-            }
-            isRemember = !isRemember
-        }*/
-
         if (helper.getLang(requireContext()).equals("en")) {
             startIndx = 21
             endIndx = 28
@@ -92,18 +81,7 @@ class LoginFragment : Fragment() {
             startIndx = 16
             endIndx = 28
         }
-        /*val span = helper.setSpannable(
-            startIndx,
-            endIndx,
-            resources.getString(R.string.new_user),
-            resources.getColor(R.color.white, context?.theme)
-        ) {
-            val bundle = Bundle()
-            bundle.putInt(SOURCE, R.id.loginFragment)
-            findNavController().navigate(R.id.signUpFragment, bundle)
-        }
 
-        binding.txtSignup.text = span*/
         binding.txtSignup.setSpannable(
             startIndx,
             endIndx,
@@ -233,8 +211,11 @@ class LoginFragment : Fragment() {
             } else {
                 binding.progress.hide()
                 binding.placeholder.hide()
-                Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
-                    .show()
+                if (it.errorMessages == "this Phone Number Not Confirmed not confirmed yet") {
+                    forgotPassword(binding.txtPhone.text.toString())
+                }
+                Toast.makeText(requireContext(), "${it.errorMessages}\n" +
+                        "You will redirect to OTP automatically", Toast.LENGTH_SHORT).show()
             }
         }
     }
