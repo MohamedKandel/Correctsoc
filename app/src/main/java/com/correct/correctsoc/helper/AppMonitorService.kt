@@ -17,7 +17,9 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.correct.correctsoc.MainActivity
 import com.correct.correctsoc.R
@@ -37,10 +39,14 @@ class AppMonitorService : Service() {
         private const val CHANNEL_ID = "AppMonitorChannel"
         private const val NOTIFICATION_ID = 1
     }
+
     private var lastPackageName: String? = null
     private val serviceScope = CoroutineScope(Dispatchers.IO)
     private lateinit var viewModel: HomeViewModel
     private lateinit var notificationManager: NotificationManager
+    private lateinit var connectionManager: ConnectionManager
+    private var isConnected = MutableLiveData<Boolean>()
+    private lateinit var helper: HelperClass
 
     // handler to change isAllowed value every 1 minute
     private val lockAppsHandler = Handler(Looper.getMainLooper())
@@ -102,20 +108,48 @@ class AppMonitorService : Service() {
         notificationManager = getSystemService(NotificationManager::class.java)
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(application)
             .create(HomeViewModel::class.java)
+        helper = HelperClass.getInstance()
+
+        connectionManager = ConnectionManager(this)
+        connectionManager.observe()
+        connectionManager.statusLiveData.observeForever {
+            when (it) {
+                ConnectivityListener.Status.AVAILABLE -> {
+                    isConnected.postValue(true)
+                }
+
+                ConnectivityListener.Status.UNAVAILABLE -> {
+                    isConnected.postValue(false)
+                }
+
+                ConnectivityListener.Status.LOST -> {
+                    isConnected.postValue(false)
+                }
+
+                ConnectivityListener.Status.LOSING -> {
+                    isConnected.postValue(false)
+                }
+            }
+        }
 
         viewModel.getNotificationMessage()
 
         createNotificationChannel()
 
         viewModel.notificationMessage.observeForever {
-            if (it.isSuccess) {
-                if (it.result != null) {
-                    updateNotification(it.result)
+            isConnected.observeForever { isConnected ->
+                if (isConnected) {
+                    if (it.isSuccess) {
+                        if (it.result != null) {
+                            updateNotification(it.result)
+                            helper.setNotification(this, it.result)
+                        }
+                    } else {
+                        updateNotification(helper.getNotificationText(this))
+                    }
                 } else {
-                    updateNotification("Null result")
+                    updateNotification(helper.getNotificationText(this))
                 }
-            } else {
-                updateNotification("Correctsoc Applocker")
             }
         }
         val initialNotification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -160,7 +194,7 @@ class AppMonitorService : Service() {
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
-            channel.setSound(null,null)
+            channel.setSound(null, null)
             channel.setShowBadge(false)
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

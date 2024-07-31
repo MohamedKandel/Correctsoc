@@ -26,6 +26,7 @@ import com.correct.correctsoc.helper.Constants.FIRST_TIME
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
 import com.correct.correctsoc.helper.Constants.IS_LOGGED
 import com.correct.correctsoc.helper.Constants.LANG
+import com.correct.correctsoc.helper.Constants.NOTIFICATION
 import com.correct.correctsoc.helper.Constants.SPLASH_TIME
 import com.correct.correctsoc.helper.Constants.STATUS
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
@@ -48,6 +49,20 @@ class HelperClass {
     private fun initSP(context: Context) {
         sp = PreferenceManager.getDefaultSharedPreferences(context)
         editor = sp.edit()
+    }
+
+    fun setNotification(context: Context, notificationText: String) {
+        initSP(context)
+        editor.apply {
+            putString(NOTIFICATION, notificationText)
+            commit()
+            apply()
+        }
+    }
+
+    fun getNotificationText(context: Context): String {
+        initSP(context)
+        return sp.getString(NOTIFICATION,"Correctsoc Applocker") ?: "Correctsoc Applocker"
     }
 
     fun deleteSplashTime(context: Context) {
@@ -253,7 +268,11 @@ class HelperClass {
 
     fun isUnknownSourcesEnabled(context: Context): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (ContextCompat.checkSelfPermission(context,Manifest.permission.REQUEST_INSTALL_PACKAGES) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.REQUEST_INSTALL_PACKAGES
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 return context.packageManager.canRequestPackageInstalls()
             } else {
                 return false
@@ -278,6 +297,6 @@ class HelperClass {
 
     fun getDeviceStatus(context: Context): Boolean {
         initSP(context)
-        return sp.getBoolean(STATUS,false) ?: false
+        return sp.getBoolean(STATUS, false) ?: false
     }
 }
