@@ -23,7 +23,7 @@
             android:layout_width="@dimen/_50sdp"
             android:layout_height="@dimen/_50sdp"
             android:contentDescription="@string/app_lock"
-            android:src="@drawable/temp_ad"
+            android:src="@drawable/password_fragment_logo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

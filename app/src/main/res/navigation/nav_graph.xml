@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.correct.correctsoc.ui.SplashFragment"
+        android:name="com.correct.correctsoc.ui.onBoarding.SplashFragment"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" />
     <fragment
