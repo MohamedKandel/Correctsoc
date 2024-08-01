@@ -40,9 +40,11 @@
             android:autofillHints="name"
             android:inputType="text"
             android:id="@+id/txt_search"
+            android:textColorHint="@color/alphaWhite"
             android:background="@drawable/search_app_drawable"
             android:drawableStart="@drawable/search_icon"
-            android:drawableTint="#56000000"
+            android:drawableTint="@color/alphaWhite"
+            android:textColor="@color/white"
             android:drawablePadding="@dimen/_3sdp"
             android:layout_marginEnd="@dimen/_15sdp"/>
 

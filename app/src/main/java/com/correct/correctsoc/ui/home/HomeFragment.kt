@@ -88,18 +88,6 @@ class HomeFragment : Fragment(), ClickListener {
         ) {
             if (it) {
                 // permission is granted
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
-                    if (!Settings.canDrawOverlays(requireContext())) {
-                        val intent = Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:${requireContext().packageName}")
-                        )
-                        startActivity(intent)
-                    }
-                } // call permission here
-                if (!hasUsageStatsPermission(requireContext())) {
-                    requestUsageStatsPermission(requireContext())
-                }
                 val intent = Intent(requireContext(), AppMonitorService::class.java)
                 ContextCompat.startForegroundService(requireContext(), intent)
                 findNavController().navigate(R.id.fetchingAppsFragment)
@@ -110,6 +98,11 @@ class HomeFragment : Fragment(), ClickListener {
                     resources.getString(R.string.notification_required),
                     Toast.LENGTH_SHORT
                 ).show()
+
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package",requireContext().packageName,null)
+                intent.data = uri
+                startActivity(intent)
             }
         }
 
@@ -121,18 +114,6 @@ class HomeFragment : Fragment(), ClickListener {
             )
                     == PackageManager.PERMISSION_GRANTED -> {
                 // permission granted
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
-                    if (!Settings.canDrawOverlays(requireContext())) {
-                        val intent = Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:${requireContext().packageName}")
-                        )
-                        startActivity(intent)
-                    }
-                } // call permission here
-                if (!hasUsageStatsPermission(requireContext())) {
-                    requestUsageStatsPermission(requireContext())
-                }
                 val intent = Intent(requireContext(), AppMonitorService::class.java)
                 ContextCompat.startForegroundService(requireContext(), intent)
                 findNavController().navigate(R.id.fetchingAppsFragment)
@@ -145,6 +126,10 @@ class HomeFragment : Fragment(), ClickListener {
                     resources.getString(R.string.notification_sorry),
                     Toast.LENGTH_SHORT
                 ).show()
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package",requireContext().packageName,null)
+                intent.data = uri
+                startActivity(intent)
             }
 
             else -> {
@@ -260,16 +245,6 @@ class HomeFragment : Fragment(), ClickListener {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     requestNotificationPermission()
                 } else {
-                    if (!Settings.canDrawOverlays(requireContext())) {
-                        val intent = Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:${requireContext().packageName}")
-                        )
-                        startActivity(intent)
-                    }
-                    if (!hasUsageStatsPermission(requireContext())) {
-                        requestUsageStatsPermission(requireContext())
-                    }
                     val intent = Intent(requireContext(), AppMonitorService::class.java)
                     ContextCompat.startForegroundService(requireContext(), intent)
                     findNavController().navigate(R.id.fetchingAppsFragment)

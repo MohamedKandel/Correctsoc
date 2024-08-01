@@ -1,11 +1,14 @@
 package com.correct.correctsoc.helper
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Shader
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.text.Editable
 import android.text.InputFilter
@@ -16,6 +19,8 @@ import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Base64
 import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
@@ -105,23 +110,23 @@ fun String.isContainsLowerCase(): Boolean {
     return flag
 }
 
-fun MutableLiveData<MutableList<Any>>.add(item: Any) {
+fun <T> MutableLiveData<MutableList<T>>.add(item: T) {
     val currentList = this.value
     currentList?.add(item)
     this.value = currentList
 }
 
-fun MutableLiveData<MutableList<Any>>.remove(item: Any) {
+fun <T> MutableLiveData<MutableList<T>>.remove(item: T) {
     val currentList = this.value
     currentList?.remove(item)
     this.value = currentList
 }
 
-fun MutableLiveData<MutableList<Any>>.clear() {
+fun <T> MutableLiveData<MutableList<T>>.clear() {
     this.value?.clear()
 }
 
-fun MutableLiveData<MutableList<Any>>.contains(item: Any): Boolean {
+fun <T> MutableLiveData<MutableList<T>>.contains(item: T): Boolean {
     return this.value?.contains(item) ?: false
 }
 
@@ -484,4 +489,15 @@ fun Context.readFile(fileRes: Int): String {
     val inputStram = this.resources.openRawResource(fileRes)
     val bufferedReader = BufferedReader(InputStreamReader(inputStram))
     return bufferedReader.use { it.readText() }
+}
+
+fun Dialog.displayDialog(layoutID: Int,context: Context): Dialog {
+    val dialog = Dialog(context)
+    dialog.setContentView(layoutID)
+    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.window?.setLayout(MATCH_PARENT, WRAP_CONTENT)
+    dialog.setCancelable(true)
+    dialog.setCanceledOnTouchOutside(true)
+    dialog.show()
+    return dialog
 }

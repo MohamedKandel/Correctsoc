@@ -89,7 +89,7 @@ class ParentPayFragment : Fragment(), NextStepListener {
             }
             parentPayFragment.changeSteps(2)
             parentFragmentManager.popBackStack()
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             findNavController().navigate(R.id.homeFragment)
             ex.stackTrace
         }

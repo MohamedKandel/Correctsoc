@@ -1,8 +1,15 @@
 package com.correct.correctsoc.ui.lock
 
+import android.app.AppOpsManager
+import android.app.Dialog
 import android.content.Context
+import android.content.Intent
+import android.media.Image
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Process
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -10,6 +17,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,6 +34,9 @@ import com.correct.correctsoc.helper.Constants.LIST
 import com.correct.correctsoc.helper.Constants.PACKAGE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.displayDialog
+import com.correct.correctsoc.helper.hide
+import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.App
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.CoroutineScope
@@ -43,6 +55,10 @@ class AppsFragment : Fragment(), ClickListener {
     private lateinit var list: MutableList<App>
     private lateinit var fragmentListener: FragmentChangedListener
     private lateinit var usersDB: UsersDB
+    private var isUsageAccepted = false
+    private var isDisplayAccepted = false
+    private lateinit var dialog: Dialog
+    private var isDialogVisible = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -71,11 +87,21 @@ class AppsFragment : Fragment(), ClickListener {
         }
 
         helper.onBackPressed(this) {
-            findNavController().navigate(R.id.homeFragment)
+            if (isDialogVisible) {
+                dialog.dismiss()
+                dialog.cancel()
+            } else {
+                findNavController().navigate(R.id.homeFragment)
+            }
         }
 
         binding.btnBack.setOnClickListener {
-            findNavController().navigate(R.id.homeFragment)
+            if (isDialogVisible) {
+                dialog.dismiss()
+                dialog.cancel()
+            } else {
+                findNavController().navigate(R.id.homeFragment)
+            }
         }
 
         lifecycleScope.launch {
@@ -140,7 +166,7 @@ class AppsFragment : Fragment(), ClickListener {
     private fun search(keyWord: String): MutableList<App> {
         val filteredList = mutableListOf<App>()
         for (app in list) {
-            if (app.appName.contains(keyWord,true)) {
+            if (app.appName.contains(keyWord, true)) {
                 filteredList.add(app)
             }
         }
@@ -152,6 +178,31 @@ class AppsFragment : Fragment(), ClickListener {
         fragmentListener.onFragmentChangedListener(R.id.appsFragment)
     }
 
+    private fun hasUsageStatsPermission(context: Context): Boolean {
+        val appOps = context
+            .getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+        val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            appOps.unsafeCheckOpNoThrow(
+                "android:get_usage_stats",
+                Process.myUid(), context.packageName
+            )
+        } else {
+            appOps.checkOpNoThrow(
+                "android:get_usage_stats",
+                Process.myUid(), context.packageName
+            )
+        }
+        val granted = mode == AppOpsManager.MODE_ALLOWED
+        return granted
+    }
+
+    private fun requestUsageStatsPermission(context: Context) {
+        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+        context.startActivity(intent)
+    }
+
+    private fun isDisplayOverAppsEnabled() = !Settings.canDrawOverlays(requireContext())
+
     override fun onItemClickListener(position: Int, extras: Bundle?) {
         Log.v("Package name mohamed", list[position].packageName)
         if (extras != null) {
@@ -159,10 +210,105 @@ class AppsFragment : Fragment(), ClickListener {
             val pkg = extras.getString(PACKAGE, "") ?: ""
             if (tag.isNotEmpty()) {
                 if (tag == resources.getString(R.string.unlock)) {
-                    val bundle = Bundle()
-                    bundle.putParcelable(ITEM, list[position])
-                    bundle.putParcelableArrayList(LIST, ArrayList(list))
-                    findNavController().navigate(R.id.passwordFragment, bundle)
+                    isUsageAccepted = hasUsageStatsPermission(requireContext())
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+                        isDisplayAccepted = false
+                    } else {
+                        isDisplayAccepted = isDisplayOverAppsEnabled()
+                    }
+                    if (isUsageAccepted && isDisplayAccepted) {
+                        val bundle = Bundle()
+                        bundle.putParcelable(ITEM, list[position])
+                        bundle.putParcelableArrayList(LIST, ArrayList(list))
+                        findNavController().navigate(R.id.passwordFragment, bundle)
+                    } else {
+                        dialog = Dialog(requireContext()).displayDialog(
+                            R.layout.lock_permissions_dialog,
+                            requireContext()
+                        )
+
+                        isDialogVisible = true
+
+                        val btn_usage = dialog.findViewById<RelativeLayout>(R.id.btn_usage_access)
+                        val btn_display =
+                            dialog.findViewById<RelativeLayout>(R.id.btn_draw_over_apps)
+                        val usage_permission_status =
+                            dialog.findViewById<ImageView>(R.id.usage_permission_icon)
+                        val draw_permission_status =
+                            dialog.findViewById<ImageView>(R.id.display_permission_icon)
+
+                        btn_usage.setOnClickListener {
+                            dialog.dismiss()
+                            dialog.cancel()
+                            isDialogVisible = false
+                            requestUsageStatsPermission(requireContext())
+                        }
+
+                        btn_display.setOnClickListener {
+                            dialog.dismiss()
+                            dialog.cancel()
+                            isDialogVisible = false
+                            val intent = Intent(
+                                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                Uri.parse("package:${requireContext().packageName}")
+                            )
+                            startActivity(intent)
+                        }
+
+                        /*if (Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+                            btn_display.hide()
+                            draw_permission_status.show()
+                            draw_permission_status.setImageResource(R.drawable.clear_icon)
+                            draw_permission_status.setColorFilter(
+                                resources.getColor(
+                                    R.color.danger_color,
+                                    context?.theme
+                                )
+                            )
+                        }*/
+
+                        if (isDisplayAccepted) {
+                            btn_display.hide()
+                            draw_permission_status.show()
+                            draw_permission_status.setImageResource(R.drawable.check_icon)
+                            draw_permission_status.setColorFilter(
+                                resources.getColor(
+                                    R.color.safe_color,
+                                    context?.theme
+                                )
+                            )
+                        } else {
+                            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+                                btn_display.show()
+                                draw_permission_status.hide()
+                            } else {
+                                btn_display.hide()
+                                draw_permission_status.show()
+                                draw_permission_status.setImageResource(R.drawable.clear_icon)
+                                draw_permission_status.setColorFilter(
+                                    resources.getColor(
+                                        R.color.danger_color,
+                                        context?.theme
+                                    )
+                                )
+                            }
+                        }
+
+                        if (isUsageAccepted) {
+                            btn_usage.hide()
+                            usage_permission_status.show()
+                            usage_permission_status.setImageResource(R.drawable.check_icon)
+                            usage_permission_status.setColorFilter(
+                                resources.getColor(
+                                    R.color.safe_color,
+                                    context?.theme
+                                )
+                            )
+                        } else {
+                            btn_usage.show()
+                            usage_permission_status.hide()
+                        }
+                    }
                 } else {
                     // switch to unlock
                     lifecycleScope.launch {
