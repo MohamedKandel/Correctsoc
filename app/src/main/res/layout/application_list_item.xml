@@ -36,7 +36,7 @@
             android:text="@string/app_lock"
             android:textColor="@color/white"
             android:textSize="@dimen/_12ssp"
-            app:layout_constraintEnd_toEndOf="@id/img_status"
+            app:layout_constraintEnd_toStartOf="@id/img_status"
             app:layout_constraintStart_toEndOf="@id/app_icon"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,7 +50,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/_11ssp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/img_status"
+            app:layout_constraintEnd_toStartOf="@id/img_status"
             app:layout_constraintStart_toEndOf="@id/app_icon" />
 
 
