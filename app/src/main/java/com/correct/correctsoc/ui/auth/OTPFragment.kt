@@ -24,6 +24,7 @@ import com.correct.correctsoc.data.auth.ConfirmPhoneBody
 import com.correct.correctsoc.data.auth.UpdatePhoneBody
 import com.correct.correctsoc.data.auth.ValidateOTPBody
 import com.correct.correctsoc.databinding.FragmentOTPBinding
+import com.correct.correctsoc.helper.Constants.ISRECONFIRM
 import com.correct.correctsoc.helper.Constants.PHONE
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TAG
@@ -47,6 +48,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
     private lateinit var binding: FragmentOTPBinding
     private lateinit var verification: String
     private var source = -1
+    private var phone = ""
     private lateinit var helper: HelperClass
 
     //private var smsReceiver: SmsReceiver? = null
@@ -54,6 +56,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
     private lateinit var usersDB: UsersDB
     private lateinit var viewModel: AuthViewModel
     private lateinit var fragmentListener: FragmentChangedListener
+    private var isReconfirmed = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -82,6 +85,10 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
 
         if (arguments != null) {
             source = requireArguments().getInt(SOURCE)
+            phone = requireArguments().getString(PHONE) ?: ""
+            if (source == R.id.loginFragment) {
+                isReconfirmed = requireArguments().getBoolean(ISRECONFIRM)
+            }
         }
 
         binding.txtFirstDigit.requestFocus()
@@ -132,13 +139,29 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
 
         binding.btnResend.setOnClickListener {
             countDownTimer?.cancel()
-            lifecycleScope.launch {
-                binding.placeholder.show()
-                binding.progress.show()
-                val id = usersDB.dao().getUserID() ?: ""
-                val phone = usersDB.dao().getUserPhone(id) ?: ""
-                resendOTP(phone)
+            if (arguments != null) {
+                val phone = requireArguments().getString(PHONE) ?: ""
+                if (phone.isNotEmpty()) {
+                    resendOTP(phone)
+                } else {
+                    lifecycleScope.launch {
+                        binding.placeholder.show()
+                        binding.progress.show()
+                        val id = usersDB.dao().getUserID() ?: ""
+                        val phone = usersDB.dao().getUserPhone(id) ?: ""
+                        resendOTP(phone)
+                    }
+                }
+            } else {
+                lifecycleScope.launch {
+                    binding.placeholder.show()
+                    binding.progress.show()
+                    val id = usersDB.dao().getUserID() ?: ""
+                    val phone = usersDB.dao().getUserPhone(id) ?: ""
+                    resendOTP(phone)
+                }
             }
+
             startCountDownTimer()
         }
 
@@ -146,21 +169,8 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
     }
 
     private fun getUserPhone() {
-        if (arguments != null) {
-            val phone = requireArguments().getString(PHONE)?: ""
-            if (phone.isNotEmpty()) {
-                binding.txtMsg.append(" $phone")
-            } else {
-                lifecycleScope.launch {
-                    val id = usersDB.dao().getUserID() ?: ""
-                    val mphone = if (id.isNotEmpty()) {
-                        usersDB.dao().getUserPhone(id) ?: ""
-                    } else {
-                        usersDB.dao().getUserPhone("1")
-                    }
-                    binding.txtMsg.append(" $mphone")
-                }
-            }
+        if (phone.isNotEmpty() && !phone.equals("null")) {
+            binding.txtMsg.append(" $phone")
         } else {
             lifecycleScope.launch {
                 val id = usersDB.dao().getUserID() ?: ""
@@ -172,7 +182,6 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                 binding.txtMsg.append(" $phone")
             }
         }
-        /**/
     }
 
     private fun confirmOTP(body: ConfirmPhoneBody) {
@@ -387,31 +396,32 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         Log.i("Verification mohamed", "onCreateView: $verification")
         lifecycleScope.launch {
             val id = usersDB.dao().getUserID() ?: ""
-            val phone = usersDB.dao().getUserPhone(id) ?: ""
+            val phone = if (arguments != null) {
+                requireArguments().getString(PHONE) ?: usersDB.dao().getUserPhone(id) ?: ""
+            } else {
+                usersDB.dao().getUserPhone(id) ?: ""
+            }
             binding.placeholder.show()
             binding.progress.show()
             when (source) {
                 R.id.loginFragment -> {
-                    // forgot password clicked
-                    if (phone.isNotEmpty()) {
-                        val body = ValidateOTPBody(verification, phone)
-                        validateOTP(body)
+                    isReconfirmed = requireArguments().getBoolean(ISRECONFIRM)
+                    // Log.v("okhttp.OkHttpClient","http://correctsocandroidapi.somee.com/api/Authentication/ $isReconfirmed")
+                    // forgot password clicked or reconfirming phone
+                    if (isReconfirmed) {
+                        val body = ConfirmPhoneBody(phone,verification)
+                        reConform(body)
                     } else {
-                        Toast.makeText(
-                            requireContext(), resources.getString(R.string.phone_not_found),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if (phone.isNotEmpty()) {
+                            val body = ValidateOTPBody(verification, phone)
+                            validateOTP(body)
+                        } else {
+                            Toast.makeText(
+                                requireContext(), resources.getString(R.string.phone_not_found),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                    /*if (code.equals(verification) || code.isEmpty()) {
-                    // correct
-//                    } else {
-//                        // wrong
-//                        Toast.makeText(
-//                            requireContext(),
-//                            resources.getString(R.string.not_match),
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }*/
                 }
 
                 R.id.signUpFragment -> {
@@ -435,6 +445,19 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         }
     }
 
+    private fun reConform(body: ConfirmPhoneBody) {
+        viewModel.confirmOTP(body)
+        val observer = object : Observer<AuthResponse> {
+            override fun onChanged(value: AuthResponse) {
+                if (value.isSuccess) {
+                    findNavController().navigate(R.id.loginFragment)
+                }
+                viewModel.otpResponse.removeObserver(this)
+            }
+        }
+        viewModel.otpResponse.observe(viewLifecycleOwner,observer)
+    }
+
     private fun validateOTP(body: ValidateOTPBody) {
         viewModel.validateOTP(body)
         val observer = object : Observer<AuthResponse> {
@@ -442,10 +465,12 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                 if (value.isSuccess) {
                     binding.placeholder.hide()
                     binding.progress.hide()
+
                     val token = requireArguments().getString(TOKEN_KEY, "") ?: ""
                     val bundle = Bundle()
                     bundle.putString(TOKEN_KEY, token)
                     findNavController().navigate(R.id.resetPasswordFragment, bundle)
+
                 } else {
                     binding.placeholder.hide()
                     binding.progress.hide()

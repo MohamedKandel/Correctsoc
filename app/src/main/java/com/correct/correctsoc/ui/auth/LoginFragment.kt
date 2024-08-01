@@ -12,12 +12,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
+import com.correct.correctsoc.data.auth.AuthResponse
 import com.correct.correctsoc.data.auth.LoginBody
 import com.correct.correctsoc.databinding.FragmentLoginBinding
+import com.correct.correctsoc.helper.Constants.ISRECONFIRM
 import com.correct.correctsoc.helper.Constants.PHONE
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
@@ -38,8 +41,6 @@ class LoginFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentLoginBinding
-
-    //    private var isRemember = false
     private lateinit var helper: HelperClass
     private var startIndx = 0
     private var endIndx = 0
@@ -215,14 +216,35 @@ class LoginFragment : Fragment() {
                 binding.progress.hide()
                 binding.placeholder.hide()
                 if (it.errorMessages == "this Phone Number Not Confirmed not confirmed yet") {
-                    forgotPassword(binding.txtPhone.text.toString())
+                    reConfirmPhone(phone = binding.txtPhone.text.toString())
+                    Toast.makeText(
+                        requireContext(), "${it.errorMessages}\n" +
+                                "You will redirect to OTP automatically", Toast.LENGTH_SHORT
+                    ).show()
                 }
                 Toast.makeText(
-                    requireContext(), "${it.errorMessages}\n" +
-                            "You will redirect to OTP automatically", Toast.LENGTH_SHORT
+                    requireContext(), it.errorMessages, Toast.LENGTH_SHORT
                 ).show()
             }
         }
+    }
+
+    private fun reConfirmPhone(phone: String) {
+        viewModel.resendOTP(phone)
+        val observer = object : Observer<AuthResponse> {
+            override fun onChanged(value: AuthResponse) {
+                if (value.isSuccess) {
+                    val bundle = Bundle()
+                    bundle.putBoolean(ISRECONFIRM, true)
+                    bundle.putInt(SOURCE, R.id.loginFragment)
+                    bundle.putString(PHONE, phone)
+                    findNavController().navigate(R.id.OTPFragment, bundle)
+                }
+
+                viewModel.otpResponse.removeObserver(this)
+            }
+        }
+        viewModel.otpResponse.observe(viewLifecycleOwner, observer)
     }
 
     private fun forgotPassword(phone: String) {
@@ -233,9 +255,9 @@ class LoginFragment : Fragment() {
                 binding.placeholder.hide()
                 val bundle = Bundle()
                 if (it.result != null) {
-                    //bundle.putString(CODE, it.result.otp)
                     bundle.putString(PHONE, phone)
                     bundle.putString(TOKEN_KEY, it.result)
+                    bundle.putBoolean(ISRECONFIRM, false)
                     bundle.putInt(SOURCE, R.id.loginFragment)
                     findNavController().navigate(R.id.OTPFragment, bundle)
                 }

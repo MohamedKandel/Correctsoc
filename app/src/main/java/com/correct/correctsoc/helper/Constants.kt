@@ -31,11 +31,9 @@ object Constants {
     const val TOTAL_PRICE = "total price"
     const val PROMO = "promo code"
     const val STATUS = "device status"
-    const val WA_NUMBER = "wa number"
-    const val PHONE_NUMBER = "phone number"
-    const val AD_OBJECT = "ad object"
     const val PACKAGE = "Package name"
     const val PHONE = "phone number"
+    const val ISRECONFIRM = "is reconfirm"
     const val NOTIFICATION = "Notification"
     const val ISLOCKED = "is app lock"
     // problem with EGP
