@@ -105,23 +105,23 @@ fun String.isContainsLowerCase(): Boolean {
     return flag
 }
 
-fun MutableLiveData<MutableList<Int>>.add(item: Int) {
+fun MutableLiveData<MutableList<Any>>.add(item: Any) {
     val currentList = this.value
     currentList?.add(item)
     this.value = currentList
 }
 
-fun MutableLiveData<MutableList<Int>>.remove(item: Int) {
+fun MutableLiveData<MutableList<Any>>.remove(item: Any) {
     val currentList = this.value
     currentList?.remove(item)
     this.value = currentList
 }
 
-fun MutableLiveData<MutableList<Int>>.clear() {
+fun MutableLiveData<MutableList<Any>>.clear() {
     this.value?.clear()
 }
 
-fun MutableLiveData<MutableList<Int>>.contains(item: Int): Boolean {
+fun MutableLiveData<MutableList<Any>>.contains(item: Any): Boolean {
     return this.value?.contains(item) ?: false
 }
 
