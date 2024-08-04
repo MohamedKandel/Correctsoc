@@ -78,7 +78,6 @@ class HomeFragment : Fragment(), ClickListener {
     private lateinit var viewModel: AuthViewModel
     private lateinit var fragmentListener: FragmentChangedListener
     private val handler = Handler(Looper.getMainLooper())
-    private var position = 0
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var connectionManager: ConnectionManager
     private var isConnected = MutableLiveData<Boolean>()
@@ -372,12 +371,6 @@ class HomeFragment : Fragment(), ClickListener {
         handler.removeCallbacksAndMessages(null)
     }
 
-    /*private fun String.getEndDat(): String {
-        val arr = this.split("T")
-        return arr[0]
-    }*/
-
-
     private fun getUserPlan(userID: String) {
         homeViewModel.getUserPlan(userID)
         val observer = object : Observer<UserPlanResponse?> {
@@ -536,29 +529,6 @@ class HomeFragment : Fragment(), ClickListener {
                 negativeButtonFunction = {
 
                 })
-    }
-
-    private fun hasUsageStatsPermission(context: Context): Boolean {
-        val appOps = context
-            .getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-        val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            appOps.unsafeCheckOpNoThrow(
-                "android:get_usage_stats",
-                Process.myUid(), context.packageName
-            )
-        } else {
-            appOps.checkOpNoThrow(
-                "android:get_usage_stats",
-                Process.myUid(), context.packageName
-            )
-        }
-        val granted = mode == AppOpsManager.MODE_ALLOWED
-        return granted
-    }
-
-    private fun requestUsageStatsPermission(context: Context) {
-        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-        context.startActivity(intent)
     }
 
     override fun onItemClickListener(position: Int, extras: Bundle?) {
