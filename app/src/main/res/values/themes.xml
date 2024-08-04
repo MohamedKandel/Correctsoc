@@ -6,16 +6,9 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="colorPrimary">@color/dark_purple</item>
-
+        <item name="android:windowIsTranslucent">true</item>
 
     </style>
-
-    <!--
-    <style name="Spinner" parent="Widget.AppCompat.TextView.SpinnerItem">
-        <item name="android:background">@drawable/spn_duration_drawable</item>
-        <item name="fontFamily">@font/roboto_regular</item>
-    </style>
-    -->
 
     <style name="Theme.CorrectSoc" parent="Base.Theme.CorrectSoc" />
     
