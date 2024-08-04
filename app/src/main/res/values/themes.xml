@@ -6,7 +6,9 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="colorPrimary">@color/dark_purple</item>
+        <!-- don't use this line to remove white screen
         <item name="android:windowIsTranslucent">true</item>
+        -->
 
     </style>
 
