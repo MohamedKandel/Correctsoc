@@ -45,6 +45,10 @@ class PasswordFragment : Fragment() {
                 findNavController().navigate(R.id.appsFragment, requireArguments())
             }
 
+            if(helper.getLang(requireContext()).equals("ar")) {
+                binding.btnBack.rotation = 180f
+            }
+
             binding.btnBack.setOnClickListener {
                 findNavController().navigate(R.id.appsFragment, requireArguments())
             }
@@ -60,6 +64,7 @@ class PasswordFragment : Fragment() {
             stringBuilder = StringBuilder()
 
             binding.apply {
+                keyboardLayout.layoutDirection = View.LAYOUT_DIRECTION_LTR
                 txtOne.setOnClickListener {
                     if (index < 4) {
                         stringBuilder.insert(index, "1")

@@ -4,7 +4,6 @@ import android.app.AppOpsManager
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.media.Image
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -57,8 +56,6 @@ class AppsFragment : Fragment(), ClickListener {
     private lateinit var usersDB: UsersDB
     private var isUsageAccepted = false
     private var isDisplayAccepted = false
-    private lateinit var dialog: Dialog
-    private var isDialogVisible = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -87,21 +84,11 @@ class AppsFragment : Fragment(), ClickListener {
         }
 
         helper.onBackPressed(this) {
-            if (isDialogVisible) {
-                dialog.dismiss()
-                dialog.cancel()
-            } else {
-                findNavController().navigate(R.id.homeFragment)
-            }
+            findNavController().navigate(R.id.homeFragment)
         }
 
         binding.btnBack.setOnClickListener {
-            if (isDialogVisible) {
-                dialog.dismiss()
-                dialog.cancel()
-            } else {
-                findNavController().navigate(R.id.homeFragment)
-            }
+            findNavController().navigate(R.id.homeFragment)
         }
 
         lifecycleScope.launch {
@@ -201,7 +188,10 @@ class AppsFragment : Fragment(), ClickListener {
         context.startActivity(intent)
     }
 
-    private fun isDisplayOverAppsEnabled() = !Settings.canDrawOverlays(requireContext())
+    private fun isDisplayOverAppsEnabled(): Boolean {
+        return Settings.canDrawOverlays(requireContext())
+    }
+
 
     override fun onItemClickListener(position: Int, extras: Bundle?) {
         Log.v("Package name mohamed", list[position].packageName)
@@ -216,18 +206,17 @@ class AppsFragment : Fragment(), ClickListener {
                     } else {
                         isDisplayAccepted = isDisplayOverAppsEnabled()
                     }
+                    Log.v("ISDisplayed mohamed", "$isDisplayAccepted")
                     if (isUsageAccepted && isDisplayAccepted) {
                         val bundle = Bundle()
                         bundle.putParcelable(ITEM, list[position])
                         bundle.putParcelableArrayList(LIST, ArrayList(list))
                         findNavController().navigate(R.id.passwordFragment, bundle)
                     } else {
-                        dialog = Dialog(requireContext()).displayDialog(
+                        val dialog = Dialog(requireContext()).displayDialog(
                             R.layout.lock_permissions_dialog,
                             requireContext()
                         )
-
-                        isDialogVisible = true
 
                         val btn_usage = dialog.findViewById<RelativeLayout>(R.id.btn_usage_access)
                         val btn_display =
@@ -240,14 +229,12 @@ class AppsFragment : Fragment(), ClickListener {
                         btn_usage.setOnClickListener {
                             dialog.dismiss()
                             dialog.cancel()
-                            isDialogVisible = false
                             requestUsageStatsPermission(requireContext())
                         }
 
                         btn_display.setOnClickListener {
                             dialog.dismiss()
                             dialog.cancel()
-                            isDialogVisible = false
                             val intent = Intent(
                                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                                 Uri.parse("package:${requireContext().packageName}")

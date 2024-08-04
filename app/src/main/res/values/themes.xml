@@ -6,7 +6,7 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="colorPrimary">@color/dark_purple</item>
-        <item name="android:windowDisablePreview">true</item>
+
 
     </style>
 

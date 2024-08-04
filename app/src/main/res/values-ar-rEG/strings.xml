@@ -173,7 +173,7 @@
     <string name="receipt_summary">ملخص الاستلام</string>
     <string name="promo_code">كود الخصم</string>
     <string name="apply">تفعيل</string>
-    <string name="app_lock">غلق التطبيقات</string>
+    <string name="app_lock">تأمين التطبيقات</string>
     <string name="six_months">٦ أشهر</string>
     <string name="one_year">سنة واحدة</string>
     <string name="more_devices">أجهزة</string>
@@ -191,9 +191,9 @@
     <string name="error">عذرًا… حدث خطأ ما من فضلك حاول في وقت لاحق</string>
     <string name="no_internet_connection">لايوجد اتصال بالانترنت</string>
     <string name="scanning">مازال الفحص … برجاء الانتظار</string>
-    <string name="lock">مغلق</string>
-    <string name="unlock">غير مغلق</string>
-    <string name="unlock_password">اكتب كلمة مرور الفتح</string>
+    <string name="lock">مؤمن</string>
+    <string name="unlock">غير مؤمن</string>
+    <string name="unlock_password">رقم تأمين التطبيقات</string>
     <string name="password_empty">كلمة المرور لايمكن ان تكون فارغة</string>
     <string name="less_password">كلمة المرور يجب ان تكون على الاقل ٤ أحرف</string>
     <string name="app_locked_successfully">تم غلق التطبيق بنجاح</string>

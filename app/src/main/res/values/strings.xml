@@ -8,7 +8,7 @@
     <string name="arabic" translatable="false">عربي</string>
     <string name="network_scanner">Services</string>
     <string name="self_test">Check router status</string>
-    <string name="app_lock">Application Lock</string>
+    <string name="app_lock">Secured Applications</string>
     <string name="device_scan">Connected wifi device Scan</string>
     <string name="apps_scan">Scan spy apps</string>
     <string name="premium">Buy premium</string>
@@ -206,9 +206,9 @@
     <string name="plus" translatable="false">+</string>
     <string name="one" translatable="false">1</string>
     <string name="scanning">Still scanning … please wait</string>
-    <string name="lock">Locked</string>
-    <string name="unlock">Unlocked</string>
-    <string name="unlock_password">Type an unlock password</string>
+    <string name="lock">Secured</string>
+    <string name="unlock">Unsecured</string>
+    <string name="unlock_password">PIN number for securing applications</string>
     <string name="password_empty">Password shouldn\'t be empty</string>
     <string name="less_password">Password should be 4 characters</string>
     <string name="app_locked_successfully">Application locked successfully</string>

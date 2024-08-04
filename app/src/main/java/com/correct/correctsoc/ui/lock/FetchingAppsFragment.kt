@@ -188,7 +188,7 @@ class FetchingAppsFragment : Fragment() {
                     break
                 }
                 progress.onUpdateProgressLoad(i)
-                delay(150)
+                delay(110)
             }
         }
     }
