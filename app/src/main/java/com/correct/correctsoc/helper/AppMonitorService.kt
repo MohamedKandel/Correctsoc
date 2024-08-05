@@ -61,8 +61,6 @@ class AppMonitorService : Service() {
         }
     }
 
-
-
     private val isInternetConnected = Observer<Boolean> {
         if (it) {
             viewModel.getNotificationMessage()
