@@ -241,14 +241,16 @@ class HomeFragment : Fragment(), ClickListener {
         binding.btnScan.setOnClickListener {
             isConnected.observe(viewLifecycleOwner) {
                 if (it) {
-                    validateToken(helper.getToken(requireContext())) {
-                        // request notification permission
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            requestNotificationPermission()
-                        } else {
-                            val intent = Intent(requireContext(), AppMonitorService::class.java)
-                            ContextCompat.startForegroundService(requireContext(), intent)
-                            findNavController().navigate(R.id.fetchingAppsFragment)
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+                        validateToken(helper.getToken(requireContext())) {
+                            // request notification permission
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                requestNotificationPermission()
+                            } else {
+                                val intent = Intent(requireContext(), AppMonitorService::class.java)
+                                ContextCompat.startForegroundService(requireContext(), intent)
+                                findNavController().navigate(R.id.fetchingAppsFragment)
+                            }
                         }
                     }
                 } else {
