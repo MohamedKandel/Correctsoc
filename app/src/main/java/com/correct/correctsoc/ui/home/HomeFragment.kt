@@ -371,7 +371,15 @@ class HomeFragment : Fragment(), ClickListener {
         handler.removeCallbacksAndMessages(null)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun getUserPlan(userID: String) {
+        lifecycleScope.launch {
+            val user = usersDB.dao().getUser(userID)
+            if (user != null) {
+                Log.v("Current user username", user.username)
+                binding.drawerMenu.txtUsername.text = "${resources.getString(R.string.hello)} ${user.username}"
+            }
+        }
         homeViewModel.getUserPlan(userID)
         val observer = object : Observer<UserPlanResponse?> {
             @SuppressLint("SetTextI18n")

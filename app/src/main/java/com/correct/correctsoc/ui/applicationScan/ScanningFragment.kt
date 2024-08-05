@@ -180,10 +180,12 @@ class ScanningFragment : Fragment() {
                     && !isPreInstalledApp(info)
                 ) {
                     // apk is com.google.android.packageinstaller
+                    Log.v("App found source", installerPackageName)
                     if (isUserInstalledApp(
                             installerPackageName,
                             info.packageName
                         ) || isPackageInstaller(installerPackageName, info.packageName)
+                        || installerPackageName == "com.whatsapp"
                     ) {
                         Log.v("App source info mohamed", info.sourceDir)
                         //Log.v("Installing mohamed", installerPackageName)
@@ -287,7 +289,8 @@ class ScanningFragment : Fragment() {
     private fun isOfficialInstaller(installerPackageName: String): Boolean {
         // Add official installer package names here
         val officialInstallers = listOf(
-            "com.xiaomi.mipicks",
+            "com.facebook.system",                  // Facebook app manager
+            "com.xiaomi.mipicks",                   // Xiaomi's MI Picks app
             "com.heytap.market",                    // Realme & OPPO
             "com.android.vending",                  // Google Play Store
             "com.xiaomi.discover",                  // Xiaomi's own app store or app discovery service

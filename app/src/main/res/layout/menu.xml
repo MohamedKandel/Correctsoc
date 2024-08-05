@@ -18,14 +18,29 @@
         android:contentDescription="@string/app_name"
         android:src="@drawable/correct" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_username"
+        app:layout_constraintTop_toBottomOf="@id/img_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/hello"
+        android:textColor="@color/white"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="@dimen/_14ssp"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_9sdp"
+        android:layout_marginEnd="@dimen/_18sdp"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/premium_drawable"
-        app:layout_constraintTop_toBottomOf="@id/img_logo"
+        app:layout_constraintTop_toBottomOf="@id/txt_username"
         android:textDirection="locale"
         android:layoutDirection="locale"
-        android:layout_marginTop="@dimen/_25sdp"
+        android:layout_marginTop="@dimen/_18sdp"
         android:id="@+id/account_type_layout"
         android:layout_marginStart="@dimen/_4sdp"
         android:layout_marginEnd="@dimen/_4sdp"

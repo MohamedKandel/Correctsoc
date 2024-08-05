@@ -204,4 +204,5 @@
     <string name="usage_access_msg">في نظام Android 7.0 أو الإصدارات الأحدث، يجب عليك السماح بالوصول إلى الاستخدام لـ Correctsoc حتى تتمكن من استخدام ميزة Correctsoc.</string>
     <string name="display_over_msg">يرجى السماح بالتنقل عبر التطبيقات الأخرى للحصول على الميزات المتقدمة.</string>
     <string name="premit">سماح</string>
+    <string name="hello">مرحبًا,</string>
 </resources>
