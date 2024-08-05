@@ -76,13 +76,17 @@ class EditInfoFragment : Fragment() {
                     val lname = if (arr.size > 1) {
                         arr[1]
                     } else {
-                        ""
+                        resources.getString(R.string.enter_lname)
                     }
+                    binding.txtFname.setHint(fname)
+                    binding.txtLname.setHint(lname)
+
                     val phone = usersDB.dao().getUserPhone(userID)?:""
+
                     if (phone.isNotEmpty()) {
-                        binding.txtFname.setHint(fname)
-                        binding.txtLname.setHint(lname)
                         binding.txtPhone.setHint(phone)
+                    } else {
+                        binding.txtPhone.setHint(R.string.enter_phone)
                     }
                 }
             }
