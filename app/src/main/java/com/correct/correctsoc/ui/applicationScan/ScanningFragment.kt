@@ -21,6 +21,7 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
 import com.correct.correctsoc.helper.hide
+import com.correct.correctsoc.room.App
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -159,6 +160,56 @@ class ScanningFragment : Fragment() {
     }
 
     private fun getApps(listener: AppsFetchedListener<AppInfo>) {
+        val apps =
+            requireContext().packageManager.getInstalledPackages(PackageManager.GET_META_DATA)
+        val list = mutableListOf<AppInfo>()
+        for (app in apps) {
+            val info = app.applicationInfo
+            val installerPackageName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val installSourceInfo =
+                    requireContext().packageManager.getInstallSourceInfo(app.packageName)
+                installSourceInfo.installingPackageName
+            } else {
+                requireContext().packageManager.getInstallerPackageName(app.packageName)
+            }
+            if (installerPackageName != null) {
+                if (info.flags and ApplicationInfo.FLAG_SYSTEM == 0
+                    && info.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP == 0
+                    && info.sourceDir.contains("/data/app/")
+                    && !isOfficialInstaller(installerPackageName)
+                    && !isPreInstalledApp(info)
+                ) {
+                    // apk is com.google.android.packageinstaller
+                    if (isUserInstalledApp(
+                            installerPackageName,
+                            info.packageName
+                        ) || isPackageInstaller(installerPackageName, info.packageName)
+                    ) {
+                        Log.v("App source info mohamed", info.sourceDir)
+                        //Log.v("Installing mohamed", installerPackageName)
+                        list.add(
+                            AppInfo(
+                                packageName = info.packageName,
+                                appName = info.loadLabel(requireContext().packageManager)
+                                    .toString(),
+                                appIcon = info.loadIcon(requireContext().packageManager)
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        listener.onAllAppsFetched(list)
+    }
+
+    private fun isPreInstalledApp(appInfo: ApplicationInfo): Boolean {
+        val sourceDir = appInfo.sourceDir
+        return sourceDir.startsWith("/system/") || sourceDir.startsWith("/vendor/") ||
+                sourceDir.startsWith("/product/") || sourceDir.startsWith("/oem/") ||
+                sourceDir.startsWith("/system_ext/") || sourceDir.startsWith("/data/preload/")
+    }
+
+    /*private fun getApps(listener: AppsFetchedListener<AppInfo>) {
         val packageManager = requireContext().packageManager
         val installedPackages = packageManager.getInstalledPackages(PackageManager.GET_META_DATA)
         val unknownSourceApps = mutableListOf<AppInfo>()
@@ -206,21 +257,48 @@ class ScanningFragment : Fragment() {
             "com.amazon.appmanager"
         )
         return officialApps.contains(packageName)
+    }*/
+
+    private fun isUserInstalledApp(InstallerPackageName: String, packageName: String): Boolean {
+        val packageManager = requireContext().packageManager
+        val appInfo: ApplicationInfo = try {
+            packageManager.getApplicationInfo(packageName, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+            return false
+        }
+
+        // Check if it's not a system app or an updated system app
+        val isSystemApp = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+        val isUpdatedSystemApp = (appInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
+
+        // Check if the app is installed in the user apps directory
+        val isInUserAppsDirectory = appInfo.sourceDir.startsWith("/data/app/")
+
+        // Return true if installer is "android", it's not a system app, and it's in the user apps directory
+        return InstallerPackageName == "android" && !isSystemApp && !isUpdatedSystemApp && isInUserAppsDirectory
+    }
+
+    private fun isPackageInstaller(installerPackageName: String, packageName: String): Boolean {
+        val packageInstaller = "com.google.android.packageinstaller"
+        return installerPackageName == packageInstaller
     }
 
     private fun isOfficialInstaller(installerPackageName: String): Boolean {
         // Add official installer package names here
         val officialInstallers = listOf(
+            "com.xiaomi.mipicks",
+            "com.heytap.market",                    // Realme & OPPO
             "com.android.vending",                  // Google Play Store
             "com.xiaomi.discover",                  // Xiaomi's own app store or app discovery service
             "com.amazon.venezia",                   // Amazon Appstore
             "com.oppo.market",                      // OPPO App Market
             "com.xiaomi.market",                    // Xiaomi Mi Market
             "com.huawei.appmarket",                 // Huawei AppGallery
-            "com.sec.android.app.samsungapps",      // Samsung Galaxy Sore
+            "com.sec.android.app.samsungapps",      // Samsung Galaxy Store
             "com.bbk.appstore",                     // VIVO Appstore
             "com.oneplus.store",                    // OnePlus Appstore
-            "com.lenovo.leos.appstore",             // Lenovo Appstore
+            "com.lenovo.leos.appstore"              // Lenovo Appstore
         )
 
         Log.d("Installing source mohamed", "application installed from $installerPackageName")

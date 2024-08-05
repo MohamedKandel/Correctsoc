@@ -196,21 +196,29 @@ class LockActivity : AppCompatActivity() {
                         if (stringBuilder.isNotEmpty() && stringBuilder.length == 4) {
                             // check password
                             val enteredPassword = stringBuilder.toString()
-                            if (app!= null) {
+                            if (app != null) {
                                 val password = app.password
                                 if (password == enteredPassword) {
                                     lifecycleScope.launch {
                                         usersDB.appDao().allowForApp(pkg)
                                         CoroutineScope(Dispatchers.Main).launch {
-                                            finish()
+                                            if (!pkg.equals("empty")) {
+                                                //finish()
+                                                val intent = packageManager.getLaunchIntentForPackage(pkg)
+                                                if (intent != null) {
+                                                    finish()
+                                                    startActivity(intent)
+                                                }
+                                            }
                                         }
                                     }
                                 } else {
-                                    Toast.makeText(this@LockActivity,
-                                        resources.getString(R.string.incorrect_password),Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        this@LockActivity,
+                                        resources.getString(R.string.incorrect_password),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
-                            } else {
-
                             }
                         } else {
                             if (stringBuilder.isEmpty()) {

@@ -19,6 +19,7 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
+import kotlin.math.ln
 
 class EditInfoFragment : Fragment() {
 
@@ -63,6 +64,28 @@ class EditInfoFragment : Fragment() {
 
         if (helper.getLang(requireContext()).equals("ar")) {
             binding.btnBack.rotation = 180f
+        }
+
+        lifecycleScope.launch {
+            val userID = usersDB.dao().getUserID() ?: ""
+            if (userID.isNotEmpty()) {
+                val name = usersDB.dao().getUsername(userID) ?: ""
+                if (name.isNotEmpty()) {
+                    val arr = name.split(" ")
+                    val fname = arr[0]
+                    val lname = if (arr.size > 1) {
+                        arr[1]
+                    } else {
+                        ""
+                    }
+                    val phone = usersDB.dao().getUserPhone(userID)?:""
+                    if (phone.isNotEmpty()) {
+                        binding.txtFname.setHint(fname)
+                        binding.txtLname.setHint(lname)
+                        binding.txtPhone.setHint(phone)
+                    }
+                }
+            }
         }
 
         binding.saveBtn.setOnClickListener {
