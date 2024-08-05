@@ -239,14 +239,20 @@ class HomeFragment : Fragment(), ClickListener {
         }
 
         binding.btnScan.setOnClickListener {
-            validateToken(helper.getToken(requireContext())) {
-                // request notification permission
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    requestNotificationPermission()
+            isConnected.observe(viewLifecycleOwner) {
+                if (it) {
+                    validateToken(helper.getToken(requireContext())) {
+                        // request notification permission
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            requestNotificationPermission()
+                        } else {
+                            val intent = Intent(requireContext(), AppMonitorService::class.java)
+                            ContextCompat.startForegroundService(requireContext(), intent)
+                            findNavController().navigate(R.id.fetchingAppsFragment)
+                        }
+                    }
                 } else {
-                    val intent = Intent(requireContext(), AppMonitorService::class.java)
-                    ContextCompat.startForegroundService(requireContext(), intent)
-                    findNavController().navigate(R.id.fetchingAppsFragment)
+                    noInternet()
                 }
             }
         }

@@ -1,6 +1,5 @@
 package com.correct.correctsoc.helper
 
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,15 +9,13 @@ import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
+import androidx.core.app.TaskStackBuilder
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +31,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.SortedMap
 import java.util.TreeMap
+
 
 class AppMonitorService : Service() {
 
@@ -161,6 +159,12 @@ class AppMonitorService : Service() {
 
         //viewModel.notificationMessage.observeForever(observer)
 
+        val notificationIntent = Intent(this, MainActivity::class.java)
+        notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val pendingIntent = PendingIntent.getActivity(this,0,notificationIntent,PendingIntent.FLAG_IMMUTABLE)
+
+
+
         /*viewModel.notificationMessage.observeForever {
             isConnected.observeForever { isConnected ->
                 if (isConnected) {
@@ -184,6 +188,7 @@ class AppMonitorService : Service() {
             .setSound(null)
             .setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)
             .setAutoCancel(false)
+            .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.notification_transparent_icon)
             .build()
 
@@ -228,10 +233,15 @@ class AppMonitorService : Service() {
     }
 
     private fun updateNotification(content: String) {
+        val notificationIntent = Intent(this, MainActivity::class.java)
+        notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val pendingIntent = PendingIntent.getActivity(this,0,notificationIntent,PendingIntent.FLAG_IMMUTABLE)
+
         val notification: Notification =
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(resources.getString(R.string.app_name))
                 .setContentText(content)
+                .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.notification_transparent_icon)
                 .build()
 
