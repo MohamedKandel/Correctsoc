@@ -205,4 +205,5 @@
     <string name="display_over_msg">يرجى السماح بالتنقل عبر التطبيقات الأخرى للحصول على الميزات المتقدمة.</string>
     <string name="premit">سماح</string>
     <string name="hello">مرحبًا,</string>
+    <string name="empty_user_phone">اسم المستخدم ورقم الهاتف لايمكن ان يكونوا فارغين</string>
 </resources>

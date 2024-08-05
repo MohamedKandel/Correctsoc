@@ -81,7 +81,7 @@ class EditInfoFragment : Fragment() {
                     binding.txtFname.setHint(fname)
                     binding.txtLname.setHint(lname)
 
-                    val phone = usersDB.dao().getUserPhone(userID)?:""
+                    val phone = usersDB.dao().getUserPhone(userID) ?: ""
 
                     if (phone.isNotEmpty()) {
                         binding.txtPhone.setHint(phone)
@@ -95,6 +95,13 @@ class EditInfoFragment : Fragment() {
         binding.saveBtn.setOnClickListener {
             val username = "${binding.txtFname.text} ${binding.txtLname.text}".trim()
             val phoneNumber = binding.txtPhone.text.toString().trim()
+            if (username.isEmpty() && phoneNumber.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.empty_user_phone),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
             if (username.isNotEmpty()) {
                 lifecycleScope.launch {
                     val id = usersDB.dao().getUserID() ?: ""

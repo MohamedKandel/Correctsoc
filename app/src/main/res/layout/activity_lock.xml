@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.lock.LockActivity"
-    android:background="@drawable/auth_bg">
+    android:background="@drawable/auth_bg"
+    tools:context=".ui.lock.LockActivity">
 
     <View
         android:layout_width="match_parent"
@@ -43,6 +43,16 @@
                     android:padding="@dimen/_7sdp"
                     android:src="@drawable/arrow_icon" />
 
+                <TextView
+                    android:id="@+id/txt_app_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_15ssp" />
+
             </RelativeLayout>
 
             <ImageView
@@ -57,10 +67,11 @@
 
             <TextView
                 android:id="@+id/txt_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_77sdp"
-                android:fontFamily="@font/roboto_serif_medium"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center"
                 android:text="@string/unlock_password"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_15ssp"
@@ -72,12 +83,12 @@
                 android:id="@+id/password_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/_30sdp"
                 android:gravity="center"
                 android:layoutDirection="locale"
                 android:textDirection="locale"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_title">
 
                 <LinearLayout
@@ -185,15 +196,15 @@
             </RelativeLayout>
 
             <ImageView
+                android:id="@+id/password_toggle_icon"
                 android:layout_width="@dimen/_15sdp"
                 android:layout_height="@dimen/_15sdp"
                 android:src="@drawable/show_password"
-                app:tint="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/password_layout"
-                app:layout_constraintStart_toEndOf="@+id/password_layout"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/password_layout"
                 app:layout_constraintTop_toTopOf="@+id/password_layout"
-                android:id="@+id/password_toggle_icon"/>
+                app:tint="@color/white" />
 
 
             <GridLayout
@@ -387,9 +398,9 @@
                 android:textSize="@dimen/_15ssp"
                 app:cornerRadius="@dimen/_15sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/keyboard_layout"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/keyboard_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

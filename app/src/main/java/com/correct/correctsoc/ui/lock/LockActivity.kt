@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -47,6 +48,8 @@ class LockActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             finish()
         }
+
+        onBackButtonPressed()
 
         if (intent.extras != null) {
             val pkg = intent.extras?.getString(PACKAGE) ?: "empty"
@@ -316,6 +319,12 @@ class LockActivity : AppCompatActivity() {
                     txtFourthDigit.text = number
                 }
             }
+        }
+    }
+
+    private fun onBackButtonPressed() {
+        onBackPressedDispatcher.addCallback(this) {
+            finish()
         }
     }
 

@@ -20,9 +20,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.correct.correctsoc.MainActivity
 import com.correct.correctsoc.R
+import com.correct.correctsoc.data.auth.forget.ForgotResponse
 import com.correct.correctsoc.helper.Constants.PACKAGE
 import com.correct.correctsoc.room.UsersDB
 import com.correct.correctsoc.ui.home.HomeViewModel
@@ -47,6 +49,28 @@ class AppMonitorService : Service() {
     private lateinit var connectionManager: ConnectionManager
     private var isConnected = MutableLiveData<Boolean>()
     private lateinit var helper: HelperClass
+
+
+    private val observer = Observer<ForgotResponse> { result ->
+        if (result.isSuccess) {
+            val contentText = result.result ?: return@Observer
+            updateNotification(contentText)
+            helper.setNotification(this,result.result)
+        } else {
+            updateNotification(helper.getNotificationText(this))
+        }
+    }
+
+
+
+    private val isInternetConnected = Observer<Boolean> {
+        if (it) {
+            viewModel.getNotificationMessage()
+            viewModel.notificationMessage.observeForever(observer)
+        } else {
+            updateNotification(helper.getNotificationText(this))
+        }
+    }
 
     // handler to change isAllowed value every 1 minute
     private val lockAppsHandler = Handler(Looper.getMainLooper())
@@ -132,11 +156,14 @@ class AppMonitorService : Service() {
             }
         }
 
-        viewModel.getNotificationMessage()
 
         createNotificationChannel()
 
-        viewModel.notificationMessage.observeForever {
+        isConnected.observeForever(isInternetConnected)
+
+        //viewModel.notificationMessage.observeForever(observer)
+
+        /*viewModel.notificationMessage.observeForever {
             isConnected.observeForever { isConnected ->
                 if (isConnected) {
                     if (it.isSuccess) {
@@ -151,10 +178,10 @@ class AppMonitorService : Service() {
                     updateNotification(helper.getNotificationText(this))
                 }
             }
-        }
+        }*/
         val initialNotification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(resources.getString(R.string.app_name))
-            .setContentText("Service running...")
+            .setContentText(helper.getNotificationText(this))
             .setOngoing(true)
             .setSound(null)
             .setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)

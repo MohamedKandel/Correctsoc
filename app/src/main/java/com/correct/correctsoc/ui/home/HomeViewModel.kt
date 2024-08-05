@@ -9,6 +9,8 @@ import com.correct.correctsoc.Retrofit.APIService
 import com.correct.correctsoc.Retrofit.RetrofitClient
 import com.correct.correctsoc.data.auth.forget.ForgotResponse
 import com.correct.correctsoc.data.user.UserPlanResponse
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 
@@ -29,7 +31,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getNotificationMessage() = viewModelScope.launch {
-        val result = homeRepository.getNotificationMessage()
-        _notificationMessage.postValue(result.body())
+        while (isActive) {
+            val result = homeRepository.getNotificationMessage()
+            _notificationMessage.postValue(result.body())
+            // delay for 0.25 minute (call API each 0.25 minute to get any update)
+            delay(15000)
+        }
     }
 }
