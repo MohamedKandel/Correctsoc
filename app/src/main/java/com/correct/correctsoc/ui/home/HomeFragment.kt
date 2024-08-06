@@ -170,7 +170,9 @@ class HomeFragment : Fragment(), ClickListener {
             when (it) {
                 ConnectivityListener.Status.AVAILABLE -> {
                     isConnected.postValue(true)
-                    setDeviceOn(helper.getToken(requireContext()))
+                    if (!helper.getDeviceStatus(requireContext())) {
+                        setDeviceOn(helper.getToken(requireContext()))
+                    }
                 }
 
                 ConnectivityListener.Status.UNAVAILABLE -> {
