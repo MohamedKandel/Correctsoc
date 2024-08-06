@@ -357,10 +357,6 @@ class HomeFragment : Fragment(), ClickListener {
                         closeMenu()
                     }
                 }
-
-                /*override fun onDown(e: MotionEvent): Boolean {
-                    return true
-                }*/
             })
 
 
