@@ -253,9 +253,14 @@ class HomeFragment : Fragment(), ClickListener {
                             }
                         }
                     } else {
+                        val msg = if (helper.getLang(requireContext()).equals("ar")) {
+                            resources.getString(R.string.android14).mappingNumbers()
+                        } else {
+                            resources.getString(R.string.android14)
+                        }
                         AlertDialog.Builder(requireContext())
                             .buildDialog(title = resources.getString(R.string.warning),
-                                msg = resources.getString(R.string.android14),
+                                msg = msg,
                                 positiveButton = resources.getString(R.string.ok),
                                 negativeButton = resources.getString(R.string.cancel),
                                 positiveButtonFunction = {
