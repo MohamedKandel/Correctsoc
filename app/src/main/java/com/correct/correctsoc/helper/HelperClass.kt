@@ -9,9 +9,6 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.provider.Settings
-import android.text.SpannableString
-import android.text.style.ClickableSpan
-import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
@@ -24,7 +21,6 @@ import androidx.preference.PreferenceManager
 import com.correct.correctsoc.data.openPorts.Port
 import com.correct.correctsoc.helper.Constants.FIRST_TIME
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
-import com.correct.correctsoc.helper.Constants.ISCONFIRMED
 import com.correct.correctsoc.helper.Constants.IS_LOGGED
 import com.correct.correctsoc.helper.Constants.LANG
 import com.correct.correctsoc.helper.Constants.NOTIFICATION
@@ -298,20 +294,6 @@ class HelperClass {
 
     fun getDeviceStatus(context: Context): Boolean {
         initSP(context)
-        return sp.getBoolean(STATUS, false) ?: false
-    }
-
-    fun setDeviceConfirmed(context: Context, isConfirmed: Boolean) {
-        initSP(context)
-        editor.apply {
-            editor.putBoolean(ISCONFIRMED, isConfirmed)
-            commit()
-            apply()
-        }
-    }
-
-    fun isDeviceConfirmed(context: Context): Boolean {
-        initSP(context)
-        return sp.getBoolean(ISCONFIRMED, false)
+        return sp.getBoolean(STATUS, false)
     }
 }
