@@ -24,6 +24,7 @@ import androidx.preference.PreferenceManager
 import com.correct.correctsoc.data.openPorts.Port
 import com.correct.correctsoc.helper.Constants.FIRST_TIME
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
+import com.correct.correctsoc.helper.Constants.ISCONFIRMED
 import com.correct.correctsoc.helper.Constants.IS_LOGGED
 import com.correct.correctsoc.helper.Constants.LANG
 import com.correct.correctsoc.helper.Constants.NOTIFICATION
@@ -62,7 +63,7 @@ class HelperClass {
 
     fun getNotificationText(context: Context): String {
         initSP(context)
-        return sp.getString(NOTIFICATION,"Correctsoc Applocker") ?: "Correctsoc Applocker"
+        return sp.getString(NOTIFICATION, "Correctsoc Applocker") ?: "Correctsoc Applocker"
     }
 
     fun deleteSplashTime(context: Context) {
@@ -298,5 +299,19 @@ class HelperClass {
     fun getDeviceStatus(context: Context): Boolean {
         initSP(context)
         return sp.getBoolean(STATUS, false) ?: false
+    }
+
+    fun setDeviceConfirmed(context: Context, isConfirmed: Boolean) {
+        initSP(context)
+        editor.apply {
+            editor.putBoolean(ISCONFIRMED, isConfirmed)
+            commit()
+            apply()
+        }
+    }
+
+    fun isDeviceConfirmed(context: Context): Boolean {
+        initSP(context)
+        return sp.getBoolean(ISCONFIRMED, false)
     }
 }

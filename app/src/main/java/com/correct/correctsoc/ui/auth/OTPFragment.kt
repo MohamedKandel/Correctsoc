@@ -204,6 +204,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                         usersDB.dao().insert(user)
                         usersDB.dao().deleteUser("1")
                         helper.setToken(it.result.token, requireContext())
+                        helper.setDeviceConfirmed(requireContext(),true)
                         Log.i(TAG, it.result.token)
                         findNavController().navigate(R.id.homeFragment)
                     }

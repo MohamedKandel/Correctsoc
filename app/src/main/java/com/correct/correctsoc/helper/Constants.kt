@@ -17,6 +17,7 @@ object Constants {
     const val SOURCE = "come from"
     const val TYPE = "type"
     const val URL = "url"
+    const val ISCONFIRMED = "is confirmed"
     const val PORTS_LIST = "ports list"
     const val ROUTER = "router ip"
     const val DEVICE_NAME = "device name"

@@ -85,10 +85,19 @@ class SplashFragment : Fragment() {
                 if (helper.isFirstStartApp(requireContext())) {
                     findNavController().navigate(R.id.onBoardingFragment)
                 } else {
-                    if (helper.getRemember(requireContext())) {
+                    if (helper.getRemember(requireContext()) && helper.isDeviceConfirmed(
+                            requireContext()
+                        )
+                    ) {
                         findNavController().navigate(R.id.homeFragment)
                     } else {
-                        findNavController().navigate(R.id.registerFragment)
+                        if (!helper.isDeviceConfirmed(requireContext())) {
+                            findNavController().navigate(R.id.loginFragment)
+                        } else {
+                            if (!helper.getRemember(requireContext())) {
+                                findNavController().navigate(R.id.registerFragment)
+                            }
+                        }
                     }
                     //checkForUsers()
                 }
