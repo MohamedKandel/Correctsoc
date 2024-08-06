@@ -612,6 +612,12 @@ class HomeFragment : Fragment(), ClickListener {
             if (it.isSuccess) {
                 helper.setRemember(requireContext(), false)
                 setDeviceOff(token)
+                lifecycleScope.launch {
+                    val id = usersDB.dao().getUserID() ?: ""
+                    if (id.isNotEmpty()) {
+                        usersDB.dao().deleteUser(id)
+                    }
+                }
                 findNavController().navigate(R.id.registerFragment)
             } else {
                 Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)

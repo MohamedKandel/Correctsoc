@@ -6,15 +6,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -26,8 +23,6 @@ import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.buildDialog
-import com.correct.correctsoc.helper.hide
-import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.UsersDB
 import com.correct.correctsoc.ui.auth.AuthViewModel
 import kotlinx.coroutines.launch
@@ -40,7 +35,6 @@ class SettingFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentSettingBinding
-    private var sourceFragment = 0
     private lateinit var helper: HelperClass
     private lateinit var fragmentListener: FragmentChangedListener
     private lateinit var viewModel: AuthViewModel
@@ -194,7 +188,10 @@ class SettingFragment : Fragment() {
         val observer = object : Observer<ForgotResponse> {
             override fun onChanged(value: ForgotResponse) {
                 if (value.isSuccess) {
-                    findNavController().navigate(R.id.registerFragment)
+                    lifecycleScope.launch {
+                        usersDB.dao().deleteUser(userID)
+                        findNavController().navigate(R.id.registerFragment)
+                    }
                 } else {
                     Toast.makeText(requireContext(), value.errorMessages, Toast.LENGTH_SHORT).show()
                 }
