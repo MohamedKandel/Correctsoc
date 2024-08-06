@@ -23,6 +23,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -105,6 +106,7 @@ class HomeFragment : Fragment(), ClickListener {
             }
         }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestNotificationPermission() {
         when {
             ContextCompat.checkSelfPermission(
