@@ -2,7 +2,6 @@ package com.correct.correctsoc.ui.home
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,7 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.Process
 import android.provider.Settings
 import android.util.Log
 import android.view.GestureDetector
@@ -81,6 +79,7 @@ class HomeFragment : Fragment(), ClickListener {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var connectionManager: ConnectionManager
+    private var isInternetConnected = false
     private var isConnected = MutableLiveData<Boolean>()
     private val notificationLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(
@@ -100,7 +99,7 @@ class HomeFragment : Fragment(), ClickListener {
                 ).show()
 
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri = Uri.fromParts("package",requireContext().packageName,null)
+                val uri = Uri.fromParts("package", requireContext().packageName, null)
                 intent.data = uri
                 startActivity(intent)
             }
@@ -128,7 +127,7 @@ class HomeFragment : Fragment(), ClickListener {
                     Toast.LENGTH_SHORT
                 ).show()
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri = Uri.fromParts("package",requireContext().packageName,null)
+                val uri = Uri.fromParts("package", requireContext().packageName, null)
                 intent.data = uri
                 startActivity(intent)
             }
@@ -169,6 +168,7 @@ class HomeFragment : Fragment(), ClickListener {
         connectionManager.statusLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 ConnectivityListener.Status.AVAILABLE -> {
+                    isInternetConnected = true
                     isConnected.postValue(true)
                     if (!helper.getDeviceStatus(requireContext())) {
                         setDeviceOn(helper.getToken(requireContext()))
@@ -176,16 +176,25 @@ class HomeFragment : Fragment(), ClickListener {
                 }
 
                 ConnectivityListener.Status.UNAVAILABLE -> {
+                    isInternetConnected = false
                     isConnected.postValue(false)
                 }
 
                 ConnectivityListener.Status.LOST -> {
+                    isInternetConnected = false
                     isConnected.postValue(false)
                 }
 
                 ConnectivityListener.Status.LOSING -> {
+                    isInternetConnected = false
                     isConnected.postValue(false)
                 }
+            }
+        }
+
+        isConnected.observe(viewLifecycleOwner) {
+            if (!it) {
+                noInternet()
             }
         }
 
@@ -217,19 +226,26 @@ class HomeFragment : Fragment(), ClickListener {
         fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
 
         binding.btnRouter.setOnClickListener {
-            isConnected.observe(viewLifecycleOwner) {
-                if (it) {
-                    validateToken(helper.getToken(requireContext())) {
-                        findNavController().navigate(R.id.selfPenFragment)
-                    }
-                } else {
-                    noInternet()
+            if (isInternetConnected) {
+                validateToken(helper.getToken(requireContext())) {
+                    findNavController().navigate(R.id.selfPenFragment)
                 }
+            } else {
+                noInternet()
             }
         }
 
         binding.btnIpScan.setOnClickListener {
-            isConnected.observe(viewLifecycleOwner) {
+            if (isInternetConnected) {
+                validateToken(helper.getToken(requireContext())) {
+                    val bundle = Bundle()
+                    bundle.putString(TYPE, IP_ADDRESS)
+                    findNavController().navigate(R.id.insertLinkFragment, bundle)
+                }
+            } else {
+                noInternet()
+            }
+            /*isConnected.observe(viewLifecycleOwner) {
                 if (it) {
                     validateToken(helper.getToken(requireContext())) {
                         val bundle = Bundle()
@@ -239,11 +255,44 @@ class HomeFragment : Fragment(), ClickListener {
                 } else {
                     noInternet()
                 }
-            }
+            }*/
         }
 
         binding.btnScan.setOnClickListener {
-            isConnected.observe(viewLifecycleOwner) {
+            if (isInternetConnected) {
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+                    validateToken(helper.getToken(requireContext())) {
+                        // request notification permission
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            requestNotificationPermission()
+                        } else {
+                            val intent = Intent(requireContext(), AppMonitorService::class.java)
+                            ContextCompat.startForegroundService(requireContext(), intent)
+                            findNavController().navigate(R.id.fetchingAppsFragment)
+                        }
+                    }
+                } else {
+                    val msg = if (helper.getLang(requireContext()).equals("ar")) {
+                        resources.getString(R.string.android14).mappingNumbers()
+                    } else {
+                        resources.getString(R.string.android14)
+                    }
+                    AlertDialog.Builder(requireContext())
+                        .buildDialog(title = resources.getString(R.string.warning),
+                            msg = msg,
+                            positiveButton = resources.getString(R.string.ok),
+                            negativeButton = resources.getString(R.string.cancel),
+                            positiveButtonFunction = {
+
+                            },
+                            negativeButtonFunction = {
+
+                            })
+                }
+            } else {
+                noInternet()
+            }
+            /*isConnected.observe(viewLifecycleOwner) {
                 if (it) {
                     if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
                         validateToken(helper.getToken(requireContext())) {
@@ -277,11 +326,18 @@ class HomeFragment : Fragment(), ClickListener {
                 } else {
                     noInternet()
                 }
-            }
+            }*/
         }
 
         binding.btnAppScan.setOnClickListener {
-            isConnected.observe(viewLifecycleOwner) {
+            if (isInternetConnected) {
+                validateToken(helper.getToken(requireContext())) {
+                    findNavController().navigate(R.id.applicationScanFragment)
+                }
+            } else {
+                noInternet()
+            }
+            /*isConnected.observe(viewLifecycleOwner) {
                 if (it) {
                     validateToken(helper.getToken(requireContext())) {
                         findNavController().navigate(R.id.applicationScanFragment)
@@ -289,11 +345,18 @@ class HomeFragment : Fragment(), ClickListener {
                 } else {
                     noInternet()
                 }
-            }
+            }*/
         }
 
         binding.btnConnectedDevices.setOnClickListener {
-            isConnected.observe(viewLifecycleOwner) {
+            if (isInternetConnected) {
+                validateToken(helper.getToken(requireContext())) {
+                    findNavController().navigate(R.id.deviceScanningFragment)
+                }
+            } else {
+                noInternet()
+            }
+            /*isConnected.observe(viewLifecycleOwner) {
                 if (it) {
                     validateToken(helper.getToken(requireContext())) {
                         findNavController().navigate(R.id.deviceScanningFragment)
@@ -301,11 +364,18 @@ class HomeFragment : Fragment(), ClickListener {
                 } else {
                     noInternet()
                 }
-            }
+            }*/
         }
 
         binding.btnWebScan.setOnClickListener {
-            isConnected.observe(viewLifecycleOwner) {
+            if (isInternetConnected) {
+                validateToken(helper.getToken(requireContext())) {
+                    findNavController().navigate(R.id.insertLinkFragment)
+                }
+            } else {
+                noInternet()
+            }
+            /*isConnected.observe(viewLifecycleOwner) {
                 if (it) {
                     validateToken(helper.getToken(requireContext())) {
                         findNavController().navigate(R.id.insertLinkFragment)
@@ -313,7 +383,7 @@ class HomeFragment : Fragment(), ClickListener {
                 } else {
                     noInternet()
                 }
-            }
+            }*/
             //findNavController().navigate(R.id.insertLinkFragment)
         }
 
@@ -402,7 +472,8 @@ class HomeFragment : Fragment(), ClickListener {
             val user = usersDB.dao().getUser(userID)
             if (user != null) {
                 Log.v("Current user username", user.username)
-                binding.drawerMenu.txtUsername.text = "${resources.getString(R.string.hello)} ${user.username}"
+                binding.drawerMenu.txtUsername.text =
+                    "${resources.getString(R.string.hello)} ${user.username}"
             }
         }
         homeViewModel.getUserPlan(userID)
@@ -566,54 +637,54 @@ class HomeFragment : Fragment(), ClickListener {
 
     override fun onItemClickListener(position: Int, extras: Bundle?) {
         if (extras != null) {
-            isConnected.observe(viewLifecycleOwner) {
-                if (it) {
-                    val clicked = extras.getString(CLICKED)
-                    if (clicked.equals("menu")) {
-                        when (position) {
-                            //premium
-                            0 -> {
-                                Log.i(TAG, "onItemClickListener: premium")
-                                findNavController().navigate(R.id.parentPayFragment)
+            //isConnected.observe(viewLifecycleOwner) {
+            if (isInternetConnected) {
+                val clicked = extras.getString(CLICKED)
+                if (clicked.equals("menu")) {
+                    when (position) {
+                        //premium
+                        0 -> {
+                            Log.i(TAG, "onItemClickListener: premium")
+                            findNavController().navigate(R.id.parentPayFragment)
+                        }
+                        //support
+                        1 -> {
+                            Log.i(TAG, "onItemClickListener: support")
+                        }
+                        //setting
+                        2 -> {
+                            Log.i(TAG, "onItemClickListener: settings")
+                            findNavController().navigate(R.id.settingFragment)
+                        }
+                        //about
+                        3 -> {
+                            val bundle = Bundle()
+                            bundle.putInt(SOURCE, R.id.homeFragment)
+                            findNavController().navigate(R.id.aboutFragment, bundle)
+                            Log.i(TAG, "onItemClickListener: about")
+                        }
+                        //logout
+                        4 -> {
+                            lifecycleScope.launch {
+                                val id = usersDB.dao().getUserID() ?: ""
+                                val phone = usersDB.dao().getUserPhone(id) ?: ""
+                                val body = SignOutBody(
+                                    phoneNumber = phone,
+                                    device = helper.getDeviceID(requireContext())
+                                )
+                                signOut(body, helper.getToken(requireContext()))
                             }
-                            //support
-                            1 -> {
-                                Log.i(TAG, "onItemClickListener: support")
-                            }
-                            //setting
-                            2 -> {
-                                Log.i(TAG, "onItemClickListener: settings")
-                                findNavController().navigate(R.id.settingFragment)
-                            }
-                            //about
-                            3 -> {
-                                val bundle = Bundle()
-                                bundle.putInt(SOURCE, R.id.homeFragment)
-                                findNavController().navigate(R.id.aboutFragment, bundle)
-                                Log.i(TAG, "onItemClickListener: about")
-                            }
-                            //logout
-                            4 -> {
-                                lifecycleScope.launch {
-                                    val id = usersDB.dao().getUserID() ?: ""
-                                    val phone = usersDB.dao().getUserPhone(id) ?: ""
-                                    val body = SignOutBody(
-                                        phoneNumber = phone,
-                                        device = helper.getDeviceID(requireContext())
-                                    )
-                                    signOut(body, helper.getToken(requireContext()))
-                                }
 //                helper.setRemember(requireContext(), false)
 //                findNavController().navigate(R.id.registerFragment)
 
-                                Log.i(TAG, "onItemClickListener: logout")
-                            }
+                            Log.i(TAG, "onItemClickListener: logout")
                         }
                     }
-                } else {
-                    noInternet()
                 }
+            } else {
+                noInternet()
             }
+            //}
         }
     }
 
