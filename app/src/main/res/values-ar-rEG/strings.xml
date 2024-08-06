@@ -206,4 +206,5 @@
     <string name="premit">سماح</string>
     <string name="hello">مرحبًا,</string>
     <string name="empty_user_phone">اسم المستخدم ورقم الهاتف لايمكن ان يكونوا فارغين</string>
+    <string name="android14">هذه الميزة غير متوفرة في إصدار أندرويد 14 وما فوق</string>
 </resources>

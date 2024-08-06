@@ -252,6 +252,18 @@ class HomeFragment : Fragment(), ClickListener {
                                 findNavController().navigate(R.id.fetchingAppsFragment)
                             }
                         }
+                    } else {
+                        AlertDialog.Builder(requireContext())
+                            .buildDialog(title = resources.getString(R.string.warning),
+                                msg = resources.getString(R.string.android14),
+                                positiveButton = resources.getString(R.string.ok),
+                                negativeButton = resources.getString(R.string.cancel),
+                                positiveButtonFunction = {
+
+                                },
+                                negativeButtonFunction = {
+
+                                })
                     }
                 } else {
                     noInternet()
