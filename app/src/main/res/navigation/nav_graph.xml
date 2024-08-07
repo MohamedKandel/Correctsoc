@@ -206,4 +206,9 @@
         android:name="com.correct.correctsoc.ui.lock.FetchingAppsFragment"
         android:label="fragment_fetching_apps"
         tools:layout="@layout/fragment_fetching_apps" />
+    <fragment
+        android:id="@+id/liveChatFragment"
+        android:name="com.correct.correctsoc.ui.home.LiveChatFragment"
+        android:label="fragment_live_chat"
+        tools:layout="@layout/fragment_live_chat" />
 </navigation>

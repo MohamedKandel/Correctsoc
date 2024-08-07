@@ -139,7 +139,7 @@
                             android:src="@drawable/fb_drawable" />
 
                         <ImageButton
-                            android:id="@+id/btn_insta"
+                            android:id="@+id/btn_tiktok"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -156,7 +156,7 @@
                             android:layout_height="match_parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/btn_insta"
+                            app:layout_constraintStart_toEndOf="@+id/btn_tiktok"
                             app:layout_constraintTop_toTopOf="parent"
                             android:layout_marginStart="@dimen/_18sdp"
                             android:background="@android:color/transparent"

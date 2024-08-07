@@ -655,6 +655,7 @@ class HomeFragment : Fragment(), ClickListener {
                         }
                         //support
                         1 -> {
+                            findNavController().navigate(R.id.liveChatFragment)
                             Log.i(TAG, "onItemClickListener: support")
                         }
                         //setting
@@ -680,8 +681,6 @@ class HomeFragment : Fragment(), ClickListener {
                                 )
                                 signOut(body, helper.getToken(requireContext()))
                             }
-//                helper.setRemember(requireContext(), false)
-//                findNavController().navigate(R.id.registerFragment)
 
                             Log.i(TAG, "onItemClickListener: logout")
                         }

@@ -37,6 +37,7 @@ object Constants {
     const val ISRECONFIRM = "is reconfirm"
     const val NOTIFICATION = "Notification"
     const val ISLOCKED = "is app lock"
+    const val CHAT_LINK = "https://tawk.to/chat/66b339f51601a2195ba1b25f/1i4m1kq5g"
     // problem with EGP
     const val CURRENCY = "USD"
 }

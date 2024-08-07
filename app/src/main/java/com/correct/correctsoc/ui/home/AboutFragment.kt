@@ -110,7 +110,7 @@ class AboutFragment : Fragment() {
             startActivity(urlIntent)
         }
 
-        binding.btnInsta.setOnClickListener {
+        binding.btnTiktok.setOnClickListener {
             val urlIntent = Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse(insta)
