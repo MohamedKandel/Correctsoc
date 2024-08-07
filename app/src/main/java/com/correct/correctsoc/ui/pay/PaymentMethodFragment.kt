@@ -3,12 +3,13 @@ package com.correct.correctsoc.ui.pay
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -16,7 +17,6 @@ import com.braintreepayments.api.BraintreeClient
 import com.braintreepayments.api.DataCollector
 import com.braintreepayments.api.GooglePayClient
 import com.braintreepayments.api.GooglePayListener
-import com.braintreepayments.api.GooglePayRequest
 import com.braintreepayments.api.PaymentMethodNonce
 import com.braintreepayments.api.UserCanceledException
 import com.correct.correctsoc.R
@@ -34,14 +34,12 @@ import com.correct.correctsoc.helper.Constants.TOTAL_PRICE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NextStepListener
+import com.correct.correctsoc.helper.buildDialog
 import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.openWhatsApp
 import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.UsersDB
-import com.google.android.gms.wallet.TransactionInfo
-import com.google.android.gms.wallet.WalletConstants
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class PaymentMethodFragment : Fragment(), GooglePayListener {
 
@@ -138,7 +136,22 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                 binding.placeholder.show()
                 binding.progress.show()
                 if (googlePay) {
-                    val googlePayRequest = GooglePayRequest()
+                    binding.placeholder.hide()
+                    binding.progress.hide()
+
+                    AlertDialog.Builder(requireContext())
+                        .buildDialog(title = resources.getString(R.string.not_supported_title),
+                            msg = resources.getString(R.string.not_supported_msg),
+                            positiveButton = resources.getString(R.string.ok),
+                            negativeButton = resources.getString(R.string.cancel),
+                            positiveButtonFunction = {
+
+                            },
+                            negativeButtonFunction = {
+
+                            })
+
+                    /*val googlePayRequest = GooglePayRequest()
                     googlePayRequest.transactionInfo = TransactionInfo.newBuilder()
                         .setTotalPrice("$price")
                         .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
@@ -147,10 +160,10 @@ class PaymentMethodFragment : Fragment(), GooglePayListener {
                     googlePayRequest.isBillingAddressRequired = true
                     binding.placeholder.hide()
                     binding.progress.hide()
-                    googlePayClient.requestPayment(requireActivity(), googlePayRequest)
+                    googlePayClient.requestPayment(requireActivity(), googlePayRequest)*/
                 } else if (activation) {
                     val bundle = Bundle()
-                    bundle.putString(PROMO,promoCode)
+                    bundle.putString(PROMO, promoCode)
                     (parentFragment as? ParentPayFragment)?.replaceFragment(
                         ActivationCodeFragment(), isHeaderVisible = false,
                         bundle = bundle

@@ -207,4 +207,6 @@
     <string name="hello">مرحبًا,</string>
     <string name="empty_user_phone">اسم المستخدم ورقم الهاتف لايمكن ان يكونوا فارغين</string>
     <string name="android14">هذه الميزة غير متوفرة في إصدار أندرويد 14 وما فوق</string>
+    <string name="not_supported_title">ميزة غير مفعلة</string>
+    <string name="not_supported_msg">الدفع عن طريق جوجل غير مدعوم حتى الآن.\nيمكنك الحصول على كود تفعيل والدفع عن طريق كود التفعيل</string>
 </resources>
