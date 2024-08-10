@@ -99,8 +99,8 @@ class AboutFragment : Fragment() {
         }*/
 
         val url = "https://correctsoc.com"
-        val facebook = "https://www.facebook.com"
-        val insta = "https://www.instagram.com"
+        val facebook = "https://www.facebook.com/Correctsoc"
+        val insta = "https://www.tiktok.com"
 
         binding.btnFacebook.setOnClickListener {
             val urlIntent = Intent(
