@@ -2,11 +2,16 @@ package com.correct.correctsoc.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
@@ -29,6 +34,25 @@ class LiveChatFragment : Fragment() {
         helper = HelperClass.getInstance()
 
         binding.webChat.webViewClient = WebViewClient()
+
+        binding.webChat.webChromeClient = object : WebChromeClient() {
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                super.onProgressChanged(view, newProgress)
+                Log.d("web Progress mohamed", "$newProgress")
+            }
+        }
+
+        binding.webChat.webViewClient = object : WebViewClient() {
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                super.onReceivedError(view, request, error)
+                Log.d("web mohamed", "${error?.errorCode}")
+            }
+        }
+
         binding.webChat.settings.javaScriptEnabled = true
         binding.webChat.settings.domStorageEnabled = true
         binding.webChat.settings.cacheMode = WebSettings.LOAD_NO_CACHE
