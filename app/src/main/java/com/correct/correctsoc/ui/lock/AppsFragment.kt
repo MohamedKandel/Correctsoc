@@ -35,6 +35,7 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.displayDialog
 import com.correct.correctsoc.helper.hide
+import com.correct.correctsoc.helper.isLightweightVersion
 import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.App
 import com.correct.correctsoc.room.UsersDB
@@ -201,11 +202,16 @@ class AppsFragment : Fragment(), ClickListener {
             if (tag.isNotEmpty()) {
                 if (tag == resources.getString(R.string.unlock)) {
                     isUsageAccepted = hasUsageStatsPermission(requireContext())
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+                    if (requireContext().isLightweightVersion()) {
                         isDisplayAccepted = false
                     } else {
                         isDisplayAccepted = isDisplayOverAppsEnabled()
                     }
+                    /*if (Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+                        isDisplayAccepted = isDisplayOverAppsEnabled()
+                    } else {
+                        isDisplayAccepted = isDisplayOverAppsEnabled()
+                    }*/
                     Log.v("ISDisplayed mohamed", "$isDisplayAccepted")
                     if (isUsageAccepted && isDisplayAccepted) {
                         val bundle = Bundle()
@@ -253,6 +259,17 @@ class AppsFragment : Fragment(), ClickListener {
                                 )
                             )
                         }*/
+                        if (requireContext().isLightweightVersion()) {
+                            btn_display.hide()
+                            draw_permission_status.show()
+                            draw_permission_status.setImageResource(R.drawable.clear_icon)
+                            draw_permission_status.setColorFilter(
+                                resources.getColor(
+                                    R.color.danger_color,
+                                    context?.theme
+                                )
+                            )
+                        }
 
                         if (isDisplayAccepted) {
                             btn_display.hide()
@@ -265,7 +282,9 @@ class AppsFragment : Fragment(), ClickListener {
                                 )
                             )
                         } else {
-                            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+                            //btn_display.show()
+                            //draw_permission_status.hide()
+                            if (!requireContext().isLightweightVersion()) {
                                 btn_display.show()
                                 draw_permission_status.hide()
                             } else {

@@ -1,5 +1,6 @@
 package com.correct.correctsoc.helper
 
+import android.app.ActivityManager
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,7 @@ import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.text.Editable
 import android.text.InputFilter
 import android.text.Spannable
@@ -500,4 +502,30 @@ fun Dialog.displayDialog(layoutID: Int,context: Context): Dialog {
     dialog.setCanceledOnTouchOutside(true)
     dialog.show()
     return dialog
+}
+
+fun Context.isLightweightVersion(): Boolean {
+    val packageManager = this.packageManager
+    val activityManager = this.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+
+    // Check if the device has low RAM
+    val isLowRamDevice = activityManager.isLowRamDevice
+
+    // Check for Go or other lightweight configurations (custom codenames, etc.)
+    val isLightweightConfig = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+            ("Android Go Edition" == Build.VERSION.CODENAME ||
+                    "Go" in Build.PRODUCT ||
+                    "Go" in Build.DEVICE ||
+                    "Lite" in Build.MODEL)
+
+    // Check for the presence of lightweight or stripped-down system apps
+    val hasLightweightApps = packageManager.getInstalledPackages(0).any {
+        it.packageName in listOf(
+            "com.google.android.apps.nbu.files", // Files Go
+            "com.google.android.apps.go", // Google Go
+            "com.google.android.apps.mapslite" // Maps Go or similar lite versions
+        )
+    }
+
+    return isLowRamDevice || isLightweightConfig || hasLightweightApps
 }

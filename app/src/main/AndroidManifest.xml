@@ -17,7 +17,7 @@
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING"
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
         android:minSdkVersion="34"/>
 
     <application
@@ -37,7 +37,7 @@
         <service android:name=".helper.AppMonitorService"
             android:enabled="true"
             android:exported="true"
-            android:foregroundServiceType="remoteMessaging"
+            android:foregroundServiceType="mediaPlayback"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" />
 
         <activity

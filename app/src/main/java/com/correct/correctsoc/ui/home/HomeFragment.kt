@@ -49,6 +49,7 @@ import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnSwipeGestureListener
 import com.correct.correctsoc.helper.buildDialog
 import com.correct.correctsoc.helper.hide
+import com.correct.correctsoc.helper.isLightweightVersion
 import com.correct.correctsoc.helper.mappingNumbers
 import com.correct.correctsoc.helper.show
 import com.correct.correctsoc.room.UsersDB
@@ -164,6 +165,9 @@ class HomeFragment : Fragment(), ClickListener {
 
         connectionManager = ConnectionManager(requireContext())
 
+
+        Log.d("Is lightweight version mohamed","${requireContext().isLightweightVersion()}")
+
         connectionManager.observe()
         connectionManager.statusLiveData.observe(viewLifecycleOwner) {
             when (it) {
@@ -260,7 +264,36 @@ class HomeFragment : Fragment(), ClickListener {
 
         binding.btnScan.setOnClickListener {
             if (isInternetConnected) {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+                if (requireContext().isLightweightVersion()) {
+                    val msg = if (helper.getLang(requireContext()).equals("ar")) {
+                        resources.getString(R.string.android14).mappingNumbers()
+                    } else {
+                        resources.getString(R.string.android14)
+                    }
+                    AlertDialog.Builder(requireContext())
+                        .buildDialog(title = resources.getString(R.string.warning),
+                            msg = msg,
+                            positiveButton = resources.getString(R.string.ok),
+                            negativeButton = resources.getString(R.string.cancel),
+                            positiveButtonFunction = {
+
+                            },
+                            negativeButtonFunction = {
+
+                            })
+                } else {
+                    validateToken(helper.getToken(requireContext())) {
+                        // request notification permission
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            requestNotificationPermission()
+                        } else {
+                            val intent = Intent(requireContext(), AppMonitorService::class.java)
+                            ContextCompat.startForegroundService(requireContext(), intent)
+                            findNavController().navigate(R.id.fetchingAppsFragment)
+                        }
+                    }
+                }
+                /*if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
                     validateToken(helper.getToken(requireContext())) {
                         // request notification permission
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -288,7 +321,7 @@ class HomeFragment : Fragment(), ClickListener {
                             negativeButtonFunction = {
 
                             })
-                }
+                }*/
             } else {
                 noInternet()
             }

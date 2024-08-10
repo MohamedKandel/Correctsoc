@@ -9,6 +9,7 @@ import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING
 import android.os.Build
 import android.os.Handler
@@ -198,7 +199,7 @@ class AppMonitorService : Service() {
             startForeground(
                 NOTIFICATION_ID,
                 initialNotification,
-                FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING
+                FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
             )
         }
 
@@ -218,7 +219,7 @@ class AppMonitorService : Service() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Correctsoc Service"
+            val name = "Applocker Service"
             val descriptionText = "Correctsoc Applocker Service"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
