@@ -69,8 +69,8 @@ class HomeFragment : Fragment(), ClickListener {
     private lateinit var list: MutableList<MenuData>
     private val TAG = "HomeFragment mohamed"
     private var isVisible = false
-    private lateinit var slideIn: Animation
-    private lateinit var slideOut: Animation
+    //private lateinit var slideIn: Animation
+    //private lateinit var slideOut: Animation
     private lateinit var fadeIn: Animation
     private lateinit var fadeOut: Animation
     private lateinit var gestureDetector: GestureDetector
@@ -436,13 +436,13 @@ class HomeFragment : Fragment(), ClickListener {
             }
         }
 
-        if (helper.getLang(requireContext()).equals("en")) {
+        /*if (helper.getLang(requireContext()).equals("en")) {
             slideIn = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_en)
             slideOut = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_en)
         } else {
             slideIn = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_ar)
             slideOut = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_ar)
-        }
+        }*/
         gestureDetector =
             GestureDetector(requireContext(), object : OnSwipeGestureListener() {
                 override fun onSwipeRight() {
@@ -573,14 +573,14 @@ class HomeFragment : Fragment(), ClickListener {
     private fun openMenu() {
         binding.placeholder.show()
         binding.drawerMenu.root.show()
-        binding.drawerMenu.root.startAnimation(slideIn)
+        //binding.drawerMenu.root.startAnimation(slideIn)
         binding.drawerMenu.recyclerView.scrollToPosition(0)
         isVisible = true
     }
 
     private fun closeMenu() {
         binding.placeholder.hide()
-        binding.drawerMenu.root.startAnimation(slideOut)
+        //binding.drawerMenu.root.startAnimation(slideOut)
         binding.drawerMenu.root.hide()
         isVisible = false
     }
