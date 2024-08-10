@@ -202,8 +202,6 @@
     <string name="discount_off">OFF</string>
     <string name="error">Sorry… an error occurred please try again later</string>
     <string name="no_internet_connection">No internet connection</string>
-    <string name="minus" translatable="false">-</string>
-    <string name="plus" translatable="false">+</string>
     <string name="one" translatable="false">1</string>
     <string name="scanning">Still scanning … please wait</string>
     <string name="lock">Secured</string>
