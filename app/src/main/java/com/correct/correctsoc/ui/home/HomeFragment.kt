@@ -69,10 +69,10 @@ class HomeFragment : Fragment(), ClickListener {
     private lateinit var list: MutableList<MenuData>
     private val TAG = "HomeFragment mohamed"
     private var isVisible = false
-    //private lateinit var slideIn: Animation
-    //private lateinit var slideOut: Animation
+    /*private lateinit var slideIn: Animation
+    private lateinit var slideOut: Animation
     private lateinit var fadeIn: Animation
-    private lateinit var fadeOut: Animation
+    private lateinit var fadeOut: Animation*/
     private lateinit var gestureDetector: GestureDetector
     private lateinit var usersDB: UsersDB
     private lateinit var viewModel: AuthViewModel
@@ -226,8 +226,8 @@ class HomeFragment : Fragment(), ClickListener {
 
         fillList()
 
-        fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
-        fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
+        //fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
+        //fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
 
         binding.btnRouter.setOnClickListener {
             if (isInternetConnected) {
