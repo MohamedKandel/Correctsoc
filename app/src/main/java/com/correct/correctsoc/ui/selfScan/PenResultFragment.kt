@@ -56,7 +56,7 @@ class PenResultFragment : Fragment() {
         helper = HelperClass.getInstance()
         viewModel = ViewModelProvider(this)[ScanViewModel::class.java]
         fragmentListener.onFragmentChangedListener(R.id.penResultFragment)
-        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+
 
         connectionManager = ConnectionManager(requireContext())
 
@@ -209,5 +209,11 @@ class PenResultFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.penResultFragment)
+        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.progressCircular.clearAnimation()
     }
 }

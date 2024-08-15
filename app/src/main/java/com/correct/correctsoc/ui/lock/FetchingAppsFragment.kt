@@ -56,11 +56,11 @@ class FetchingAppsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentFetchingAppsBinding.inflate(inflater,container,false)
+        binding = FragmentFetchingAppsBinding.inflate(inflater, container, false)
         helper = HelperClass.getInstance()
         fragmentListener.onFragmentChangedListener(R.id.fetchingAppsFragment)
 
-        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+
         binding.root.keepScreenOn = true
 
         binding.btnStop.setOnClickListener {
@@ -108,14 +108,21 @@ class FetchingAppsFragment : Fragment() {
         super.onResume()
         val progress = binding.txtPercent.text
         if (progress == "100%") {
-            Log.i("Progress completed","Progress is completed")
+            Log.i("Progress completed", "Progress is completed")
             Log.e("List Devices onResume mohamed", "onCreateView: ${list.size}")
             Log.d("List Devices mohamed", "onCreateView: finished")
             val bundle = Bundle()
             bundle.putParcelableArrayList(Constants.LIST, ArrayList(list))
             findNavController().navigate(R.id.appsFragment, bundle)
+        } else {
+            binding.progressCircular.startAnimation(helper.circularAnimation(3000))
         }
         fragmentListener.onFragmentChangedListener(R.id.fetchingAppsFragment)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.progressCircular.clearAnimation()
     }
 
     private fun displayAppName(list: MutableList<App>) {
@@ -170,12 +177,13 @@ class FetchingAppsFragment : Fragment() {
         for (packageInfo in installedPackages) {
             val applicationInfo = packageInfo.applicationInfo
             val isSystemApp = (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-            val hasLauncherIntent = packageManager.getLaunchIntentForPackage(packageInfo.packageName) != null
+            val hasLauncherIntent =
+                packageManager.getLaunchIntentForPackage(packageInfo.packageName) != null
 
             if (!isSystemApp || hasLauncherIntent) {
                 val appName = applicationInfo.loadLabel(packageManager).toString()
                 val packageName = packageInfo.packageName
-                list.add(App(packageName = packageName, appName = appName,"",1))
+                list.add(App(packageName = packageName, appName = appName, "", 1))
             }
         }
         listener.onAllAppsFetched(list)
