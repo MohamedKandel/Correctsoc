@@ -67,7 +67,7 @@ class DetectingFragment : Fragment() {
             findNavController().navigate(R.id.selfPenFragment)
         }
 
-        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+
 
         connectionManager = ConnectionManager(requireContext())
 
@@ -202,5 +202,11 @@ class DetectingFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.detectingFragment)
+        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.progressCircular.clearAnimation()
     }
 }

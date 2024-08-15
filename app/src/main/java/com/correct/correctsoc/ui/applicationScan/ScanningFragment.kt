@@ -62,7 +62,7 @@ class ScanningFragment : Fragment() {
 
         fragmentListener.onFragmentChangedListener(R.id.scanningFragment)
 
-        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+        //binding.progressCircular.startAnimation(helper.circularAnimation(3000))
 
         binding.root.keepScreenOn = true
 
@@ -110,9 +110,15 @@ class ScanningFragment : Fragment() {
         return binding.root
     }
 
+    override fun onPause() {
+        super.onPause()
+        binding.progressCircular.clearAnimation()
+    }
+
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.scanningFragment)
+        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
     }
 
     private fun displayAppName(list: MutableList<AppInfo>) {

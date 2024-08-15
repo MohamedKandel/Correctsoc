@@ -65,8 +65,7 @@ class SelfPenFragment : Fragment() {
             }
         }
 
-        //Start animation
-        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+
 
         helper.onBackPressed(this) {
             findNavController().navigate(R.id.homeFragment)
@@ -112,5 +111,13 @@ class SelfPenFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.selfPenFragment)
+        //Start animation
+        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        //Start animation
+        binding.progressCircular.clearAnimation()
     }
 }

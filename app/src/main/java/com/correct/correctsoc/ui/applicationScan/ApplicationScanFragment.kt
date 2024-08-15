@@ -63,9 +63,15 @@ class ApplicationScanFragment : Fragment() {
         return binding.root
     }
 
+    override fun onPause() {
+        super.onPause()
+        binding.circularImage.clearAnimation()
+    }
+
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.applicationScanFragment)
+        binding.circularImage.startAnimation(helper.circularAnimation(3000))
     }
 
 }

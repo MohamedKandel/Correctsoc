@@ -109,5 +109,13 @@ class LangFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.langFragment)
+        //Start animation
+        binding.circleImg.startAnimation(helper.circularAnimation(1000))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        //Start animation
+        binding.circleImg.clearAnimation()
     }
 }

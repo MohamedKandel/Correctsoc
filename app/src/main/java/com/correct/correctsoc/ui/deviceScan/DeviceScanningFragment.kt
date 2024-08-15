@@ -76,7 +76,7 @@ class DeviceScanningFragment : Fragment() {
             findNavController().navigate(R.id.homeFragment)
         }
 
-        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+//        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
 
         //Log.i("Vendor mohamed", "onCreateView: ${getVendorName("e6:61:c0:14:78:88")}")
 
@@ -213,5 +213,11 @@ class DeviceScanningFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.deviceScanningFragment)
+        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.progressCircular.clearAnimation()
     }
 }
