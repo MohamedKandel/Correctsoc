@@ -3,6 +3,8 @@ package com.correct.correctsoc.helper
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.NetworkCapabilities
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -59,7 +61,34 @@ class ConnectionManager(private val context: Context) : ConnectivityListener {
         }.distinctUntilChanged()
     }
 
+    private fun isOnline(): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     fun observe() {
+        if (isOnline()) {
+            _statusLiveData.postValue(ConnectivityListener.Status.AVAILABLE)
+        } else {
+            _statusLiveData.postValue(ConnectivityListener.Status.UNAVAILABLE)
+        }
         CoroutineScope(Dispatchers.IO).launch {
             onConnectionStatusChangedListener().collect {
                 _statusLiveData.postValue(it)
