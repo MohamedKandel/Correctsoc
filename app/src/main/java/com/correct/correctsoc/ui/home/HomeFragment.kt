@@ -69,10 +69,6 @@ class HomeFragment : Fragment(), ClickListener {
     private lateinit var list: MutableList<MenuData>
     private val TAG = "HomeFragment mohamed"
     private var isVisible = false
-    /*private lateinit var slideIn: Animation
-    private lateinit var slideOut: Animation
-    private lateinit var fadeIn: Animation
-    private lateinit var fadeOut: Animation*/
     private lateinit var gestureDetector: GestureDetector
     private lateinit var usersDB: UsersDB
     private lateinit var viewModel: AuthViewModel
@@ -226,9 +222,6 @@ class HomeFragment : Fragment(), ClickListener {
 
         fillList()
 
-        //fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
-        //fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
-
         binding.btnRouter.setOnClickListener {
             if (isInternetConnected) {
                 validateToken(helper.getToken(requireContext())) {
@@ -249,17 +242,6 @@ class HomeFragment : Fragment(), ClickListener {
             } else {
                 noInternet()
             }
-            /*isConnected.observe(viewLifecycleOwner) {
-                if (it) {
-                    validateToken(helper.getToken(requireContext())) {
-                        val bundle = Bundle()
-                        bundle.putString(TYPE, IP_ADDRESS)
-                        findNavController().navigate(R.id.insertLinkFragment, bundle)
-                    }
-                } else {
-                    noInternet()
-                }
-            }*/
         }
 
         binding.btnScan.setOnClickListener {
@@ -293,73 +275,9 @@ class HomeFragment : Fragment(), ClickListener {
                         }
                     }
                 }
-                /*if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
-                    validateToken(helper.getToken(requireContext())) {
-                        // request notification permission
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            requestNotificationPermission()
-                        } else {
-                            val intent = Intent(requireContext(), AppMonitorService::class.java)
-                            ContextCompat.startForegroundService(requireContext(), intent)
-                            findNavController().navigate(R.id.fetchingAppsFragment)
-                        }
-                    }
-                } else {
-                    val msg = if (helper.getLang(requireContext()).equals("ar")) {
-                        resources.getString(R.string.android14).mappingNumbers()
-                    } else {
-                        resources.getString(R.string.android14)
-                    }
-                    AlertDialog.Builder(requireContext())
-                        .buildDialog(title = resources.getString(R.string.warning),
-                            msg = msg,
-                            positiveButton = resources.getString(R.string.ok),
-                            negativeButton = resources.getString(R.string.cancel),
-                            positiveButtonFunction = {
-
-                            },
-                            negativeButtonFunction = {
-
-                            })
-                }*/
             } else {
                 noInternet()
             }
-            /*isConnected.observe(viewLifecycleOwner) {
-                if (it) {
-                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
-                        validateToken(helper.getToken(requireContext())) {
-                            // request notification permission
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                requestNotificationPermission()
-                            } else {
-                                val intent = Intent(requireContext(), AppMonitorService::class.java)
-                                ContextCompat.startForegroundService(requireContext(), intent)
-                                findNavController().navigate(R.id.fetchingAppsFragment)
-                            }
-                        }
-                    } else {
-                        val msg = if (helper.getLang(requireContext()).equals("ar")) {
-                            resources.getString(R.string.android14).mappingNumbers()
-                        } else {
-                            resources.getString(R.string.android14)
-                        }
-                        AlertDialog.Builder(requireContext())
-                            .buildDialog(title = resources.getString(R.string.warning),
-                                msg = msg,
-                                positiveButton = resources.getString(R.string.ok),
-                                negativeButton = resources.getString(R.string.cancel),
-                                positiveButtonFunction = {
-
-                                },
-                                negativeButtonFunction = {
-
-                                })
-                    }
-                } else {
-                    noInternet()
-                }
-            }*/
         }
 
         binding.btnAppScan.setOnClickListener {
@@ -370,15 +288,6 @@ class HomeFragment : Fragment(), ClickListener {
             } else {
                 noInternet()
             }
-            /*isConnected.observe(viewLifecycleOwner) {
-                if (it) {
-                    validateToken(helper.getToken(requireContext())) {
-                        findNavController().navigate(R.id.applicationScanFragment)
-                    }
-                } else {
-                    noInternet()
-                }
-            }*/
         }
 
         binding.btnConnectedDevices.setOnClickListener {
@@ -389,15 +298,6 @@ class HomeFragment : Fragment(), ClickListener {
             } else {
                 noInternet()
             }
-            /*isConnected.observe(viewLifecycleOwner) {
-                if (it) {
-                    validateToken(helper.getToken(requireContext())) {
-                        findNavController().navigate(R.id.deviceScanningFragment)
-                    }
-                } else {
-                    noInternet()
-                }
-            }*/
         }
 
         binding.btnWebScan.setOnClickListener {
@@ -408,16 +308,6 @@ class HomeFragment : Fragment(), ClickListener {
             } else {
                 noInternet()
             }
-            /*isConnected.observe(viewLifecycleOwner) {
-                if (it) {
-                    validateToken(helper.getToken(requireContext())) {
-                        findNavController().navigate(R.id.insertLinkFragment)
-                    }
-                } else {
-                    noInternet()
-                }
-            }*/
-            //findNavController().navigate(R.id.insertLinkFragment)
         }
 
         val version = if (helper.getLang(requireContext()).equals("ar")) {
@@ -436,13 +326,6 @@ class HomeFragment : Fragment(), ClickListener {
             }
         }
 
-        /*if (helper.getLang(requireContext()).equals("en")) {
-            slideIn = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_en)
-            slideOut = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_en)
-        } else {
-            slideIn = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_ar)
-            slideOut = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_ar)
-        }*/
         gestureDetector =
             GestureDetector(requireContext(), object : OnSwipeGestureListener() {
                 override fun onSwipeRight() {
@@ -573,14 +456,12 @@ class HomeFragment : Fragment(), ClickListener {
     private fun openMenu() {
         binding.placeholder.show()
         binding.drawerMenu.root.show()
-        //binding.drawerMenu.root.startAnimation(slideIn)
         binding.drawerMenu.recyclerView.scrollToPosition(0)
         isVisible = true
     }
 
     private fun closeMenu() {
         binding.placeholder.hide()
-        //binding.drawerMenu.root.startAnimation(slideOut)
         binding.drawerMenu.root.hide()
         isVisible = false
     }
