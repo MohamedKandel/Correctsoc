@@ -427,6 +427,7 @@ fun EditText.upperCaseOnly() {
         }
     })
 }
+
 fun TextView.mappingPassword(): String {
     var char = ""
     this.addTextChangedListener(object : TextWatcher {
@@ -498,7 +499,7 @@ fun Context.readFile(fileRes: Int): String {
     return bufferedReader.use { it.readText() }
 }
 
-fun Dialog.displayDialog(layoutID: Int,context: Context): Dialog {
+fun Dialog.displayDialog(layoutID: Int, context: Context): Dialog {
     val dialog = Dialog(context)
     dialog.setContentView(layoutID)
     dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
