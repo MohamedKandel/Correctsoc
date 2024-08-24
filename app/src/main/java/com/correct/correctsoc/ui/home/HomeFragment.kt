@@ -48,6 +48,7 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnSwipeGestureListener
 import com.correct.correctsoc.helper.buildDialog
+import com.correct.correctsoc.helper.getAppVersion
 import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.isLightweightVersion
 import com.correct.correctsoc.helper.mappingNumbers
@@ -333,9 +334,11 @@ class HomeFragment : Fragment(), ClickListener {
         }
 
         val version = if (helper.getLang(requireContext()).equals("ar")) {
-            helper.getAppVersion(requireContext()).mappingNumbers()
+            //helper.getAppVersion(requireContext()).mappingNumbers()
+            getAppVersion().mappingNumbers()
         } else {
-            helper.getAppVersion(requireContext())
+            getAppVersion()
+            //helper.getAppVersion(requireContext())
         }
 
         binding.txtVersion.append(" $version")
@@ -495,9 +498,9 @@ class HomeFragment : Fragment(), ClickListener {
         list.add(MenuData(R.drawable.about_icon, resources.getString(R.string.about)))
         list.add(MenuData(R.drawable.logout_icon, resources.getString(R.string.logout)))
         val version = if (helper.getLang(requireContext()).equals("ar")) {
-            helper.getAppVersion(requireContext()).mappingNumbers()
+            getAppVersion().mappingNumbers()
         } else {
-            helper.getAppVersion(requireContext())
+            getAppVersion()
         }
         list.add(
             MenuData(

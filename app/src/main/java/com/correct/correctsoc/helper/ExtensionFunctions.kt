@@ -24,18 +24,14 @@ import android.util.Base64
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.view.WindowInsets
-import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import java.io.BufferedReader
-import java.io.File
 import java.io.InputStreamReader
 
 
@@ -554,4 +550,18 @@ private fun setWindowFlag(bits: Int, on: Boolean, activity: Activity) {
         winParams.flags = winParams.flags and bits.inv()
     }
     win.attributes = winParams
+}
+
+fun Activity.getAppVersion(): String {
+    val pkgInfo = this.packageManager.getPackageInfo(
+        this.packageName, 0
+    )
+    return pkgInfo.versionName
+}
+
+fun Fragment.getAppVersion(): String {
+    val pkgInfo = requireContext().packageManager.getPackageInfo(
+        requireActivity().packageName, 0
+    )
+    return pkgInfo.versionName
 }

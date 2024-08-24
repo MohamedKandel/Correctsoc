@@ -4,18 +4,19 @@ import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
-import com.correct.correctsoc.room.UsersDB
 import com.correct.correctsoc.databinding.FragmentSplashBinding
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.getAppVersion
 import com.correct.correctsoc.helper.mappingNumbers
+import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
 
 class SplashFragment : Fragment() {
@@ -56,9 +57,9 @@ class SplashFragment : Fragment() {
         binding.root.keepScreenOn = true
 
         val version = if (helper.getLang(requireContext()).equals("ar")) {
-            helper.getAppVersion(requireContext()).mappingNumbers()
+            getAppVersion().mappingNumbers()
         } else {
-            helper.getAppVersion(requireContext())
+            getAppVersion()
         }
         fragmentListener.onFragmentChangedListener(R.id.splashFragment)
         binding.txtVersion.append(" $version")

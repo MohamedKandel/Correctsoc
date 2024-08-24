@@ -14,6 +14,7 @@ import com.correct.correctsoc.databinding.FragmentAboutBinding
 import com.correct.correctsoc.helper.Constants
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.getAppVersion
 import com.correct.correctsoc.helper.mappingNumbers
 
 
@@ -60,9 +61,9 @@ class AboutFragment : Fragment() {
         }
 
         val version = if (helper.getLang(requireContext()).equals("ar")) {
-            helper.getAppVersion(requireContext()).mappingNumbers()
+            getAppVersion().mappingNumbers()
         } else {
-            helper.getAppVersion(requireContext())
+            getAppVersion()
         }
         binding.txtVersion.append(" : $version")
 

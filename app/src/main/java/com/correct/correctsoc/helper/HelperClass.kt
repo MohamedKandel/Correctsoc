@@ -71,13 +71,6 @@ class HelperClass {
         }
     }
 
-    fun getAppVersion(context: Context): String {
-        val pkgInfo = context.packageManager.getPackageInfo(
-            context.packageName, 0
-        )
-        return pkgInfo.versionName
-    }
-
     fun setToken(token: String, context: Context) {
         initSP(context)
         editor.apply {
@@ -161,31 +154,6 @@ class HelperClass {
         }
         return null
     }
-
-    /*fun getDeviceType(vendorName: String): String {
-        val map = mapOf(
-            "Apple" to "Mobile Phone",
-            "Samsung" to "Mobile Phone",
-            "Huawei" to "Mobile Phone",
-            "Dell" to "PC",
-            "HP" to "PC",
-            "Lenovo" to "PC",
-            "Cisco" to "Access Point",
-            "TP-Link" to "Access Point",
-            "Netgear" to "Access Point",
-            "Zhejiang Uniview Technologies Co.,Ltd." to "Security Camera"
-        )
-
-        val keys = map.keys
-        var value = "Unknown"
-        for (key in keys) {
-            if (key.contains(vendorName, true)) {
-                value = map[key].toString()
-                break
-            }
-        }
-        return value
-    }*/
 
     fun isSecureSite(list: MutableList<Port>): Boolean {
         var isSecure = true
