@@ -168,6 +168,19 @@ class HomeFragment : Fragment(), ClickListener {
         connectionManager.statusLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 ConnectivityListener.Status.AVAILABLE -> {
+                    Log.i("IsConnected mohamed", "Connected")
+                    lifecycleScope.launch {
+                        val id = usersDB.dao().getUserID() ?: ""
+                        val user = usersDB.dao().getUser(id)
+                        if (user != null) {
+                            Log.v(TAG, user.id)
+                            Log.v(TAG, user.phone)
+                            Log.v(TAG, user.token)
+                            Log.v(TAG, user.password)
+                            Log.v(TAG, user.username)
+                            getUserPlan(user.id)
+                        }
+                    }
                     isInternetConnected = true
                     isConnected.postValue(true)
                     if (!helper.getDeviceStatus(requireContext())) {
@@ -176,16 +189,19 @@ class HomeFragment : Fragment(), ClickListener {
                 }
 
                 ConnectivityListener.Status.UNAVAILABLE -> {
+                    Log.i("IsConnected mohamed", "UnConnected")
                     isInternetConnected = false
                     isConnected.postValue(false)
                 }
 
                 ConnectivityListener.Status.LOST -> {
+                    Log.i("IsConnected mohamed", "UnConnected")
                     isInternetConnected = false
                     isConnected.postValue(false)
                 }
 
                 ConnectivityListener.Status.LOSING -> {
+                    Log.i("IsConnected mohamed", "UnConnected")
                     isInternetConnected = false
                     isConnected.postValue(false)
                 }
@@ -203,7 +219,7 @@ class HomeFragment : Fragment(), ClickListener {
 
         binding.drawerMenu.recyclerView.adapter = adapter
 
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             val id = usersDB.dao().getUserID() ?: ""
             val user = usersDB.dao().getUser(id)
             if (user != null) {
@@ -212,18 +228,19 @@ class HomeFragment : Fragment(), ClickListener {
                 Log.v(TAG, user.token)
                 Log.v(TAG, user.password)
                 Log.v(TAG, user.username)
-                isConnected.observe(requireActivity()) {
+                /*isConnected.observe(requireActivity()) {
                     if (it) {
                         getUserPlan(user.id)
                     }
-                }
+                }*/
             }
-        }
+        }*/
 
         fillList()
 
         binding.btnRouter.setOnClickListener {
             if (isInternetConnected) {
+                Log.i("IsConnected mohamed", "Connected")
                 validateToken(helper.getToken(requireContext())) {
                     findNavController().navigate(R.id.selfPenFragment)
                 }
@@ -234,6 +251,7 @@ class HomeFragment : Fragment(), ClickListener {
 
         binding.btnIpScan.setOnClickListener {
             if (isInternetConnected) {
+                Log.i("IsConnected mohamed", "Connected")
                 validateToken(helper.getToken(requireContext())) {
                     val bundle = Bundle()
                     bundle.putString(TYPE, IP_ADDRESS)
@@ -246,6 +264,7 @@ class HomeFragment : Fragment(), ClickListener {
 
         binding.btnScan.setOnClickListener {
             if (isInternetConnected) {
+                Log.i("IsConnected mohamed", "Connected")
                 if (requireContext().isLightweightVersion()) {
                     val msg = if (helper.getLang(requireContext()).equals("ar")) {
                         resources.getString(R.string.android14).mappingNumbers()
@@ -281,6 +300,7 @@ class HomeFragment : Fragment(), ClickListener {
         }
 
         binding.btnAppScan.setOnClickListener {
+            Log.i("IsConnected mohamed", "Connected")
             if (isInternetConnected) {
                 validateToken(helper.getToken(requireContext())) {
                     findNavController().navigate(R.id.applicationScanFragment)
@@ -291,6 +311,7 @@ class HomeFragment : Fragment(), ClickListener {
         }
 
         binding.btnConnectedDevices.setOnClickListener {
+            Log.i("IsConnected mohamed", "Connected")
             if (isInternetConnected) {
                 validateToken(helper.getToken(requireContext())) {
                     findNavController().navigate(R.id.deviceScanningFragment)
@@ -301,6 +322,7 @@ class HomeFragment : Fragment(), ClickListener {
         }
 
         binding.btnWebScan.setOnClickListener {
+            Log.i("IsConnected mohamed", "Connected")
             if (isInternetConnected) {
                 validateToken(helper.getToken(requireContext())) {
                     findNavController().navigate(R.id.insertLinkFragment)
