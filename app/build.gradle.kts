@@ -1,8 +1,12 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
-    id("kotlin-parcelize")
+    //id("com.android.application")
+    alias(libs.plugins.androidApplication)
+//    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.kotlinAndroid)
+//    id("com.google.devtools.ksp")
+    alias(libs.plugins.ksp)
+//    id("kotlin-parcelize")
+    alias(libs.plugins.kotlinParcelize)
 }
 
 android {
