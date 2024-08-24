@@ -6,19 +6,14 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -31,7 +26,6 @@ import com.correct.correctsoc.helper.ConnectionManager
 import com.correct.correctsoc.helper.ConnectivityListener
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
-import com.correct.correctsoc.helper.buildDialog
 import com.correct.correctsoc.helper.transparentStatusBar
 import com.correct.correctsoc.ui.auth.AuthViewModel
 import com.google.android.play.core.appupdate.AppUpdateManager

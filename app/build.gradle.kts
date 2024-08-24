@@ -100,4 +100,7 @@ dependencies {
 
     // gif
     implementation(libs.android.gif.drawable)
+
+    // internet connection
+    implementation(libs.network.connetivity)
 }
