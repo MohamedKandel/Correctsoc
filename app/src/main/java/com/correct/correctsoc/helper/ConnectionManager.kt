@@ -29,28 +29,28 @@ class ConnectionManager(private val context: Context) : ConnectivityListener {
                 override fun onAvailable(network: Network) {
                     super.onAvailable(network)
                     launch {
-                        trySend(ConnectivityListener.Status.AVAILABLE)
+                        send(ConnectivityListener.Status.AVAILABLE)
                     }
                 }
 
                 override fun onLosing(network: Network, maxMsToLive: Int) {
                     super.onLosing(network, maxMsToLive)
                     launch {
-                        trySend(ConnectivityListener.Status.LOSING)
+                        send(ConnectivityListener.Status.LOSING)
                     }
                 }
 
                 override fun onLost(network: Network) {
                     super.onLost(network)
                     launch {
-                        trySend(ConnectivityListener.Status.LOST)
+                        send(ConnectivityListener.Status.LOST)
                     }
                 }
 
                 override fun onUnavailable() {
                     super.onUnavailable()
                     launch {
-                        trySend(ConnectivityListener.Status.UNAVAILABLE)
+                        send(ConnectivityListener.Status.UNAVAILABLE)
                     }
                 }
             }
