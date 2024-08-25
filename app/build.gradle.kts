@@ -103,4 +103,8 @@ dependencies {
 
     // internet connection
     implementation(libs.network.connetivity)
+
+    // read OTP
+    implementation(libs.play.services.auth)
+    implementation(libs.play.services.auth.api.phone)
 }

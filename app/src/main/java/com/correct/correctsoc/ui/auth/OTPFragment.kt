@@ -1,19 +1,25 @@
 package com.correct.correctsoc.ui.auth
 
+import android.app.Activity.RESULT_OK
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -31,12 +37,14 @@ import com.correct.correctsoc.helper.Constants.TAG
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.SmsReceiver
 import com.correct.correctsoc.helper.VerificationTextFilledListener
 import com.correct.correctsoc.helper.hide
-import com.correct.correctsoc.helper.upperCaseOnly
 import com.correct.correctsoc.helper.show
+import com.correct.correctsoc.helper.upperCaseOnly
 import com.correct.correctsoc.room.User
 import com.correct.correctsoc.room.UsersDB
+import com.google.android.gms.auth.api.phone.SmsRetriever
 import kotlinx.coroutines.launch
 
 class OTPFragment : Fragment(), VerificationTextFilledListener {
@@ -51,7 +59,34 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
     private var phone = ""
     private lateinit var helper: HelperClass
 
-    //private var smsReceiver: SmsReceiver? = null
+    private var smsReceiver: SmsReceiver? = null
+    private val arl: ActivityResultLauncher<Intent?> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if((it.resultCode == RESULT_OK) && (it.data != null)) {
+            val message = it.data?.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
+            if (message != null) {
+                getOTP(message,this)
+            }
+        }
+    }
+
+    private fun getOTP(message: String, listener: VerificationTextFilledListener) {
+        val otpPattern = "[A-Z0-9]+".toRegex()
+        // Find the first match of the pattern in the message
+        val matchResult = otpPattern.find(message)
+        val otp = matchResult?.value
+        if (otp != null) {
+            binding.txtFirstDigit.setText("${otp[0]}")
+            binding.txtSecondDigit.setText("${otp[1]}")
+            binding.txtThirdDigit.setText("${otp[2]}")
+            binding.txtFourthDigit.setText("${otp[3]}")
+            binding.txtFifthDigit.setText("${otp[4]}")
+            binding.txtSixthDigit.setText("${otp[5]}")
+            listener.onVerificationTextFilled()
+        }
+    }
+
     private var countDownTimer: CountDownTimer? = null
     private lateinit var usersDB: UsersDB
     private lateinit var viewModel: AuthViewModel
@@ -135,7 +170,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
 
         startCountDownTimer()
 
-        //startCountDownTimer()
+        startSmartUserConsent()
 
         binding.btnResend.setOnClickListener {
             countDownTimer?.cancel()
@@ -287,10 +322,40 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         countDownTimer?.cancel()
     }
 
+    private fun startSmartUserConsent() {
+        val client = SmsRetriever.getClient(requireContext())
+        // add sender phone number or name here to listen for
+        client.startSmsUserConsent(null)
+    }
+
+    private fun registerReceiver() {
+        smsReceiver = SmsReceiver()
+        smsReceiver?.listener = object : SmsReceiver.SmsReceiverListener {
+            override fun onSuccess(intent: Intent?) {
+                arl.launch(intent)
+            }
+
+            override fun onFailure() {
+                Toast.makeText(requireContext(),"Failed to fetch OTP", Toast.LENGTH_SHORT).show()
+            }
+        }
+        val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireActivity().registerReceiver(smsReceiver,intentFilter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            requireActivity().registerReceiver(smsReceiver, intentFilter)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        registerReceiver()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         countDownTimer?.cancel()
-        //requireActivity().unregisterReceiver(smsReceiver)
+        requireActivity().unregisterReceiver(smsReceiver)
     }
 
     private fun changeFocus(editTexts: Array<EditText>, listener: VerificationTextFilledListener) {
