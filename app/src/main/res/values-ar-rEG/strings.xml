@@ -36,6 +36,8 @@
     <string name="danger">خطر</string>
     <string name="scan">فحص</string>
 
+    <string name="confirm_password">تأكيد كلمة المرور</string>
+
     <string name="applications">تطبيقات تهدد الهاتف</string>
     <string name="scan_device">فحص الأجهزة المتصلة …</string>
     <string name="conntected_devices">بيانات الأجهزة المتصلة بالواي فاي</string>
