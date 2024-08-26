@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base.Theme.CorrectSoc" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="colorPrimary">@color/purple</item>
+        <item name="colorPrimaryDark">@color/purple</item>
+    </style>
+
+    <style name="Theme.CorrectSoc" parent="Base.Theme.CorrectSoc" />
+
+    <style name="AuthInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxCornerRadiusBottomEnd">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusTopStart">@dimen/_8sdp</item>
+        <item name="boxStrokeColor">@color/box_stroke_color</item>
+        <item name="boxStrokeWidth">@dimen/_2sdp</item>
+        <item name="hintAnimationEnabled">false</item>
+        <item name="hintEnabled">false</item>
+        <item name="hintTextAppearance">@color/alphaWhite</item>
+    </style>
+
+    <style name="Spinner" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxCornerRadiusBottomEnd">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusTopStart">@dimen/_8sdp</item>
+        <item name="boxStrokeColor">@color/box_stroke_color</item>
+        <item name="boxStrokeWidth">@dimen/_2sdp</item>
+        <item name="hintAnimationEnabled">false</item>
+        <item name="hintEnabled">false</item>
+        <item name="hintTextAppearance">@color/alphaWhite</item>
+    </style>
+
+    <style name="CustomAutoCompleteTextViewStyle" parent="Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox">
+        <item name="android:popupBackground">@drawable/spn_menu_drawable</item>
+    </style>
+
+    <style name="ShapeImageView">
+        <item name="cornerSizeTopLeft">@dimen/_7sdp</item>
+        <item name="cornerSizeBottomLeft">@dimen/_7sdp</item>
+    </style>
+
+    <style name="RoundedImageView">
+        <item name="cornerSizeBottomLeft">@dimen/_7sdp</item>
+        <item name="cornerSizeBottomRight">@dimen/_7sdp</item>
+        <item name="cornerSizeTopLeft">@dimen/_7sdp</item>
+        <item name="cornerSizeTopRight">@dimen/_7sdp</item>
+    </style>
+</resources>
