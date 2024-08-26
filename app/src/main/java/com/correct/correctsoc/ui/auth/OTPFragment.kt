@@ -122,7 +122,8 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
             source = requireArguments().getInt(SOURCE)
             phone = requireArguments().getString(PHONE) ?: ""
             if (source == R.id.loginFragment) {
-                isReconfirmed = requireArguments().getBoolean(ISRECONFIRM)
+                isReconfirmed = requireArguments().getBoolean(ISRECONFIRM, false)
+                Log.i("Is reconfirmed mohamed", "$isReconfirmed")
             }
         }
 
@@ -470,8 +471,8 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
             binding.progress.show()
             when (source) {
                 R.id.loginFragment -> {
-                    isReconfirmed = requireArguments().getBoolean(ISRECONFIRM)
-                    // Log.v("okhttp.OkHttpClient","http://correctsocandroidapi.somee.com/api/Authentication/ $isReconfirmed")
+                    Log.i("Is reconfirmed mohamed", "login")
+                    isReconfirmed = requireArguments().getBoolean(ISRECONFIRM, false)
                     // forgot password clicked or reconfirming phone
                     if (isReconfirmed) {
                         val body = ConfirmPhoneBody(phone,verification)
@@ -491,10 +492,12 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
 
                 R.id.signUpFragment -> {
                     // register account clicked
+                    Log.i("Is reconfirmed mohamed", "register")
                     confirmOTP(ConfirmPhoneBody(phone, verification))
                 }
 
                 R.id.editInfoFragment -> {
+                    Log.i("Is reconfirmed mohamed", "update")
                     // update phone clicked
                     lifecycleScope.launch {
                         val id = usersDB.dao().getUserID() ?: ""

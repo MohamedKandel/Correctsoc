@@ -11,7 +11,6 @@ import com.correct.correctsoc.data.auth.AuthResponse
 import com.correct.correctsoc.data.auth.ConfirmPhoneBody
 import com.correct.correctsoc.data.auth.GenerateOTPBody
 import com.correct.correctsoc.data.auth.LoginBody
-import com.correct.correctsoc.data.auth.forget.ForgotResponse
 import com.correct.correctsoc.data.auth.RegisterBody
 import com.correct.correctsoc.data.auth.ResetPasswordBody
 import com.correct.correctsoc.data.auth.SignOutBody
@@ -19,6 +18,7 @@ import com.correct.correctsoc.data.auth.UpdatePasswordBody
 import com.correct.correctsoc.data.auth.UpdatePhoneBody
 import com.correct.correctsoc.data.auth.UpdateUsernameBody
 import com.correct.correctsoc.data.auth.ValidateOTPBody
+import com.correct.correctsoc.data.auth.forget.ForgotResponse
 import kotlinx.coroutines.launch
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
@@ -71,11 +71,12 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun confirmOTP(body: ConfirmPhoneBody) = viewModelScope.launch {
         val result = authRepository.confirmOTP(body)
-        if (result.isSuccessful) {
+        _OTPResponse.postValue(result.body())
+        /*if (result.isSuccessful) {
             _OTPResponse.postValue(result.body())
         } else {
             _OTPResponse.postValue(result.body())
-        }
+        }*/
     }
 
     fun resendOTP(phoneNumber: String) = viewModelScope.launch {
@@ -166,11 +167,12 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun validateOTP(body: ValidateOTPBody) = viewModelScope.launch {
         val result = authRepository.validateOTP(body)
-        if (result.isSuccessful) {
+        _validateOTPResponse.postValue(result.body())
+        /*if (result.isSuccessful) {
             _validateOTPResponse.postValue(result.body())
         } else {
             _validateOTPResponse.postValue(result.body())
-        }
+        }*/
     }
 
     fun setDeviceOn(token: String) = viewModelScope.launch {
