@@ -4,8 +4,7 @@
         <!-- Customize your dark theme here. -->
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="colorPrimary">@color/purple</item>
-        <item name="colorPrimaryDark">@color/purple</item>
+        <item name="colorPrimary">@color/light_purple</item>
     </style>
 
     <style name="Theme.CorrectSoc" parent="Base.Theme.CorrectSoc" />

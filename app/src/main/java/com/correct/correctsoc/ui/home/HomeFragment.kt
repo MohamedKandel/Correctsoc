@@ -16,8 +16,6 @@ import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -466,7 +464,8 @@ class HomeFragment : Fragment(), ClickListener {
                             msg = resources.getString(R.string.subscription_end),
                             positiveButton = resources.getString(R.string.ok),
                             positiveButtonFunction = {
-                                Log.v("Premium version", "premium version requested")
+                                Log.v(TAG, "premium version requested")
+                                findNavController().navigate(R.id.parentPayFragment)
                             }, negativeButton = resources.getString(R.string.cancel),
                             negativeButtonFunction = {
 

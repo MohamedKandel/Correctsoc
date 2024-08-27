@@ -10,6 +10,7 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="gray">#999999</color>
     <color name="purple">#663CA6</color>
+    <color name="light_purple">#9F70E6</color>
     <color name="dark_purple">#401744</color>
     <color name="safe_color">#48A62C</color>
     <color name="warning_color">#C79516</color>

@@ -6,7 +6,6 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="colorPrimary">@color/dark_purple</item>
-        <item name="colorPrimaryDark">@color/purple</item>
     </style>
 
     <style name="Theme.CorrectSoc" parent="Base.Theme.CorrectSoc" />
