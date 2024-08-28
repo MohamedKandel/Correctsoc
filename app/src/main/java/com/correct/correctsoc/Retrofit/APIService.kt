@@ -31,12 +31,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface APIService {
-    /*@GET("GetUserIp")
-    suspend fun getUserIP(): Response<ResultResponse>
-
-    @POST("NmapAppScan")
-    suspend fun Scan(@Query("input") input: String): Response<OpenPorts>*/
-
     @POST("Authentication/RegisterUser")
     suspend fun registerUser(@Body body: RegisterBody): Response<AuthResponse>
 
