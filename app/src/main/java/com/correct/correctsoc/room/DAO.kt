@@ -25,6 +25,12 @@ interface DAO {
     @Query("select phone from UserData where id= :id")
     suspend fun getUserPhone(id: String): String?
 
+    @Query("select mail from Userdata where id= :id")
+    suspend fun getUserMail(id: String): String?
+
+    @Query("update UserData set mail = :newMail where id = :id")
+    suspend fun updateMail(id: String, newMail: String)
+
     @Query("update UserData set phone = :newPhone where id = :id")
     suspend fun updatePhone(id: String, newPhone: String)
 

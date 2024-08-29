@@ -1,23 +1,26 @@
 package com.correct.correctsoc.ui.auth
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
 import android.text.method.LinkMovementMethod
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.data.auth.RegisterBody
-import com.correct.correctsoc.room.UsersDB
 import com.correct.correctsoc.databinding.FragmentSignUpBinding
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TAG
@@ -26,9 +29,16 @@ import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.mappingNumbers
 import com.correct.correctsoc.helper.setSpannable
-import com.correct.correctsoc.helper.updateRequirements
 import com.correct.correctsoc.helper.show
+import com.correct.correctsoc.helper.updateRequirements
 import com.correct.correctsoc.room.User
+import com.correct.correctsoc.room.UsersDB
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.launch
 
 class SignUpFragment : Fragment() {
@@ -55,6 +65,30 @@ class SignUpFragment : Fragment() {
     private lateinit var usersDB: UsersDB
     private lateinit var viewModel: AuthViewModel
     private lateinit var fragmentListener: FragmentChangedListener
+    private lateinit var gso: GoogleSignInOptions
+    private lateinit var client: GoogleSignInClient
+    private var isChoosedMail = false
+
+    private val getMailIntent: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+        try {
+            task.getResult(ApiException::class.java)
+            isChoosedMail = true
+            returnToSignUp()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+    }
+
+    private fun returnToSignUp() {
+        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
+        if (account != null) {
+            account.email?.let { Log.v("Google mail mohamed", it) }
+            binding.txtMail.setText(account.email)
+        }
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -80,12 +114,41 @@ class SignUpFragment : Fragment() {
         binding.placeholder.hide()
         binding.progress.hide()
 
+        gso =
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+        client = GoogleSignIn.getClient(requireContext(), gso)
+
         val text = resources
             .getString(R.string.already_have_account)
             .replace("\n", " ")
 
         if (arguments != null) {
             source = requireArguments().getInt(SOURCE)
+        }
+
+        binding.txtMail.inputType = android.text.InputType.TYPE_NULL
+        binding.txtMail.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                val imm =
+                    view?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                if (isChoosedMail) {
+                    signOut()
+                } else {
+                    getMailIntent.launch(client.signInIntent)
+                }
+            }
+        }
+
+        binding.txtMail.setOnClickListener {
+            val imm =
+                view?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view?.windowToken, 0)
+            if (isChoosedMail) {
+                signOut()
+            } else {
+                getMailIntent.launch(client.signInIntent)
+            }
         }
 
         if (helper.getLang(requireContext()).equals("en")) {
@@ -95,10 +158,12 @@ class SignUpFragment : Fragment() {
         }
         endIndx = text.length
 
-        binding.txtLogin.setSpannable(startIndx,
+        binding.txtLogin.setSpannable(
+            startIndx,
             endIndx,
             text,
-            resources.getColor(R.color.white, context?.theme)) {
+            resources.getColor(R.color.white, context?.theme)
+        ) {
             val bundle = Bundle()
             bundle.putInt(SOURCE, R.id.signUpFragment)
             findNavController().navigate(R.id.loginFragment, bundle)
@@ -163,20 +228,21 @@ class SignUpFragment : Fragment() {
                 }
                 //updateRequirements(s.toString())
                 if (binding.layoutPassInstructions.txtInstructionConfirm
-                    .updateRequirements(
-                        s.toString(), arrayOf(
-                            lenStrtIndx, numberStrtIndx,
-                            upperStrtIndx, lowerStrtIndx, specialStrtIndx
-                        ),
-                        arrayOf(
-                            lenEndIndx, numberEndIndx,
-                            upperEndIndx, lowerEndIndx,
-                            specialEndIndx
-                        ),
-                        resources.getString(R.string.password_instruction),
-                        resources.getColor(R.color.safe_color, context?.theme),
-                        resources.getColor(R.color.black, context?.theme)
-                    )) {
+                        .updateRequirements(
+                            s.toString(), arrayOf(
+                                lenStrtIndx, numberStrtIndx,
+                                upperStrtIndx, lowerStrtIndx, specialStrtIndx
+                            ),
+                            arrayOf(
+                                lenEndIndx, numberEndIndx,
+                                upperEndIndx, lowerEndIndx,
+                                specialEndIndx
+                            ),
+                            resources.getString(R.string.password_instruction),
+                            resources.getColor(R.color.safe_color, context?.theme),
+                            resources.getColor(R.color.black, context?.theme)
+                        )
+                ) {
                     binding.layoutPassInstructions.root.hide()
                 }
             }
@@ -225,9 +291,11 @@ class SignUpFragment : Fragment() {
                 val name = binding.txtName.text.toString()
                 val phone = binding.txtPhone.text.toString()
                 val password = binding.txtPassword.text.toString()
+                val mail = binding.txtMail.text.toString()
                 val body = RegisterBody(
                     name = name, phone = phone,
-                    password = password
+                    password = password,
+                    mail = mail
                 )
                 registerUser(body)
             }
@@ -258,6 +326,12 @@ class SignUpFragment : Fragment() {
         return binding.root
     }
 
+    private fun signOut() {
+        client.signOut().addOnCompleteListener {
+            getMailIntent.launch(client.signInIntent)
+        }
+    }
+
     private fun registerUser(body: RegisterBody) {
         viewModel.registerUser(body)
         viewModel.registerResponse.observe(viewLifecycleOwner) {
@@ -265,7 +339,7 @@ class SignUpFragment : Fragment() {
                 binding.placeholder.hide()
                 binding.progress.hide()
                 Log.v(TAG, "${it.statusCode}")
-                val user = User("1", body.name, body.password, body.phone, "0")
+                val user = User("1", body.name, body.password, body.phone, "0", body.mail)
                 lifecycleScope.launch {
                     usersDB.dao().insert(user)
                     helper.setRemember(requireContext(), true)
@@ -290,6 +364,7 @@ class SignUpFragment : Fragment() {
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.signUpFragment)

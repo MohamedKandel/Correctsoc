@@ -6,5 +6,6 @@ data class ResultBody(
     val months: Int,
     val name: String,
     val phone: String,
-    val planName: String
+    val planName: String,
+    val email: String
 )

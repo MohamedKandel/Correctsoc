@@ -91,7 +91,8 @@
     <string name="forget_password">نسيت كلمة المرور</string>
     <string name="new_user">لا تمتلك حساب ؟ تسجيل مستخدم</string>
     <string name="create_account">إنشاء حساب</string>
-    <string name="full_name">الاسم بالكامل</string>
+    <string name="full_name">الاسم</string>
+    <string name="mail">البريد الإلكتروني</string>
     <string name="code">رمز التفعيل</string>
     <string name="verification">تحقق من هاتفك المحمول</string>
     <string name="verification_msg">من فضلك ادخل كود التفعيل الذي وصل\nعلى</string>

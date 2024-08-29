@@ -34,7 +34,7 @@ interface APIService {
     @POST("Authentication/RegisterUser")
     suspend fun registerUser(@Body body: RegisterBody): Response<AuthResponse>
 
-    @POST("Authentication/ConfirmPhone")
+    @POST("Authentication/ConfirmEmail")
     suspend fun confirmOTP(@Body body: ConfirmPhoneBody): Response<AuthResponse>
 
     @POST("Authentication/SendNewOTP")
@@ -42,7 +42,7 @@ interface APIService {
 
     @POST("Authentication/ForgetPassword")
     suspend fun forgetPassword(
-        @Query("phone") phone: String
+        @Query("email") email: String
     ): Response<ForgotResponse>
 
     @POST("Authentication/ValidateResetOtp")

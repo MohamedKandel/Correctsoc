@@ -93,7 +93,8 @@
     <string name="forget_password">Forget Password ?</string>
     <string name="new_user">Don\'t have account ? Sign up</string>
     <string name="create_account">Create account</string>
-    <string name="full_name">Full name</string>
+    <string name="full_name">Name</string>
+    <string name="mail">E-mail</string>
     <string name="code">Verification Code</string>
     <string name="verification">Check your phone</string>
     <string name="verification_msg">Please enter the verification code sent\nto</string>

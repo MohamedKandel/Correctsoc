@@ -10,7 +10,8 @@ class User(
     var username: String,
     var password: String,
     var phone: String,
-    var token: String/*,
+    var token: String,
+    var mail: String/*,
     var code: String*/
 ) {
     override fun equals(other: Any?): Boolean {
@@ -24,6 +25,7 @@ class User(
         if (password != other.password) return false
         if (phone != other.phone) return false
         if (token != other.token) return false
+        if (mail != other.mail) return false
         //if (code != other.code) return false
 
         return true
@@ -35,6 +37,7 @@ class User(
         result = 31 * result + password.hashCode()
         result = 31 * result + phone.hashCode()
         result = 31 * result + token.hashCode()
+        result = 31 * result + mail.hashCode()
         //result = 31 * result + code.hashCode()
         return result
     }

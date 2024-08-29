@@ -2,11 +2,11 @@ package com.correct.correctsoc.ui.auth
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,7 +19,6 @@ import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
-import kotlin.math.ln
 
 class EditInfoFragment : Fragment() {
 
@@ -107,6 +106,7 @@ class EditInfoFragment : Fragment() {
                     val id = usersDB.dao().getUserID() ?: ""
                     val name = usersDB.dao().getUsername(id) ?: ""
                     val phone = usersDB.dao().getUserPhone(id) ?: ""
+                    val mail = usersDB.dao().getUserMail(id) ?: ""
                     //Toast.makeText(requireContext(), phone, Toast.LENGTH_SHORT).show()
                     if (!name.equals(username)) {
                         val body = UpdateUsernameBody(
@@ -122,9 +122,11 @@ class EditInfoFragment : Fragment() {
                         if (phoneNumber.isNotEmpty()) {
                             if (phone != phoneNumber) {
                                 lifecycleScope.launch {
+
                                     val otpBody = GenerateOTPBody(
                                         newPhone = phoneNumber,
-                                        userId = id
+                                        userId = id,
+                                        email = mail
                                     )
                                     generateOTP(otpBody, helper.getToken(requireContext()))
                                 }
@@ -137,11 +139,13 @@ class EditInfoFragment : Fragment() {
                     lifecycleScope.launch {
                         val id = usersDB.dao().getUserID() ?: ""
                         val phone = usersDB.dao().getUserPhone(id) ?: ""
+                        val mail = usersDB.dao().getUserMail(id) ?: ""
                         if (phone != phoneNumber) {
                             lifecycleScope.launch {
                                 val otpBody = GenerateOTPBody(
                                     newPhone = phoneNumber,
-                                    userId = id
+                                    userId = id,
+                                    email = mail
                                 )
                                 generateOTP(otpBody, helper.getToken(requireContext()))
                             }
@@ -165,12 +169,14 @@ class EditInfoFragment : Fragment() {
             if (it.isSuccess) {
                 lifecycleScope.launch {
                     val id = usersDB.dao().getUserID() ?: ""
+                    val mail = usersDB.dao().getUserMail(id) ?: ""
                     usersDB.dao().updateUsername(body.username, id)
 
                     if (updatePhone) {
                         val otpBody = GenerateOTPBody(
                             newPhone = binding.txtPhone.text.toString(),
-                            userId = id
+                            userId = id,
+                            email = mail
                         )
                         generateOTP(otpBody, token)
 

@@ -7,7 +7,9 @@
     android:background="@drawable/auth_bg"
     tools:context=".ui.auth.SignUpFragment">
 
+
     <RelativeLayout
+        android:id="@+id/layout_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_32sdp"
@@ -65,7 +67,6 @@
                 android:layout_height="match_parent"
                 android:autofillHints="phone"
                 android:digits="0123456789+"
-                android:drawableStart="@drawable/phone_icon"
                 android:drawablePadding="@dimen/_7sdp"
                 android:hint="@string/phone"
                 android:inputType="phone"
@@ -87,10 +88,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:autofillHints="name"
-                android:drawableStart="@drawable/person_icon"
                 android:drawablePadding="@dimen/_7sdp"
                 android:hint="@string/full_name"
                 android:inputType="textPersonName"
+                android:textColor="@color/white"
+                android:textColorHint="@color/alphaWhite" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_mail"
+            style="@style/AuthInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_name"
+            android:layout_marginTop="@dimen/_12sdp"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_mail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autofillHints="name"
+                android:drawablePadding="@dimen/_7sdp"
+                android:hint="@string/mail"
+                android:inputType="textEmailAddress"
                 android:textColor="@color/white"
                 android:textColorHint="@color/alphaWhite" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -100,7 +121,7 @@
             style="@style/AuthInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/layout_name"
+            android:layout_below="@id/layout_mail"
             android:layout_marginTop="@dimen/_12sdp"
             app:endIconMode="password_toggle"
             app:endIconTint="@color/white">
@@ -110,14 +131,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:autofillHints="password"
-                android:drawableStart="@drawable/lock_icon"
                 android:drawablePadding="@dimen/_7sdp"
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:textColor="@color/white"
                 android:textColorHint="@color/alphaWhite" />
-            <include android:id="@+id/layout_pass_instructions"
-                layout="@layout/msg_bubble"/>
+
+            <include
+                android:id="@+id/layout_pass_instructions"
+                layout="@layout/msg_bubble" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -134,11 +156,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:autofillHints="name"
-                android:drawableStart="@drawable/key_icon"
                 android:drawablePadding="@dimen/_7sdp"
+                android:enabled="false"
                 android:hint="@string/code"
                 android:inputType="text"
-                android:enabled="false"
                 android:textColor="@color/white"
                 android:textColorHint="@color/alphaWhite" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -149,13 +170,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_34sdp"
+        android:layout_marginTop="@dimen/_31sdp"
         android:layout_marginEnd="@dimen/_34sdp"
         android:layout_marginBottom="@dimen/_31sdp"
         android:layoutDirection="locale"
         android:textDirection="locale"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_fields">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/register_btn"

@@ -161,7 +161,7 @@ class HomeFragment : Fragment(), ClickListener {
         connectionManager = ConnectionManager(requireContext())
 
 
-        Log.d("Is lightweight version mohamed","${requireContext().isLightweightVersion()}")
+        Log.d("Is lightweight version mohamed", "${requireContext().isLightweightVersion()}")
 
         connectionManager.observe()
         connectionManager.statusLiveData.observe(viewLifecycleOwner) {
@@ -423,6 +423,9 @@ class HomeFragment : Fragment(), ClickListener {
                     if (value.isSuccess) {
                         val model = value.result
                         if (model != null) {
+                            lifecycleScope.launch {
+                                usersDB.dao().updateMail(userID, model.email)
+                            }
                             binding.drawerMenu.txtAccountType.text = model.planName
                             if (helper.getLang(requireContext()).equals("ar")) {
                                 binding.drawerMenu.txtRemind.text =
