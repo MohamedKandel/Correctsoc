@@ -2,38 +2,25 @@ package com.correct.correctsoc.ui.selfScan
 
 import android.app.Application
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.correct.correctsoc.Retrofit.APIService
+import com.correct.correctsoc.Retrofit.ClientExternalIP
 import com.correct.correctsoc.Retrofit.ClientVendorRetrofit
 import com.correct.correctsoc.Retrofit.RetrofitClient
 import com.correct.correctsoc.data.GeneralResponse
-import com.correct.correctsoc.data.ResultResponse
 import com.correct.correctsoc.data.UserIPResponse
 import com.correct.correctsoc.data.openPorts.OpenPorts
-import com.correct.correctsoc.data.openPorts.Port
 import com.correct.correctsoc.helper.Constants.API_TAG
 import com.correct.correctsoc.helper.RetrofitResponse
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectIndexed
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -42,6 +29,11 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
 
     private val scanRepository = ScanRepository(
         RetrofitClient.getClient()
+            .create(APIService::class.java)
+    )
+
+    private val externalIPRepository = ScanRepository(
+        ClientExternalIP.getClient()
             .create(APIService::class.java)
     )
 
@@ -57,9 +49,12 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
 
     val vendorResponse = MutableLiveData<String>()
     val isRequestSuccessfull = MutableLiveData<GeneralResponse>()
+
+    private val _externalIPResponse = MutableLiveData<String>()
     private val _userIPResponse = MutableLiveData<UserIPResponse>()
     private val _scanResponse = MutableLiveData<OpenPorts>()
 
+    val externalIPResponse: LiveData<String> get() = _externalIPResponse
     val scanResponse: LiveData<OpenPorts> get() = _scanResponse
     val userIPResponse: LiveData<UserIPResponse> get() = _userIPResponse
 
@@ -69,6 +64,15 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
             _userIPResponse.postValue(result.body())
         } else {
             _userIPResponse.postValue(result.body())
+        }
+    }
+
+    fun getExternalIP() = viewModelScope.launch {
+        val result = externalIPRepository.getExternalIP()
+        if (result.isSuccessful) {
+            _externalIPResponse.postValue(result.body())
+        } else {
+            _externalIPResponse.postValue("Failed to get IP")
         }
     }
 

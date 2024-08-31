@@ -21,7 +21,6 @@ import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.data.auth.AuthResponse
 import com.correct.correctsoc.data.auth.ConfirmPhoneBody
-import com.correct.correctsoc.data.auth.UpdatePhoneBody
 import com.correct.correctsoc.data.auth.ValidateOTPBody
 import com.correct.correctsoc.databinding.FragmentOTPBinding
 import com.correct.correctsoc.helper.Constants.ISRECONFIRM
@@ -425,10 +424,10 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         Log.i("Verification mohamed", "onCreateView: $verification")
         lifecycleScope.launch {
             val id = usersDB.dao().getUserID() ?: ""
-            val phone = if (arguments != null) {
-                requireArguments().getString(PHONE) ?: usersDB.dao().getUserPhone(id) ?: ""
+            val mail = if (arguments != null) {
+                requireArguments().getString(PHONE) ?: usersDB.dao().getUserMail(id) ?: ""
             } else {
-                usersDB.dao().getUserPhone(id) ?: ""
+                usersDB.dao().getUserMail(id) ?: ""
             }
             binding.placeholder.show()
             binding.progress.show()
@@ -438,11 +437,11 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                     isReconfirmed = requireArguments().getBoolean(ISRECONFIRM, false)
                     // forgot password clicked or reconfirming phone
                     if (isReconfirmed) {
-                        val body = ConfirmPhoneBody(phone, verification)
+                        val body = ConfirmPhoneBody(mail, verification)
                         reConform(body)
                     } else {
-                        if (phone.isNotEmpty()) {
-                            val body = ValidateOTPBody(verification, phone)
+                        if (mail.isNotEmpty()) {
+                            val body = ValidateOTPBody(verification, mail)
                             validateOTP(body)
                         } else {
                             Toast.makeText(
@@ -456,10 +455,10 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                 R.id.signUpFragment -> {
                     // register account clicked
                     Log.i("Is reconfirmed mohamed", "register")
-                    confirmOTP(ConfirmPhoneBody(phone, verification))
+                    confirmOTP(ConfirmPhoneBody(mail, verification))
                 }
 
-                R.id.editInfoFragment -> {
+                /*R.id.editInfoFragment -> {
                     Log.i("Is reconfirmed mohamed", "update")
                     // update phone clicked
                     lifecycleScope.launch {
@@ -471,7 +470,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                         )
                         updatePhone(body, helper.getToken(requireContext()))
                     }
-                }
+                }*/
             }
         }
     }
@@ -514,7 +513,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         viewModel.validateOTPResponse.observe(viewLifecycleOwner, observer)
     }
 
-    private fun updatePhone(body: UpdatePhoneBody, token: String) {
+    /*private fun updatePhone(body: UpdatePhoneBody, token: String) {
         viewModel.updatePhone(body, token)
         val observer = object : Observer<AuthResponse> {
             override fun onChanged(it: AuthResponse) {
@@ -535,7 +534,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
             }
         }
         viewModel.updatePhoneResponse.observe(viewLifecycleOwner, observer)
-    }
+    }*/
 
     override fun onResume() {
         super.onResume()

@@ -6,12 +6,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -146,7 +145,11 @@ class DetectingFragment : Fragment() {
     }
 
     private fun getAPIAddress() {
-        viewModel.getUserIP(helper.getToken(requireContext()))
+        viewModel.getExternalIP()
+        viewModel.externalIPResponse.observe(viewLifecycleOwner) {
+            ipAddress = it
+        }
+        /*viewModel.getUserIP(helper.getToken(requireContext()))
         viewModel.userIPResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
                 if (it.result != null) {
@@ -157,7 +160,7 @@ class DetectingFragment : Fragment() {
                 Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
                     .show()
             }
-        }
+        }*/
     }
 
     @SuppressLint("SetTextI18n")

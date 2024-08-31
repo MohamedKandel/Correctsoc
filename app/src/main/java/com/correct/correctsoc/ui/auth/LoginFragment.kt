@@ -231,6 +231,7 @@ class LoginFragment : Fragment() {
         }
     }
 
+    // call API to get mail from phone first
     private fun reConfirmPhone(phone: String) {
         viewModel.resendOTP(phone)
         val observer = object : Observer<AuthResponse> {

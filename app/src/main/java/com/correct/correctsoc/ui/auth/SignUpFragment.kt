@@ -276,6 +276,7 @@ class SignUpFragment : Fragment() {
                     binding.txtPhone,
                     binding.txtPassword,
                     binding.txtCode,
+                    binding.txtMail,
                     binding.txtName
                 )
             ) {

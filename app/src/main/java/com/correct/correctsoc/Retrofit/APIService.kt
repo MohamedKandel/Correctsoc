@@ -137,4 +137,7 @@ interface APIService {
     // get vendor name of device with mac address
     @GET("{macAddress}")
     fun getVendor(@Path("macAddress") macAddress: String): Call<ResponseBody>
+
+    @GET("ip")
+    suspend fun getExternalIP(): Response<String>
 }

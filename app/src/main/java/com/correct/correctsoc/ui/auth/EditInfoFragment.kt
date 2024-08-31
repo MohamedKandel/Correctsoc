@@ -11,10 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
-import com.correct.correctsoc.data.auth.GenerateOTPBody
+import com.correct.correctsoc.data.auth.UpdatePhoneBody
 import com.correct.correctsoc.data.auth.UpdateUsernameBody
 import com.correct.correctsoc.databinding.FragmentEditInfoBinding
-import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.room.UsersDB
@@ -123,12 +122,16 @@ class EditInfoFragment : Fragment() {
                             if (phone != phoneNumber) {
                                 lifecycleScope.launch {
 
-                                    val otpBody = GenerateOTPBody(
+                                    val updatePhoneBody = UpdatePhoneBody(
                                         newPhone = phoneNumber,
                                         userId = id,
-                                        email = mail
                                     )
-                                    generateOTP(otpBody, helper.getToken(requireContext()))
+                                    // update phone
+                                    updatePhoneNumber(
+                                        updatePhoneBody,
+                                        helper.getToken(requireContext())
+                                    )
+                                    //generateOTP(otpBody, helper.getToken(requireContext()))
                                 }
                             }
                         }
@@ -142,12 +145,16 @@ class EditInfoFragment : Fragment() {
                         val mail = usersDB.dao().getUserMail(id) ?: ""
                         if (phone != phoneNumber) {
                             lifecycleScope.launch {
-                                val otpBody = GenerateOTPBody(
+                                val updatePhoneBody = UpdatePhoneBody(
                                     newPhone = phoneNumber,
                                     userId = id,
-                                    email = mail
                                 )
-                                generateOTP(otpBody, helper.getToken(requireContext()))
+                                // update phone
+                                updatePhoneNumber(
+                                    updatePhoneBody,
+                                    helper.getToken(requireContext())
+                                )
+                                //generateOTP(otpBody, helper.getToken(requireContext()))
                             }
                         }
                     }
@@ -173,12 +180,13 @@ class EditInfoFragment : Fragment() {
                     usersDB.dao().updateUsername(body.username, id)
 
                     if (updatePhone) {
-                        val otpBody = GenerateOTPBody(
+                        val updatePhoneBody = UpdatePhoneBody(
                             newPhone = binding.txtPhone.text.toString(),
                             userId = id,
-                            email = mail
                         )
-                        generateOTP(otpBody, token)
+                        // update phone
+                        updatePhoneNumber(updatePhoneBody, token)
+                        //generateOTP(otpBody, token)
 
                     } else {
                         Toast.makeText(
@@ -198,7 +206,21 @@ class EditInfoFragment : Fragment() {
         }
     }
 
-    private fun generateOTP(body: GenerateOTPBody, token: String) {
+    private fun updatePhoneNumber(body: UpdatePhoneBody, token: String) {
+
+        // update in local database
+        lifecycleScope.launch {
+            usersDB.dao().updatePhone(body.userId, body.newPhone)
+            Toast.makeText(
+                requireContext(),
+                resources.getString(R.string.phone_updated),
+                Toast.LENGTH_SHORT
+            ).show()
+            findNavController().navigate(R.id.settingFragment)
+        }
+    }
+
+    /*private fun generateOTP(body: GenerateOTPBody, token: String) {
         viewModel.generateOTP(body, token)
         viewModel.generateOTPResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
@@ -215,6 +237,6 @@ class EditInfoFragment : Fragment() {
                     .show()
             }
         }
-    }
+    }*/
 
 }

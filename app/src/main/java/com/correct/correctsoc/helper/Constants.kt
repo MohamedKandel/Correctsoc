@@ -7,6 +7,7 @@ object Constants {
     const val IP_ADDRESS = "ip address"
     const val BASE_URL = "http://148.113.174.123/api/"
     const val VENDOR_BASE_URL = "https://api.macvendors.com/"
+    const val EXTERNAL_IP = "http://ifcfg.me/"
     const val API_TAG = "api message"
     const val PKG_NAME = "package name"
     const val CLICKED = "clicked"
