@@ -71,7 +71,8 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
             R.id.fourthFragment,
             R.id.splashFragment,
             R.id.loginFragment,
-            R.id.resetPasswordFragment
+            R.id.resetPasswordFragment,
+            R.id.OTPFragment
         )
 
         appUpdateManager = AppUpdateManagerFactory.create(applicationContext)

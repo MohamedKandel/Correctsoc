@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
+import com.correct.correctsoc.data.auth.AuthResponse
 import com.correct.correctsoc.data.auth.UpdatePhoneBody
 import com.correct.correctsoc.data.auth.UpdateUsernameBody
 import com.correct.correctsoc.databinding.FragmentEditInfoBinding
@@ -207,17 +209,25 @@ class EditInfoFragment : Fragment() {
     }
 
     private fun updatePhoneNumber(body: UpdatePhoneBody, token: String) {
-
-        // update in local database
-        lifecycleScope.launch {
-            usersDB.dao().updatePhone(body.userId, body.newPhone)
-            Toast.makeText(
-                requireContext(),
-                resources.getString(R.string.phone_updated),
-                Toast.LENGTH_SHORT
-            ).show()
-            findNavController().navigate(R.id.settingFragment)
+        viewModel.updatePhone(body,token)
+        val observer = object : Observer<AuthResponse> {
+            override fun onChanged(value: AuthResponse) {
+                if (value.isSuccess) {
+                    // update in local database
+                    lifecycleScope.launch {
+                        usersDB.dao().updatePhone(body.userId, body.newPhone)
+                        Toast.makeText(
+                            requireContext(),
+                            resources.getString(R.string.phone_updated),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        findNavController().navigate(R.id.settingFragment)
+                    }
+                }
+                viewModel.updatePhoneResponse.removeObserver(this)
+            }
         }
+        viewModel.updatePhoneResponse.observe(viewLifecycleOwner,observer)
     }
 
     /*private fun generateOTP(body: GenerateOTPBody, token: String) {

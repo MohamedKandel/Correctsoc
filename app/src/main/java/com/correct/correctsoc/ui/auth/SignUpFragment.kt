@@ -82,6 +82,11 @@ class SignUpFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        client.signOut()
+    }
+
     private fun returnToSignUp() {
         val account = GoogleSignIn.getLastSignedInAccount(requireContext())
         if (account != null) {
@@ -115,7 +120,9 @@ class SignUpFragment : Fragment() {
         binding.progress.hide()
 
         gso =
-            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
         client = GoogleSignIn.getClient(requireContext(), gso)
 
         val text = resources

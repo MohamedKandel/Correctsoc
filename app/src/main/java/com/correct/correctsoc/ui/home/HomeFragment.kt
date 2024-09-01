@@ -177,6 +177,7 @@ class HomeFragment : Fragment(), ClickListener {
                             Log.v(TAG, user.token)
                             Log.v(TAG, user.password)
                             Log.v(TAG, user.username)
+                            Log.v(TAG, user.mail)
                             getUserPlan(user.id)
                         }
                     }

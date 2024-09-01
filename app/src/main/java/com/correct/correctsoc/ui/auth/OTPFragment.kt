@@ -127,7 +127,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
             txtSixthDigit.upperCaseOnly()
         }
 
-        getUserPhone()
+        getUserMail()
 
         if (helper.getLang(requireContext()).equals("ar")) {
             binding.btnBack.rotation = 180f
@@ -182,7 +182,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         return binding.root
     }
 
-    private fun getUserPhone() {
+    private fun getUserMail() {
         if (phone.isNotEmpty() && !phone.equals("null")) {
             binding.txtMsg.append(" $phone")
         } else {
@@ -201,36 +201,40 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
     private fun confirmOTP(body: ConfirmPhoneBody) {
         viewModel.confirmOTP(body)
         val observer = object : Observer<AuthResponse> {
-            override fun onChanged(it: AuthResponse) {
-                if (it.isSuccess) {
+            override fun onChanged(value: AuthResponse) {
+                if (value.isSuccess) {
                     binding.placeholder.hide()
                     binding.progress.hide()
-                    if (it.result != null) {
+                    if (value.result != null) {
+                        Log.d("In Resend mohamed", "otp confirmed")
                         lifecycleScope.launch {
-                            Log.v(TAG, it.result.userid)
-                            Log.v(TAG, it.result.name)
-                            Log.v(TAG, it.result.token)
+                            Log.v(TAG, value.result.userid)
+                            Log.v(TAG, value.result.name)
+                            Log.v(TAG, value.result.token)
                             val password = usersDB.dao().getPassword("1") ?: ""
                             val phone = usersDB.dao().getUserPhone("1") ?: ""
                             val mail = usersDB.dao().getUserMail("1") ?: ""
                             val user = User(
-                                it.result.userid, it.result.name,
-                                password, phone, it.result.token,
+                                value.result.userid, value.result.name,
+                                password, phone, value.result.token,
                                 mail
                             )
                             usersDB.dao().insert(user)
                             usersDB.dao().deleteUser("1")
-                            helper.setToken(it.result.token, requireContext())
-                            Log.i(TAG, it.result.token)
+                            helper.setToken(value.result.token, requireContext())
+                            Log.i(TAG, value.result.token)
+                            Log.d("In Resend mohamed", "after resent otp")
                             findNavController().navigate(R.id.homeFragment)
                         }
+                    } else {
+                        Log.i("In Resend mohamed", "result is null")
                     }
                 } else {
                     binding.placeholder.hide()
                     binding.progress.hide()
-                    Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), value.errorMessages, Toast.LENGTH_SHORT).show()
                 }
-                viewModel.otpResponse.removeObserver(this)
+                //viewModel.otpResponse.removeObserver(this)
             }
         }
         viewModel.otpResponse.observe(viewLifecycleOwner, observer)
@@ -239,24 +243,24 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
     private fun resendOTP(phone: String) {
         viewModel.resendOTP(phone)
         val observer = object : Observer<AuthResponse> {
-            override fun onChanged(it: AuthResponse) {
-                if (it.isSuccess) {
+            override fun onChanged(value: AuthResponse) {
+                if (value.isSuccess) {
                     binding.placeholder.hide()
                     binding.progress.hide()
-                    if (it.result != null) {
+                    if (value.result != null) {
                         lifecycleScope.launch {
-                            Log.v(TAG, it.result.userid)
-                            Log.v(TAG, it.result.name)
-                            Log.v(TAG, it.result.token)
+                            Log.v(TAG, value.result.userid)
+                            Log.v(TAG, value.result.name)
+                            Log.v(TAG, value.result.token)
                             val password = usersDB.dao().getPassword("1") ?: ""
                             val phone = usersDB.dao().getUserPhone("1") ?: ""
                             val mail = usersDB.dao().getUserMail("1") ?: ""
                             val user = User(
-                                it.result.userid, it.result.name,
-                                password, phone, it.result.token,
+                                value.result.userid, value.result.name,
+                                password, phone, value.result.token,
                                 mail
                             )
-                            helper.setToken(it.result.token, requireContext())
+                            helper.setToken(value.result.token, requireContext())
                             usersDB.dao().insert(user)
                             usersDB.dao().deleteUser("1")
                             findNavController().navigate(R.id.homeFragment)
@@ -265,7 +269,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                 } else {
                     binding.placeholder.hide()
                     binding.progress.hide()
-                    Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), value.errorMessages, Toast.LENGTH_SHORT).show()
                 }
                 viewModel.otpResponse.removeObserver(this)
             }
@@ -459,20 +463,6 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                     Log.i("Is reconfirmed mohamed", "register")
                     confirmOTP(ConfirmPhoneBody(mail, verification))
                 }
-
-                /*R.id.editInfoFragment -> {
-                    Log.i("Is reconfirmed mohamed", "update")
-                    // update phone clicked
-                    lifecycleScope.launch {
-                        val id = usersDB.dao().getUserID() ?: ""
-                        val phone = usersDB.dao().getUserPhone(id) ?: ""
-                        val body = UpdatePhoneBody(
-                            userId = id, newPhone = phone,
-                            otp = verification
-                        )
-                        updatePhone(body, helper.getToken(requireContext()))
-                    }
-                }*/
             }
         }
     }
@@ -515,29 +505,6 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         }
         viewModel.validateOTPResponse.observe(viewLifecycleOwner, observer)
     }
-
-    /*private fun updatePhone(body: UpdatePhoneBody, token: String) {
-        viewModel.updatePhone(body, token)
-        val observer = object : Observer<AuthResponse> {
-            override fun onChanged(it: AuthResponse) {
-                if (it.isSuccess) {
-                    Toast.makeText(
-                        requireContext(),
-                        resources.getString(R.string.phone_updated),
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                    findNavController().navigate(R.id.homeFragment)
-                } else {
-                    Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
-                        .show()
-                }
-
-                viewModel.updatePhoneResponse.removeObserver(this)
-            }
-        }
-        viewModel.updatePhoneResponse.observe(viewLifecycleOwner, observer)
-    }*/
 
     override fun onResume() {
         super.onResume()
