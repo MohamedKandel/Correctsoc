@@ -174,11 +174,15 @@ class LoginFragment : Fragment() {
                 if (mail.isNotEmpty()) {
                     forgotPassword(mail)
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        resources.getString(R.string.phone_empty),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    if (userPhone.isNotEmpty()) {
+                        getMailByPhone(userPhone,false)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            resources.getString(R.string.phone_empty),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }
@@ -217,8 +221,9 @@ class LoginFragment : Fragment() {
             } else {
                 binding.progress.hide()
                 binding.placeholder.hide()
-                if (it.errorMessages == "this Phone Number Not Confirmed not confirmed yet") {
-                    reConfirmPhone(phone = binding.txtPhone.text.toString())
+                if (it.statusCode == 400) {
+                    getMailByPhone(binding.txtPhone.text.toString(),true)
+                    //reConfirmPhone(phone = binding.txtPhone.text.toString())
                     Toast.makeText(
                         requireContext(), "${it.errorMessages}\n" +
                                 "You will redirect to OTP automatically", Toast.LENGTH_SHORT
@@ -232,6 +237,22 @@ class LoginFragment : Fragment() {
     }
 
     // call API to get mail from phone first
+    private fun getMailByPhone(phone: String, reConfirm: Boolean) {
+        viewModel.getMailByPhone(phone)
+        val observer = object : Observer<String> {
+            override fun onChanged(value: String) {
+                if (reConfirm) {
+                    reConfirmPhone(value)
+                } else {
+                    forgotPassword(value)
+                }
+                viewModel.mailByPhone.removeObserver(this)
+            }
+        }
+        viewModel.mailByPhone.observe(viewLifecycleOwner,observer)
+
+    }
+
     private fun reConfirmPhone(phone: String) {
         viewModel.resendOTP(phone)
         val observer = object : Observer<AuthResponse> {

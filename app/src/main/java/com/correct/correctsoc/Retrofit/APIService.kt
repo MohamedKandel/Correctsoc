@@ -38,7 +38,7 @@ interface APIService {
     suspend fun confirmOTP(@Body body: ConfirmPhoneBody): Response<AuthResponse>
 
     @POST("Authentication/SendNewOTP")
-    suspend fun resendOTP(@Query("phone") phone: String): Response<AuthResponse>
+    suspend fun resendOTP(@Query("email") phone: String): Response<AuthResponse>
 
     @POST("Authentication/ForgetPassword")
     suspend fun forgetPassword(
@@ -130,6 +130,9 @@ interface APIService {
     @DELETE("Authentication/DeleteAccount")
     suspend fun deleteAccount(@Query("userId") userID: String,
                               @Header("Authorization") token: String): Response<ForgotResponse>
+
+    @POST("Authentication/GetEmail")
+    suspend fun getMailByPhone(@Query("phone") phone: String): Response<String>
 
     @GET("User/GetNotificationMessage")
     suspend fun getNotificationMessage(): Response<ForgotResponse>

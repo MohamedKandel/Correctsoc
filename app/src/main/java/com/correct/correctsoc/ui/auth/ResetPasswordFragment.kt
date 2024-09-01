@@ -5,26 +5,27 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.data.auth.ResetPasswordBody
 import com.correct.correctsoc.databinding.FragmentResetPasswordBinding
-
+import com.correct.correctsoc.helper.Constants.MAIL
 import com.correct.correctsoc.helper.Constants.TAG
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.helper.mappingNumbers
-import com.correct.correctsoc.helper.updateRequirements
 import com.correct.correctsoc.helper.show
+import com.correct.correctsoc.helper.updateRequirements
 import com.correct.correctsoc.room.UsersDB
 import kotlinx.coroutines.launch
 
@@ -213,11 +214,26 @@ class ResetPasswordFragment : Fragment() {
             if (newPassword.equals(confirm) && (newPassword.isNotEmpty() || confirm.isNotEmpty())) {
                 if (arguments != null) {
                     val token = requireArguments().getString(TOKEN_KEY, "") ?: ""
+                    val email = requireArguments().getString(MAIL,"") ?: ""
                     lifecycleScope.launch {
                         val id = usersDB.dao().getUserID() ?: ""
                         val phone = usersDB.dao().getUserPhone(id) ?: ""
-                        val body = ResetPasswordBody(newPassword, token, phone)
-                        resetPassword(body, helper.getToken(requireContext()))
+                        val mail = usersDB.dao().getUserMail(id) ?: ""
+                        if (phone.isNotEmpty() && mail.isEmpty()) {
+                            getMailByPhone(
+                                phone,
+                                helper.getToken(requireContext()),
+                                newPassword,
+                                token
+                            )
+                        } else {
+                            val body = if (mail.isEmpty()) {
+                                ResetPasswordBody(newPassword,token,email)
+                            } else {
+                                ResetPasswordBody(newPassword, token, mail)
+                            }
+                            resetPassword(body, helper.getToken(requireContext()))
+                        }
                     }
                 }
             } else {
@@ -234,6 +250,24 @@ class ResetPasswordFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    private fun getMailByPhone(
+        phone: String,
+        token: String,
+        newPassword: String,
+        resetToken: String
+    ) {
+        viewModel.getMailByPhone(phone)
+        val observer = object : Observer<String> {
+            override fun onChanged(value: String) {
+                val body =
+                    ResetPasswordBody(newPassword = newPassword, token = resetToken, email = value)
+                resetPassword(body, token)
+                viewModel.mailByPhone.removeObserver(this)
+            }
+        }
+        viewModel.mailByPhone.observe(viewLifecycleOwner, observer)
     }
 
     private fun resetPassword(body: ResetPasswordBody, token: String) {
@@ -258,6 +292,7 @@ class ResetPasswordFragment : Fragment() {
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.resetPasswordFragment)

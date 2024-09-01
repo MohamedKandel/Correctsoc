@@ -24,6 +24,7 @@ import com.correct.correctsoc.data.auth.ConfirmPhoneBody
 import com.correct.correctsoc.data.auth.ValidateOTPBody
 import com.correct.correctsoc.databinding.FragmentOTPBinding
 import com.correct.correctsoc.helper.Constants.ISRECONFIRM
+import com.correct.correctsoc.helper.Constants.MAIL
 import com.correct.correctsoc.helper.Constants.PHONE
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TAG
@@ -161,7 +162,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                         binding.placeholder.show()
                         binding.progress.show()
                         val id = usersDB.dao().getUserID() ?: ""
-                        val phone = usersDB.dao().getUserPhone(id) ?: ""
+                        val phone = usersDB.dao().getUserMail(id) ?: ""
                         resendOTP(phone)
                     }
                 }
@@ -170,7 +171,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                     binding.placeholder.show()
                     binding.progress.show()
                     val id = usersDB.dao().getUserID() ?: ""
-                    val phone = usersDB.dao().getUserPhone(id) ?: ""
+                    val phone = usersDB.dao().getUserMail(id) ?: ""
                     resendOTP(phone)
                 }
             }
@@ -412,6 +413,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
         }
     }
 
+
     override fun onVerificationTextFilled() {
         verification = "${binding.txtFirstDigit.text}" +
                 "${binding.txtSecondDigit.text}" +
@@ -499,6 +501,7 @@ class OTPFragment : Fragment(), VerificationTextFilledListener {
                     val token = requireArguments().getString(TOKEN_KEY, "") ?: ""
                     val bundle = Bundle()
                     bundle.putString(TOKEN_KEY, token)
+                    bundle.putString(MAIL, body.email)
                     findNavController().navigate(R.id.resetPasswordFragment, bundle)
 
                 } else {

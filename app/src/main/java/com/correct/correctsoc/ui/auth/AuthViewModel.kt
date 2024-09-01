@@ -41,7 +41,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _validateOTPResponse = MutableLiveData<AuthResponse>()
     private val _changeDeviceStatus = MutableLiveData<Boolean>()
     private val _deleteAccountResponse = MutableLiveData<ForgotResponse>()
+    private val _mailByPhone = MutableLiveData<String>()
 
+    val mailByPhone: LiveData<String> get() = _mailByPhone
     val deleteAccountResponse:LiveData<ForgotResponse> get() = _deleteAccountResponse
     val changeDeviceStatus: LiveData<Boolean> get() = _changeDeviceStatus
     val validateOTPResponse: LiveData<AuthResponse> get() = _validateOTPResponse
@@ -188,6 +190,15 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun deleteAccount(userID: String, token: String) = viewModelScope.launch {
         val result = authRepository.deleteAccount(userID,token)
         _deleteAccountResponse.postValue(result.body())
+    }
+
+    fun getMailByPhone(phoneNumber: String) = viewModelScope.launch {
+        val result = authRepository.getMailByPhone(phoneNumber)
+        if (result.isSuccessful) {
+            _mailByPhone.postValue(result.body())
+        } else {
+            _mailByPhone.postValue("User Not Found")
+        }
     }
 
 }

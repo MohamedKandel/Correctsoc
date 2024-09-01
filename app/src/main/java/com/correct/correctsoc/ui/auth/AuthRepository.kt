@@ -5,7 +5,6 @@ import com.correct.correctsoc.data.auth.AuthResponse
 import com.correct.correctsoc.data.auth.ConfirmPhoneBody
 import com.correct.correctsoc.data.auth.GenerateOTPBody
 import com.correct.correctsoc.data.auth.LoginBody
-import com.correct.correctsoc.data.auth.forget.ForgotResponse
 import com.correct.correctsoc.data.auth.RegisterBody
 import com.correct.correctsoc.data.auth.ResetPasswordBody
 import com.correct.correctsoc.data.auth.SignOutBody
@@ -13,7 +12,7 @@ import com.correct.correctsoc.data.auth.UpdatePasswordBody
 import com.correct.correctsoc.data.auth.UpdatePhoneBody
 import com.correct.correctsoc.data.auth.UpdateUsernameBody
 import com.correct.correctsoc.data.auth.ValidateOTPBody
-import com.correct.correctsoc.data.user.UserPlanResponse
+import com.correct.correctsoc.data.auth.forget.ForgotResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -99,5 +98,10 @@ class AuthRepository(private val apiService: APIService) {
     suspend fun deleteAccount(userID: String, token: String): Response<ForgotResponse> =
         withContext(Dispatchers.IO) {
             apiService.deleteAccount(userID, token)
+        }
+
+    suspend fun getMailByPhone(phone: String): Response<String> =
+        withContext(Dispatchers.IO) {
+            apiService.getMailByPhone(phone)
         }
 }
