@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.correct.correctsoc.data.openPorts.Port
 import com.correct.correctsoc.helper.Constants.FIRST_TIME
-import com.correct.correctsoc.helper.Constants.IP_ADDRESS
 import com.correct.correctsoc.helper.Constants.IS_LOGGED
 import com.correct.correctsoc.helper.Constants.LANG
 import com.correct.correctsoc.helper.Constants.NOTIFICATION
@@ -164,20 +163,6 @@ class HelperClass {
             }
         }
         return isSecure
-    }
-
-    fun setIPAddress(context: Context, ip: String) {
-        initSP(context)
-        editor.apply {
-            putString(IP_ADDRESS, ip)
-            commit()
-            apply()
-        }
-    }
-
-    fun getIPAddress(context: Context): String {
-        initSP(context)
-        return sp.getString(IP_ADDRESS, "") ?: ""
     }
 
     fun onBackPressed(fragment: Fragment, navFunction: () -> Unit) {

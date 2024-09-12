@@ -10,13 +10,11 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
-import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
-import androidx.core.app.TaskStackBuilder
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -164,24 +162,6 @@ class AppMonitorService : Service() {
         notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         val pendingIntent = PendingIntent.getActivity(this,0,notificationIntent,PendingIntent.FLAG_IMMUTABLE)
 
-
-
-        /*viewModel.notificationMessage.observeForever {
-            isConnected.observeForever { isConnected ->
-                if (isConnected) {
-                    if (it.isSuccess) {
-                        if (it.result != null) {
-                            updateNotification(it.result)
-                            helper.setNotification(this, it.result)
-                        }
-                    } else {
-                        updateNotification(helper.getNotificationText(this))
-                    }
-                } else {
-                    updateNotification(helper.getNotificationText(this))
-                }
-            }
-        }*/
         val initialNotification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(resources.getString(R.string.app_name))
             .setContentText(helper.getNotificationText(this))
