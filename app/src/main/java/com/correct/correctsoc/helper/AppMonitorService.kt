@@ -169,6 +169,7 @@ class AppMonitorService : Service() {
             .setSound(null)
             .setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)
             .setAutoCancel(false)
+            .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.notification_transparent_icon)
             .build()
@@ -201,7 +202,7 @@ class AppMonitorService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Applocker Service"
             val descriptionText = "Correctsoc Applocker Service"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
@@ -223,6 +224,7 @@ class AppMonitorService : Service() {
                 .setContentTitle(resources.getString(R.string.app_name))
                 .setContentText(content)
                 .setContentIntent(pendingIntent)
+                .setPriority(NotificationManager.IMPORTANCE_HIGH)
                 .setSmallIcon(R.drawable.notification_transparent_icon)
                 .build()
 
