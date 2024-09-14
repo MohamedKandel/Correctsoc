@@ -30,111 +30,111 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface APIService {
-    @POST("Authentication/RegisterUser")
+    @POST("api/Authentication/RegisterUser")
     suspend fun registerUser(@Body body: RegisterBody): Response<AuthResponse>
 
-    @POST("Authentication/ConfirmEmail")
+    @POST("api/Authentication/ConfirmEmail")
     suspend fun confirmOTP(@Body body: ConfirmPhoneBody): Response<AuthResponse>
 
-    @POST("Authentication/SendNewOTP")
+    @POST("api/Authentication/SendNewOTP")
     suspend fun resendOTP(@Query("email") phone: String): Response<AuthResponse>
 
-    @POST("Authentication/ForgetPassword")
+    @POST("api/Authentication/ForgetPassword")
     suspend fun forgetPassword(
         @Query("email") email: String
     ): Response<ForgotResponse>
 
-    @POST("Authentication/ValidateResetOtp")
+    @POST("api/Authentication/ValidateResetOtp")
     suspend fun validateOTP(@Body body: ValidateOTPBody): Response<AuthResponse>
 
-    @POST("Authentication/ResetPassword")
+    @POST("api/Authentication/ResetPassword")
     suspend fun resetPassword(
         @Body body: ResetPasswordBody,
         @Header("Authorization") token: String
     ): Response<AuthResponse>
 
-    @POST("Authentication/SignIn")
+    @POST("api/Authentication/SignIn")
     suspend fun login(@Body body: LoginBody): Response<AuthResponse>
 
-    @POST("Authentication/SignOut")
+    @POST("api/Authentication/SignOut")
     suspend fun signOut(
         @Body body: SignOutBody,
         @Header("Authorization") token: String
     ): Response<AuthResponse>
 
-    @PUT("Authentication/UpdateUserName")
+    @PUT("api/Authentication/UpdateUserName")
     suspend fun updateUsername(
         @Body body: UpdateUsernameBody,
         @Header("Authorization") token: String
     ): Response<AuthResponse>
 
-    @POST("Authentication/GenerateUpdatePhoneOTP")
+    @POST("api/Authentication/GenerateUpdatePhoneOTP")
     suspend fun sendOTPUpdatePhone(
         @Body body: GenerateOTPBody,
         @Header("Authorization") token: String
     ): Response<AuthResponse>
 
-    @PUT("Authentication/UpdatePhone")
+    @PUT("api/Authentication/UpdatePhone")
     suspend fun updatePhone(
         @Body body: UpdatePhoneBody,
         @Header("Authorization") token: String
     ): Response<AuthResponse>
 
-    @PUT("Authentication/UpdatePassword")
+    @PUT("api/Authentication/UpdatePassword")
     suspend fun updatePassword(
         @Body body: UpdatePasswordBody,
         @Header("Authorization") token: String
     ): Response<AuthResponse>
 
-    @GET("Authentication/ValidateToken")
+    @GET("api/Authentication/ValidateToken")
     suspend fun validateToken(@Header("Authorization") token: String): Response<Void>
+
+    @DELETE("api/Authentication/DeleteAccount")
+    suspend fun deleteAccount(@Query("userId") userID: String,
+                              @Header("Authorization") token: String): Response<ForgotResponse>
+
+    @POST("api/Authentication/GetEmail")
+    suspend fun getMailByPhone(@Query("phone") phone: String): Response<String>
 
     /*@GET("NmapScan/GetUserIp")
     suspend fun getUserIP(@Header("Authorization") token: String): Response<UserIPResponse>*/
 
-    @POST("NmapScan/NmapAppScan")
+    @POST("api/NmapScan/NmapAppScan")
     suspend fun scan(
         @Query("IpORWeblink") input: String,
         @Header("Authorization") token: String
     ): Response<OpenPorts>
 
-    @GET("User/Cost")
+    @GET("api/User/Cost")
     suspend fun getCost(
         @Query("numberDevices") number: Int,
         @Query("months") months: Int,
         @Query("years") years: Int
     ): Response<ForgotResponse>
 
-    @POST("User/SetDeviceOn")
+    @POST("api/User/SetDeviceOn")
     suspend fun setDeviceOn(@Header("Authorization") token: String): Response<Void>
 
-    @POST("User/SetDeviceOff")
+    @POST("api/User/SetDeviceOff")
     suspend fun setDeviceOff(@Header("Authorization") token: String): Response<Void>
 
-    @POST("Payment/OrderPay")
-    suspend fun orderPayWithGooglePay(): Response<ForgotResponse>
-
-    @POST("Payment/Subscribe")
-    suspend fun subscribeWithGooglePay(@Body body: SubscibeGooglePayBody): Response<ForgotResponse>
-
-    @POST("User/Subscribe")
+    @POST("api/User/Subscribe")
     suspend fun subscribeWithCode(@Body body: SubscribeCodeBody): Response<ForgotResponse>
 
-    @GET("User/GetUser")
+    @GET("api/User/GetUser")
     suspend fun getUserPlan(@Query("id") id: String): Response<UserPlanResponse>
 
-    @POST("Payment/GetPromotionPercentag")
-    suspend fun getPromoCodePercent(@Query("code") code: String): Response<PromoCodePercentResponse>
-
-    @DELETE("Authentication/DeleteAccount")
-    suspend fun deleteAccount(@Query("userId") userID: String,
-                              @Header("Authorization") token: String): Response<ForgotResponse>
-
-    @POST("Authentication/GetEmail")
-    suspend fun getMailByPhone(@Query("phone") phone: String): Response<String>
-
-    @GET("User/GetNotificationMessage")
+    @GET("api/User/GetNotificationMessage")
     suspend fun getNotificationMessage(): Response<ForgotResponse>
+
+    @POST("api/Payment/OrderPay")
+    suspend fun orderPayWithGooglePay(): Response<ForgotResponse>
+
+    @POST("api/Payment/Subscribe")
+    suspend fun subscribeWithGooglePay(@Body body: SubscibeGooglePayBody): Response<ForgotResponse>
+
+    @POST("api/Payment/GetPromotionPercentag")
+    suspend fun getPromoCodePercent(@Query("code") code: String): Response<PromoCodePercentResponse>
 
     // get vendor name of device with mac address
     @GET("{macAddress}")
