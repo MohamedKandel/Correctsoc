@@ -1,7 +1,6 @@
 package com.correct.correctsoc.ui.selfScan
 
 import com.correct.correctsoc.Retrofit.APIService
-import com.correct.correctsoc.data.UserIPResponse
 import com.correct.correctsoc.data.openPorts.OpenPorts
 import com.correct.correctsoc.helper.RetrofitResponse
 import com.google.gson.JsonParser
@@ -14,10 +13,10 @@ import retrofit2.Response
 
 class ScanRepository(private val apiService: APIService) {
 
-    suspend fun getUserIP(token: String): Response<UserIPResponse> =
+    /*suspend fun getUserIP(token: String): Response<UserIPResponse> =
         withContext(Dispatchers.IO) {
             apiService.getUserIP(token)
-        }
+        }*/
 
     suspend fun scan(input: String, token: String): Response<OpenPorts> =
         withContext(Dispatchers.IO) {

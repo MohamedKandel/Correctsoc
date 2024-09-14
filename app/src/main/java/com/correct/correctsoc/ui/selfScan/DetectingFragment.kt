@@ -149,18 +149,6 @@ class DetectingFragment : Fragment() {
         viewModel.externalIPResponse.observe(viewLifecycleOwner) {
             ipAddress = it
         }
-        /*viewModel.getUserIP(helper.getToken(requireContext()))
-        viewModel.userIPResponse.observe(viewLifecycleOwner) {
-            if (it.isSuccess) {
-                if (it.result != null) {
-                    ipAddress = it.result.ipAddress
-                    helper.setIPAddress(requireContext(), ipAddress)
-                }
-            } else {
-                Toast.makeText(requireContext(), it.errorMessages, Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }*/
     }
 
     @SuppressLint("SetTextI18n")

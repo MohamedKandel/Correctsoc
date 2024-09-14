@@ -58,14 +58,14 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
     val scanResponse: LiveData<OpenPorts> get() = _scanResponse
     val userIPResponse: LiveData<UserIPResponse> get() = _userIPResponse
 
-    fun getUserIP(token: String) = viewModelScope.launch {
+    /*fun getUserIP(token: String) = viewModelScope.launch {
         val result = scanRepository.getUserIP(token)
         if (result.isSuccessful) {
             _userIPResponse.postValue(result.body())
         } else {
             _userIPResponse.postValue(result.body())
         }
-    }
+    }*/
 
     fun getExternalIP() = viewModelScope.launch {
         val result = externalIPRepository.getExternalIP()

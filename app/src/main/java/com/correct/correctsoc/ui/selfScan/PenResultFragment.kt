@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -177,7 +176,15 @@ class PenResultFragment : Fragment() {
                 })
     }
 
-    fun getIPAddress() {
+    private fun getIPAddress() {
+        viewModel.getExternalIP()
+        viewModel.externalIPResponse.observe(viewLifecycleOwner) {
+            ipAddress = it
+
+        }
+    }
+
+    /*fun getIPAddress() {
         viewModel.getUserIP(helper.getToken(requireContext()))
         viewModel.userIPResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
@@ -200,7 +207,7 @@ class PenResultFragment : Fragment() {
                 }
             }*/
         }
-    }
+    }*/
 
     override fun onResume() {
         super.onResume()

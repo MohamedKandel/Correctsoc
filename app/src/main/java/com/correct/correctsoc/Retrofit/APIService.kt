@@ -1,6 +1,5 @@
 package com.correct.correctsoc.Retrofit
 
-import com.correct.correctsoc.data.UserIPResponse
 import com.correct.correctsoc.data.auth.AuthResponse
 import com.correct.correctsoc.data.auth.ConfirmPhoneBody
 import com.correct.correctsoc.data.auth.GenerateOTPBody
@@ -90,8 +89,8 @@ interface APIService {
     @GET("Authentication/ValidateToken")
     suspend fun validateToken(@Header("Authorization") token: String): Response<Void>
 
-    @GET("NmapScan/GetUserIp")
-    suspend fun getUserIP(@Header("Authorization") token: String): Response<UserIPResponse>
+    /*@GET("NmapScan/GetUserIp")
+    suspend fun getUserIP(@Header("Authorization") token: String): Response<UserIPResponse>*/
 
     @POST("NmapScan/NmapAppScan")
     suspend fun scan(
