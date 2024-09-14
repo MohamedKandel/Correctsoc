@@ -184,7 +184,7 @@ class HomeFragment : Fragment(), ClickListener {
                     isInternetConnected = true
                     isConnected.postValue(true)
                     if (!helper.getDeviceStatus(requireContext())) {
-                        setDeviceOn(helper.getToken(requireContext()))
+                        //setDeviceOn(helper.getToken(requireContext()))
                     }
                 }
 
@@ -553,7 +553,7 @@ class HomeFragment : Fragment(), ClickListener {
         viewModel.signOutResponse.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
                 helper.setRemember(requireContext(), false)
-                setDeviceOff(token)
+                //setDeviceOff(token)
                 lifecycleScope.launch {
                     val id = usersDB.dao().getUserID() ?: ""
                     if (id.isNotEmpty()) {
