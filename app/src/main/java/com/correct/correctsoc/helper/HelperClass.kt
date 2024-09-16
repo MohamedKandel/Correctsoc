@@ -194,20 +194,20 @@ class HelperClass private constructor() {
     fun generateFirstCode(): String {
         val string = "ZXCVBNMASDFGHJKLQWERTYUIOP1234567890"
         var code = ""
-        code += string.generatNRandom(8)
+        code += string.generateNRandom(8)
         code += "-"
-        code += string.generatNRandom(4)
+        code += string.generateNRandom(4)
         code += "-"
-        code += string.generatNRandom(4)
+        code += string.generateNRandom(4)
         code += "-"
-        code += string.generatNRandom(4)
+        code += string.generateNRandom(4)
         code += "-"
-        code += string.generatNRandom(12)
+        code += string.generateNRandom(12)
 
         return code
     }
 
-    private fun String.generatNRandom(length: Int): String {
+    private fun String.generateNRandom(length: Int): String {
         var randomStr = ""
         for (i in 0..<length) {
             val random = this.indices.random()
