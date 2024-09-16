@@ -28,7 +28,7 @@ import com.correct.correctsoc.helper.Constants.STATUS
 import com.correct.correctsoc.helper.Constants.TOKEN_KEY
 import com.correct.correctsoc.helper.Constants.TOKEN_VALUE
 
-class HelperClass {
+class HelperClass private constructor() {
     private lateinit var sp: SharedPreferences
     private lateinit var editor: Editor
 
