@@ -26,6 +26,7 @@ import com.correct.correctsoc.helper.ConnectivityListener
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.LocaleHelper
+
 import com.correct.correctsoc.helper.transparentStatusBar
 import com.correct.correctsoc.ui.auth.AuthViewModel
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -140,7 +141,12 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
 
     override fun attachBaseContext(newBase: Context?) {
         helper = HelperClass.getInstance()
-        super.attachBaseContext(newBase?.let { LocaleHelper(newBase).wrap(it,helper.getLang(newBase)) })
+        super.attachBaseContext(newBase?.let {
+            LocaleHelper(newBase).wrap(
+                it,
+                helper.getLang(newBase)
+            )
+        })
     }
 
     /*private fun updateLocale(lang: String):Context {
