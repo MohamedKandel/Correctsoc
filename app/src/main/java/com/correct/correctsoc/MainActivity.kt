@@ -122,8 +122,8 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
         }
     }
 
-        private fun setDeviceOff(token: String) {
-            isConnected.observe(this) {
+    private fun setDeviceOff(token: String) {
+        isConnected.observe(this) {
             if (it) {
                 viewModel.setDeviceOff(token)
                 val observer = object : Observer<Boolean> {
