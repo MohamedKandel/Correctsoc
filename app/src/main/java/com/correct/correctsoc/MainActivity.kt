@@ -3,9 +3,8 @@ package com.correct.correctsoc
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -26,6 +25,7 @@ import com.correct.correctsoc.helper.ConnectionManager
 import com.correct.correctsoc.helper.ConnectivityListener
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.LocaleHelper
 import com.correct.correctsoc.helper.transparentStatusBar
 import com.correct.correctsoc.ui.auth.AuthViewModel
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -39,7 +39,6 @@ import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 class MainActivity : AppCompatActivity(), FragmentChangedListener {
 
@@ -86,7 +85,7 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
         val navHost = supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
         navController = navHost.navController
 
-        setLocale(helper.getLang(applicationContext))
+        //setLocale(helper.getLang(applicationContext))
         setContentView(binding.root)
 
         transparentStatusBar()
@@ -139,6 +138,28 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
         }
     }
 
+    override fun attachBaseContext(newBase: Context?) {
+        helper = HelperClass.getInstance()
+        super.attachBaseContext(newBase?.let { LocaleHelper(newBase).wrap(it,helper.getLang(newBase)) })
+    }
+
+    /*private fun updateLocale(lang: String):Context {
+        /*val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val resources: Resources = resources
+        val configuration: Configuration = resources.configuration
+        configuration.setLocale(locale)
+        configuration.setLayoutDirection(locale)
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+        createConfigurationContext(configuration)*/
+        val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val configuration = resources.configuration
+        configuration.setLocale(locale)
+        configuration.setLayoutDirection(locale)
+        return createConfigurationContext(configuration)
+    }
+
     private fun setLocale(lang: String) {
         val locale = Locale(lang)
         Locale.setDefault(locale)
@@ -148,7 +169,7 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
         configuration.setLayoutDirection(locale)
         resources.updateConfiguration(configuration, resources.displayMetrics)
         createConfigurationContext(configuration)
-    }
+    }*/
 
     private fun checkForUpdate() {
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
