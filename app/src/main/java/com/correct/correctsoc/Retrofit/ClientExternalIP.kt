@@ -28,7 +28,7 @@ object ClientExternalIP {
                 .client(client)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl(Constants.EXTERNAL_IP)
+                .baseUrl(Constants.RESERVE_EXTERNAL_IP)
                 .build()
         }
 

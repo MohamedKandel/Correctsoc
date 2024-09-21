@@ -7,6 +7,7 @@
         </trust-anchors>
         <!--adding all APIs found in application to network security certificate config file-->
         <domain includeSubdomains="true">ifcfg.me</domain>
+        <domain includeSubdomains="true">api.ipify.org</domain>
         <domain includeSubdomains="true">api.macvendors.com</domain>
     </domain-config>
 </network-security-config>

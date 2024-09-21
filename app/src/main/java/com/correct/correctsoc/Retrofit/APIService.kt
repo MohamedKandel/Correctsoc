@@ -140,6 +140,9 @@ interface APIService {
     @GET("{macAddress}")
     fun getVendor(@Path("macAddress") macAddress: String): Call<ResponseBody>
 
-    @GET("ip")
+    /*@GET("?format=text")
+    suspend fun getExternalIP(): Response<String>*/
+
+    @GET("ip?format=text")
     suspend fun getExternalIP(): Response<String>
 }
