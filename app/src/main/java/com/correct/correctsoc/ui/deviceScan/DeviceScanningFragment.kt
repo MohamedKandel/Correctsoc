@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.data.DevicesData
@@ -15,9 +15,9 @@ import com.correct.correctsoc.databinding.FragmentDeviceScanningBinding
 import com.correct.correctsoc.helper.Constants.LIST
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.NetworkScanner
 import com.correct.correctsoc.helper.OnDataFetchedListener
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
-import com.correct.correctsoc.helper.mappingNumbers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,12 +27,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import tej.androidnetworktools.lib.Device
-import tej.androidnetworktools.lib.scanner.NetworkScanner
-import tej.androidnetworktools.lib.scanner.OnNetworkScanListener
-import tej.wifitoolslib.DevicesFinder
-import tej.wifitoolslib.interfaces.OnDeviceFindListener
-import tej.wifitoolslib.models.DeviceItem
 
 class DeviceScanningFragment : Fragment() {
 
@@ -169,7 +163,12 @@ class DeviceScanningFragment : Fragment() {
 
     private fun getDevices(callback: OnDataFetchedListener<DevicesData>) {
         mlist = mutableListOf()
-        NetworkScanner.init(requireContext())
+        val networkScanner = NetworkScanner(requireContext())
+        networkScanner.scanNetwork {
+            mlist.add(it)
+        }
+        callback.onAllDataFetched(mlist)
+        /*NetworkScanner.init(requireContext())
         NetworkScanner.scan(object : OnNetworkScanListener {
             override fun onComplete(devices: MutableList<Device>?) {
                 if (devices != null) {
@@ -193,7 +192,7 @@ class DeviceScanningFragment : Fragment() {
                 callback.onAllDataFetched(mlist)
             }
         })
-        NetworkScanner.setShowMacAddress(true)
+        NetworkScanner.setShowMacAddress(true)*/
     }
 
 
