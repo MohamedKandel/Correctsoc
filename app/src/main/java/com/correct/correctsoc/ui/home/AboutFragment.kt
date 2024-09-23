@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentAboutBinding
@@ -101,7 +101,7 @@ class AboutFragment : Fragment() {
 
         val url = "https://correctsoc.com"
         val facebook = "https://www.facebook.com/Correctsoc"
-        val insta = "https://www.tiktok.com"
+        val tiktok = "https://www.tiktok.com"
 
         binding.btnFacebook.setOnClickListener {
             val urlIntent = Intent(
@@ -112,11 +112,11 @@ class AboutFragment : Fragment() {
         }
 
         binding.btnTiktok.setOnClickListener {
-            val urlIntent = Intent(
+            /*val urlIntent = Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse(insta)
             )
-            startActivity(urlIntent)
+            startActivity(urlIntent)*/
         }
 
         binding.btnInternet.setOnClickListener {
