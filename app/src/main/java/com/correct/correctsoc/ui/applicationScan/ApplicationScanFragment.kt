@@ -2,17 +2,16 @@ package com.correct.correctsoc.ui.applicationScan
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentApplicationScanBinding
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.circularAnimation
 
 class ApplicationScanFragment : Fragment() {
 
@@ -42,7 +41,7 @@ class ApplicationScanFragment : Fragment() {
         helper = HelperClass.getInstance()
 
         fragmentListener.onFragmentChangedListener(R.id.applicationScanFragment)
-        binding.circularImage.startAnimation(helper.circularAnimation(3000))
+        binding.circularImage.startAnimation(circularAnimation(3000))
 
         helper.onBackPressed(this) {
             findNavController().navigate(R.id.homeFragment)
@@ -71,7 +70,7 @@ class ApplicationScanFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.applicationScanFragment)
-        binding.circularImage.startAnimation(helper.circularAnimation(3000))
+        binding.circularImage.startAnimation(circularAnimation(3000))
     }
 
 }

@@ -6,10 +6,10 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.databinding.FragmentFetchingAppsBinding
@@ -18,6 +18,7 @@ import com.correct.correctsoc.helper.Constants
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
+import com.correct.correctsoc.helper.circularAnimation
 import com.correct.correctsoc.helper.hide
 import com.correct.correctsoc.room.App
 import kotlinx.coroutines.CoroutineScope
@@ -115,7 +116,7 @@ class FetchingAppsFragment : Fragment() {
             bundle.putParcelableArrayList(Constants.LIST, ArrayList(list))
             findNavController().navigate(R.id.appsFragment, bundle)
         } else {
-            binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+            binding.progressCircular.startAnimation(circularAnimation(3000))
         }
         fragmentListener.onFragmentChangedListener(R.id.fetchingAppsFragment)
     }

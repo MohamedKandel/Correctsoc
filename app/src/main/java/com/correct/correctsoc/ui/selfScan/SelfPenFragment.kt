@@ -1,19 +1,12 @@
 package com.correct.correctsoc.ui.selfScan
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.LinearInterpolator
-import android.view.animation.RotateAnimation
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
@@ -23,6 +16,7 @@ import com.correct.correctsoc.helper.ConnectivityListener
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.buildDialog
+import com.correct.correctsoc.helper.circularAnimation
 
 class SelfPenFragment : Fragment() {
 
@@ -112,7 +106,7 @@ class SelfPenFragment : Fragment() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.selfPenFragment)
         //Start animation
-        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+        binding.progressCircular.startAnimation(circularAnimation(3000))
     }
 
     override fun onPause() {

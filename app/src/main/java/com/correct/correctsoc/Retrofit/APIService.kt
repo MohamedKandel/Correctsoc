@@ -143,6 +143,6 @@ interface APIService {
     /*@GET("?format=text")
     suspend fun getExternalIP(): Response<String>*/
 
-    @GET("ip?format=text")
+    @GET("?format=text")
     suspend fun getExternalIP(): Response<String>
 }

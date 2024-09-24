@@ -18,6 +18,7 @@ import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.NetworkScanner
 import com.correct.correctsoc.helper.OnDataFetchedListener
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
+import com.correct.correctsoc.helper.circularAnimation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -187,7 +188,7 @@ class DeviceScanningFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.deviceScanningFragment)
-        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+        binding.progressCircular.startAnimation(circularAnimation(3000))
     }
 
     override fun onPause() {

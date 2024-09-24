@@ -6,13 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.LinearInterpolator
-import android.view.animation.RotateAnimation
 import android.widget.Button
-import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.MainActivity
@@ -21,6 +15,7 @@ import com.correct.correctsoc.databinding.FragmentLangBinding
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
+import com.correct.correctsoc.helper.circularAnimation
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
@@ -69,7 +64,7 @@ class LangFragment : Fragment() {
         }
 
         //Start animation
-        binding.circleImg.startAnimation(helper.circularAnimation(1000))
+        binding.circleImg.startAnimation(circularAnimation(1000))
 
         displayBtmSheet()
 
@@ -110,7 +105,7 @@ class LangFragment : Fragment() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.langFragment)
         //Start animation
-        binding.circleImg.startAnimation(helper.circularAnimation(1000))
+        binding.circleImg.startAnimation(circularAnimation(1000))
     }
 
     override fun onPause() {

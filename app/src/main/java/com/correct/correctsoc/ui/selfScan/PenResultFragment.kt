@@ -21,6 +21,7 @@ import com.correct.correctsoc.helper.Constants.TYPE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.buildDialog
+import com.correct.correctsoc.helper.circularAnimation
 
 class PenResultFragment : Fragment() {
 
@@ -212,7 +213,7 @@ class PenResultFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.penResultFragment)
-        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+        binding.progressCircular.startAnimation(circularAnimation(3000))
     }
 
     override fun onPause() {

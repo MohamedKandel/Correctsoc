@@ -7,10 +7,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
 import com.correct.correctsoc.data.AppInfo
@@ -20,8 +20,8 @@ import com.correct.correctsoc.helper.Constants.LIST
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.OnProgressUpdatedListener
+import com.correct.correctsoc.helper.circularAnimation
 import com.correct.correctsoc.helper.hide
-import com.correct.correctsoc.room.App
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -118,7 +118,7 @@ class ScanningFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.scanningFragment)
-        binding.progressCircular.startAnimation(helper.circularAnimation(3000))
+        binding.progressCircular.startAnimation(circularAnimation(3000))
     }
 
     private fun displayAppName(list: MutableList<AppInfo>) {

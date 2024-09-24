@@ -25,6 +25,9 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
@@ -564,4 +567,22 @@ fun Fragment.getAppVersion(): String {
         requireActivity().packageName, 0
     )
     return pkgInfo.versionName
+}
+
+fun Fragment.circularAnimation(duration: Long): RotateAnimation {
+    val anim = RotateAnimation(
+        0.0f,
+        360.0f,
+        Animation.RELATIVE_TO_SELF,
+        0.5f,
+        Animation.RELATIVE_TO_SELF,
+        0.5f
+    )
+    //Setup anim with desired properties
+    anim.interpolator = LinearInterpolator()
+    anim.repeatCount = Animation.INFINITE //Repeat animation indefinitely
+
+    anim.duration = duration //Put desired duration per anim cycle here, in milliseconds
+
+    return anim
 }
