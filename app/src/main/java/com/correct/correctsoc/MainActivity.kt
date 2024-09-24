@@ -23,6 +23,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.correct.correctsoc.databinding.ActivityMainBinding
 import com.correct.correctsoc.helper.ConnectionManager
 import com.correct.correctsoc.helper.ConnectivityListener
+import com.correct.correctsoc.helper.Constants.STATUS
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
 import com.correct.correctsoc.helper.LocaleHelper
@@ -110,9 +111,9 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
                     override fun onChanged(value: Boolean) {
                         if (value) {
                             helper.setDeviceOnline(true, this@MainActivity)
-                            Log.v("device status", "account online")
+                            Log.v(STATUS, "account online")
                         } else {
-                            Log.v("device status", "account failed to be online")
+                            Log.v(STATUS, "account failed to be online")
                         }
                         viewModel.changeDeviceStatus.removeObserver(this)
                     }
@@ -253,7 +254,10 @@ class MainActivity : AppCompatActivity(), FragmentChangedListener {
             when (it) {
                 ConnectivityListener.Status.AVAILABLE -> {
                     if (acceptFragment && !helper.getDeviceStatus(this)) {
+                        Log.i(STATUS,"Set device on from main activity")
                         setDeviceOn(helper.getToken(this))
+                    } else {
+                        Log.e(STATUS,"Else branch")
                     }
                 }
 

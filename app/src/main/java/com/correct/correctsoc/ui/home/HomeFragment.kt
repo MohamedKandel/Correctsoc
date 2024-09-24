@@ -41,6 +41,7 @@ import com.correct.correctsoc.helper.ConnectivityListener
 import com.correct.correctsoc.helper.Constants.CLICKED
 import com.correct.correctsoc.helper.Constants.IP_ADDRESS
 import com.correct.correctsoc.helper.Constants.SOURCE
+import com.correct.correctsoc.helper.Constants.STATUS
 import com.correct.correctsoc.helper.Constants.TYPE
 import com.correct.correctsoc.helper.FragmentChangedListener
 import com.correct.correctsoc.helper.HelperClass
@@ -184,7 +185,8 @@ class HomeFragment : Fragment(), ClickListener {
                     isInternetConnected = true
                     isConnected.postValue(true)
                     if (!helper.getDeviceStatus(requireContext())) {
-                        //setDeviceOn(helper.getToken(requireContext()))
+                        Log.i(STATUS,"Set device on from home")
+                        setDeviceOn(helper.getToken(requireContext()))
                     }
                 }
 
@@ -218,23 +220,6 @@ class HomeFragment : Fragment(), ClickListener {
         adapter = MenuAdapter(requireContext(), list, this)
 
         binding.drawerMenu.recyclerView.adapter = adapter
-
-        /*lifecycleScope.launch {
-            val id = usersDB.dao().getUserID() ?: ""
-            val user = usersDB.dao().getUser(id)
-            if (user != null) {
-                Log.v(TAG, user.id)
-                Log.v(TAG, user.phone)
-                Log.v(TAG, user.token)
-                Log.v(TAG, user.password)
-                Log.v(TAG, user.username)
-                /*isConnected.observe(requireActivity()) {
-                    if (it) {
-                        getUserPlan(user.id)
-                    }
-                }*/
-            }
-        }*/
 
         fillList()
 
@@ -453,6 +438,31 @@ class HomeFragment : Fragment(), ClickListener {
 
     override fun onResume() {
         super.onResume()
+        /*connectionManager.observe()
+        connectionManager.statusLiveData.observe(this) {
+            when (it) {
+                ConnectivityListener.Status.AVAILABLE -> {
+                    if (!helper.getDeviceStatus(requireContext())) {
+                        Log.i(STATUS,"Set device on from home")
+                        setDeviceOn(helper.getToken(requireContext()))
+                    } else {
+                        Log.e(STATUS,"Else branch from home fragment")
+                    }
+                }
+
+                ConnectivityListener.Status.UNAVAILABLE -> {
+
+                }
+
+                ConnectivityListener.Status.LOST -> {
+
+                }
+
+                ConnectivityListener.Status.LOSING -> {
+
+                }
+            }
+        }*/
         fragmentListener.onFragmentChangedListener(R.id.homeFragment)
     }
 
