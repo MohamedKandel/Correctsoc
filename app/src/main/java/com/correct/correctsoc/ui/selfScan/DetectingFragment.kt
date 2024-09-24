@@ -197,9 +197,5 @@ class DetectingFragment : Fragment() {
         binding.progressCircular.startAnimation(circularAnimation(3000))
     }
 
-    override fun onPause() {
-        super.onPause()
-        // stop animation
-        binding.progressCircular.clearAnimation()
-    }
+
 }
