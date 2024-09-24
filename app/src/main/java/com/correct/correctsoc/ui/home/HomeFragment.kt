@@ -438,31 +438,6 @@ class HomeFragment : Fragment(), ClickListener {
 
     override fun onResume() {
         super.onResume()
-        /*connectionManager.observe()
-        connectionManager.statusLiveData.observe(this) {
-            when (it) {
-                ConnectivityListener.Status.AVAILABLE -> {
-                    if (!helper.getDeviceStatus(requireContext())) {
-                        Log.i(STATUS,"Set device on from home")
-                        setDeviceOn(helper.getToken(requireContext()))
-                    } else {
-                        Log.e(STATUS,"Else branch from home fragment")
-                    }
-                }
-
-                ConnectivityListener.Status.UNAVAILABLE -> {
-
-                }
-
-                ConnectivityListener.Status.LOST -> {
-
-                }
-
-                ConnectivityListener.Status.LOSING -> {
-
-                }
-            }
-        }*/
         fragmentListener.onFragmentChangedListener(R.id.homeFragment)
     }
 
@@ -540,22 +515,6 @@ class HomeFragment : Fragment(), ClickListener {
         }
         viewModel.changeDeviceStatus.observe(viewLifecycleOwner, observer)
 
-    }
-
-    private fun setDeviceOff(token: String) {
-        viewModel.setDeviceOff(token)
-        val observer = object : Observer<Boolean> {
-            override fun onChanged(value: Boolean) {
-                if (value) {
-                    helper.setDeviceOnline(false, requireContext())
-                    Log.v("device status", "account online")
-                } else {
-                    Log.v("device status", "account failed to be online")
-                }
-                viewModel.changeDeviceStatus.removeObserver(this)
-            }
-        }
-        viewModel.changeDeviceStatus.observe(viewLifecycleOwner, observer)
     }
 
     private fun signOut(body: SignOutBody, token: String) {
