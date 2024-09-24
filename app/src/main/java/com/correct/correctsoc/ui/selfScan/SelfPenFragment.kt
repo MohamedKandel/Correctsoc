@@ -109,9 +109,5 @@ class SelfPenFragment : Fragment() {
         binding.progressCircular.startAnimation(circularAnimation(3000))
     }
 
-    override fun onPause() {
-        super.onPause()
-        //Start animation
-        binding.progressCircular.clearAnimation()
-    }
+
 }
