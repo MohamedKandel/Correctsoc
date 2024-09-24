@@ -1,15 +1,14 @@
 package com.correct.correctsoc.ui.deviceScan
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.correct.correctsoc.R
@@ -42,6 +41,7 @@ class DeviceDataFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,7 +69,11 @@ class DeviceDataFragment : Fragment() {
             binding.txtDeviceName.text = model.deviceName
             binding.txtDeviceMac.text = model.macAddress
             // call API here
-            getVendorName(model.macAddress)
+            if (model.macAddress.isNotEmpty()) {
+                getVendorName(model.macAddress)
+            } else {
+                binding.txtDeviceVendor.text = "Cannot detect"
+            }
 
             binding.btnBack.setOnClickListener {
                 findNavController().navigate(R.id.devicesFragment, requireArguments())

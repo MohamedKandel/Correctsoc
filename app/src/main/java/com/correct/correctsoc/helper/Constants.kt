@@ -6,7 +6,7 @@ object Constants {
     const val FIRST_TIME = "first start"
     const val IP_ADDRESS = "ip address"
     const val BASE_URL = "https://correctsoc.com:81/"
-    const val VENDOR_BASE_URL = "https://api.macvendors.com/"
+    const val VENDOR_BASE_URL = "http://api.macvendors.com/"
     const val EXTERNAL_IP = "http://api.ipify.org/"
     const val RESERVE_EXTERNAL_IP = "http://ifcfg.me/"
     const val API_TAG = "api message"

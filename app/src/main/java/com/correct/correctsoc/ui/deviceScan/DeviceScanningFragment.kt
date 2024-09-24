@@ -168,31 +168,6 @@ class DeviceScanningFragment : Fragment() {
             mlist.add(it)
         }
         callback.onAllDataFetched(mlist)
-        /*NetworkScanner.init(requireContext())
-        NetworkScanner.scan(object : OnNetworkScanListener {
-            override fun onComplete(devices: MutableList<Device>?) {
-                if (devices != null) {
-                    for (device in devices) {
-                        if (device != null) {
-                            mlist.add(
-                                DevicesData(
-                                    device.ipAddress,
-                                    device.hostname, device.macAddress, device.vendorName
-                                )
-                            )
-                            Log.i("Device mohamed", device.macAddress)
-                        }
-                    }
-                }
-                callback.onAllDataFetched(mlist)
-            }
-
-            override fun onFailed() {
-                Log.d("error mohamed", "onFailed: can't load")
-                callback.onAllDataFetched(mlist)
-            }
-        })
-        NetworkScanner.setShowMacAddress(true)*/
     }
 
 
