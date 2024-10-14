@@ -78,7 +78,7 @@ class SignUpFragment : Fragment(), ClickListener {
     private lateinit var dialog: Dialog
     private lateinit var accountsList: MutableList<String>
     private lateinit var accountsAdapter: AccountsAdapter
-    private var isChoosedMail = false
+    //private var isChoosedMail = false
     private val requestPermissionLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
