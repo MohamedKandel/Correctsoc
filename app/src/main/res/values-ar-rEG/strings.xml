@@ -212,4 +212,6 @@
     <string name="android14">هذه الميزة غير متوفرة في إصدار أندرويد للفئات الاقتصادية</string>
     <string name="not_supported_title">ميزة غير مفعلة</string>
     <string name="not_supported_msg">الدفع عن طريق جوجل غير مدعوم حتى الآن.\nيمكنك الحصول على كود تفعيل والدفع عن طريق كود التفعيل</string>
+
+    <string name="select_account">أختر الحساب</string>
 </resources>

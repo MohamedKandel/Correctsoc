@@ -1,7 +1,12 @@
 package com.correct.correctsoc.ui.auth
 
+import AccountsAdapter
+import android.accounts.Account
+import android.accounts.AccountManager
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,17 +16,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.correct.correctsoc.R
 import com.correct.correctsoc.data.auth.RegisterBody
 import com.correct.correctsoc.databinding.FragmentSignUpBinding
+import com.correct.correctsoc.helper.ClickListener
 import com.correct.correctsoc.helper.Constants.SOURCE
 import com.correct.correctsoc.helper.Constants.TAG
 import com.correct.correctsoc.helper.FragmentChangedListener
@@ -41,7 +51,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.launch
 
-class SignUpFragment : Fragment() {
+class SignUpFragment : Fragment(), ClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +75,21 @@ class SignUpFragment : Fragment() {
     private lateinit var usersDB: UsersDB
     private lateinit var viewModel: AuthViewModel
     private lateinit var fragmentListener: FragmentChangedListener
-    private lateinit var gso: GoogleSignInOptions
+    private lateinit var dialog: Dialog
+    private lateinit var accountsList: MutableList<String>
+    private lateinit var accountsAdapter: AccountsAdapter
+    private var isChoosedMail = false
+    private val requestPermissionLauncher: ActivityResultLauncher<String> =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                // granted
+                getGoogleAccounts()
+            } else {
+                // declined
+            }
+        }
+
+    /*private lateinit var gso: GoogleSignInOptions
     private lateinit var client: GoogleSignInClient
     private var isChoosedMail = false
 
@@ -81,19 +105,68 @@ class SignUpFragment : Fragment() {
             ex.printStackTrace()
         }
     }
+    private fun returnToSignUp() {
+            val account = GoogleSignIn.getLastSignedInAccount(requireContext())
+            if (account != null) {
+                account.email?.let { Log.v("Google mail mohamed", it) }
+                binding.txtMail.setText(account.email)
+            }
+    }*/
+
+    private fun displayDialog() {
+        dialog = Dialog(requireContext())
+        dialog.setContentView(R.layout.pick_account_dialog)
+        dialog.window?.setLayout(MATCH_PARENT, WRAP_CONTENT)
+        dialog.setCancelable(true)
+        dialog.setCanceledOnTouchOutside(true)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val recyclerView = dialog.findViewById<RecyclerView>(R.id.account_recyclerView)
+        recyclerView.adapter = accountsAdapter
+
+        checkAndRequestPermission()
+
+        dialog.show()
+    }
+
+    private fun checkAndRequestPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.GET_ACCOUNTS
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                // Permission already granted, retrieve Google accounts
+                getGoogleAccounts()
+            }
+
+            else -> {
+                // Request permission
+                requestPermissionLauncher.launch(android.Manifest.permission.GET_ACCOUNTS)
+            }
+        }
+    }
+
+    private fun getGoogleAccounts() {
+        val accountManager = AccountManager.get(requireContext())
+        val accounts: Array<Account> = accountManager.getAccountsByType("com.google")
+
+        for (account in accounts) {
+            // add unique emails only
+            if (!accountsList.contains(account.name)) {
+                accountsList.add(account.name)
+            }
+            accountsAdapter.updateAdapter(accountsList)
+
+            println("Google Account: ${account.name}")
+            // Handle each Google account, e.g., display the name
+        }
+    }
 
     override fun onPause() {
         super.onPause()
-        client.signOut()
+        //client.signOut()
     }
 
-    private fun returnToSignUp() {
-        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
-        if (account != null) {
-            account.email?.let { Log.v("Google mail mohamed", it) }
-            binding.txtMail.setText(account.email)
-        }
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -119,11 +192,14 @@ class SignUpFragment : Fragment() {
         binding.placeholder.hide()
         binding.progress.hide()
 
-        gso =
+        accountsList = mutableListOf()
+        accountsAdapter = AccountsAdapter(accountsList, this)
+
+        /*gso =
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build()
-        client = GoogleSignIn.getClient(requireContext(), gso)
+        client = GoogleSignIn.getClient(requireContext(), gso)*/
 
         val text = resources
             .getString(R.string.already_have_account)
@@ -139,11 +215,19 @@ class SignUpFragment : Fragment() {
                 val imm =
                     view?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(view?.windowToken, 0)
-                if (isChoosedMail) {
+                displayDialog()
+                //checkAndRequestPermission()
+
+                /*if (isChoosedMail) {
+
+                } else {
+                    checkAndRequestPermission()
+                }*/
+                /*if (isChoosedMail) {
                     signOut()
                 } else {
                     getMailIntent.launch(client.signInIntent)
-                }
+                }*/
             }
         }
 
@@ -151,11 +235,15 @@ class SignUpFragment : Fragment() {
             val imm =
                 view?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.windowToken, 0)
-            if (isChoosedMail) {
+
+            displayDialog()
+            //checkAndRequestPermission()
+
+            /*if (isChoosedMail) {
                 signOut()
             } else {
                 getMailIntent.launch(client.signInIntent)
-            }
+            }*/
         }
 
         if (helper.getLang(requireContext()).equals("en")) {
@@ -334,11 +422,11 @@ class SignUpFragment : Fragment() {
         return binding.root
     }
 
-    private fun signOut() {
+    /*private fun signOut() {
         client.signOut().addOnCompleteListener {
             getMailIntent.launch(client.signInIntent)
         }
-    }
+    }*/
 
     private fun registerUser(body: RegisterBody) {
         viewModel.registerUser(body)
@@ -376,5 +464,16 @@ class SignUpFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fragmentListener.onFragmentChangedListener(R.id.signUpFragment)
+    }
+
+    override fun onItemClickListener(position: Int, extras: Bundle?) {
+        Log.v("Account selected mohamed", accountsList[position])
+        binding.txtMail.setText(accountsList[position])
+        dialog.cancel()
+        dialog.cancel()
+    }
+
+    override fun onLongItemClickListener(position: Int, extras: Bundle?) {
+
     }
 }

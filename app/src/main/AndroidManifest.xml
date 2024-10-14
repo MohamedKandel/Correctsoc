@@ -20,6 +20,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
         android:minSdkVersion="34"/>
 
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
     <application
         android:networkSecurityConfig="@xml/network_security_certificate_config"
         android:allowBackup="true"

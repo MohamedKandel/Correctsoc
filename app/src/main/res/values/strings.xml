@@ -226,4 +226,6 @@
     <string name="android14">This feature is not available in Budget devices</string>
     <string name="not_supported_title">Not supported feature</string>
     <string name="not_supported_msg">Google Pay method is not supported yet.\nYou can get the code and Pay with activation code</string>
+
+    <string name="select_account">Select Account</string>
 </resources>
